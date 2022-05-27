@@ -1,8 +1,15 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
+import dynamic from 'next/dynamic'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  const SafeHydrate = dynamic(() => import('@/components/SafeHydrate'), { ssr: false })
+
+  return (
+    <SafeHydrate>
+      <Component {...pageProps} />
+    </SafeHydrate>
+  )
 }
 
 export default MyApp
