@@ -9,6 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarSeparator,
   useSidebar,
 } from './ui/sidebar'
 import { supabase } from '~/lib/supabase'
@@ -44,6 +45,20 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => handleLinkClick('/')}>ホーム</SidebarMenuButton>
               </SidebarMenuItem>
+              <SidebarSeparator />
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => handleLinkClick('/')}>タスク</SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => handleLinkClick('/')}>ノート</SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => handleLinkClick('/')}>家計簿</SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => handleLinkClick('/')}>燃費記録</SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarSeparator />
               {isLoggedIn ? (
                 <SidebarMenuItem>
                   <SidebarMenuButton onClick={handleClickSignOut}>ログアウト</SidebarMenuButton>
