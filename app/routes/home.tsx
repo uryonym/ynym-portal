@@ -1,5 +1,4 @@
 import { supabase } from '~/lib/supabase'
-import { Welcome } from '../welcome/welcome'
 import { redirect } from 'react-router'
 
 export async function clientLoader() {
@@ -11,5 +10,9 @@ export async function clientLoader() {
 }
 
 export default function Home() {
-  return <Welcome />
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <h2 className="text-4xl font-bold">ynym portal</h2>
+    </div>
+  )
 }
