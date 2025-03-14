@@ -47,7 +47,7 @@ export function AppSidebar() {
               </SidebarMenuItem>
               <SidebarSeparator />
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => handleLinkClick('/')}>タスク</SidebarMenuButton>
+                <SidebarMenuButton onClick={() => handleLinkClick('/task')}>タスク</SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => handleLinkClick('/')}>ノート</SidebarMenuButton>
