@@ -1,10 +1,11 @@
 import React from 'react'
 
-import { type Task } from '@/generated/client'
+import { type Task } from '@/../generated/client'
 
 import TaskFromSheet from './TaskFormSheet'
 import TaskTable from './TaskTable'
 import { getTasks } from '../actions/tasks'
+
 
 const Task = async () => {
   const { tasks, error } = await getTasks()

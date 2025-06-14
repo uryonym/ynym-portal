@@ -1,4 +1,4 @@
-import { PrismaClient } from '@/generated/client'
+import { PrismaClient } from '../../generated/client'
 
 // globalThisにPrismaClientのインスタンスをキャッシュするための型定義
 const globalForPrisma = globalThis as unknown as {

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 
-import { Task } from '@/generated/client'
+import { Task } from '@/../generated/client'
 import { prisma } from '@/lib/prisma'
 
 export const getTasks = async (): Promise<{ tasks?: Task[]; error?: string }> => {

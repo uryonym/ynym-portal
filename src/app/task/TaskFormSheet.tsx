@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 
+import { Task } from '@/../generated/client'
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { Task } from '@/generated/client'
 
 import { createTask, updateTask, deleteTask } from '../actions/tasks'
 
