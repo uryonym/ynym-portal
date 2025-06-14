@@ -19,6 +19,7 @@ const TaskFormSheet = ({ mode = 'create', task, open, onOpenChange }: TaskFormSh
     title: '',
     description: '',
     dueDate: '',
+    completed: false,
   })
 
   useEffect(() => {
@@ -27,15 +28,17 @@ const TaskFormSheet = ({ mode = 'create', task, open, onOpenChange }: TaskFormSh
         title: task.title,
         description: task.description ?? '',
         dueDate: task.dueDate ? new Date(task.dueDate).toISOString().slice(0, 10) : '',
+        completed: task.completed,
       })
     } else {
-      setForm({ title: '', description: '', dueDate: '' })
+      setForm({ title: '', description: '', dueDate: '', completed: false })
     }
   }, [mode, task, open])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
+    formData.set('completed', form.completed ? 'true' : 'false')
     if (mode === 'edit' && task) {
       formData.append('id', task.id)
       await updateTask(formData)
@@ -97,6 +100,19 @@ const TaskFormSheet = ({ mode = 'create', task, open, onOpenChange }: TaskFormSh
               className="w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
             />
           </div>
+          {mode === 'edit' && (
+            <div>
+              <label className="mb-1 block font-medium">完了</label>
+              <input
+                name="completed"
+                type="checkbox"
+                checked={form.completed}
+                onChange={(e) => setForm((f) => ({ ...f, completed: e.target.checked }))}
+                className="h-5 w-5 align-middle"
+              />
+              <span className="ml-2">完了した場合はチェック</span>
+            </div>
+          )}
           <button
             type="submit"
             className="self-start rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"

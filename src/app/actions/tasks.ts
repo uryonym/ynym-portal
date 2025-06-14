@@ -25,6 +25,7 @@ export const createTask = async (formData: FormData) => {
         title,
         description: description || null,
         dueDate: dueDate ? new Date(dueDate) : null,
+        completed: false,
       },
     })
     revalidatePath('/task')
@@ -39,12 +40,15 @@ export const updateTask = async (formData: FormData) => {
     const title = formData.get('title') as string
     const description = formData.get('description') as string
     const dueDate = formData.get('dueDate') as string
+    const completedRaw = formData.get('completed')
+    const completed = completedRaw === 'true'
     await prisma.task.update({
       where: { id },
       data: {
         title,
         description: description || null,
         dueDate: dueDate ? new Date(dueDate) : null,
+        completed,
       },
     })
     revalidatePath('/task')
