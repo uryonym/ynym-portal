@@ -33,13 +33,13 @@ export const createTask = async (formData: FormData) => {
   }
 }
 
-export const updateTask = async (formData: FormData): Promise<{ task?: Task; error?: string }> => {
+export const updateTask = async (formData: FormData) => {
   try {
     const id = formData.get('id') as string
     const title = formData.get('title') as string
     const description = formData.get('description') as string
     const dueDate = formData.get('dueDate') as string
-    const task = await prisma.task.update({
+    await prisma.task.update({
       where: { id },
       data: {
         title,
@@ -48,23 +48,17 @@ export const updateTask = async (formData: FormData): Promise<{ task?: Task; err
       },
     })
     revalidatePath('/task')
-    return { task }
   } catch (error) {
     console.error('Error updating task:', error)
-    return { error: 'タスクの更新に失敗しました' }
   }
 }
 
-export const deleteTask = async (
-  formData: FormData,
-): Promise<{ success: boolean; error?: string }> => {
+export const deleteTask = async (formData: FormData) => {
   try {
     const id = formData.get('id') as string
     await prisma.task.delete({ where: { id } })
     revalidatePath('/task')
-    return { success: true }
   } catch (error) {
     console.error('Error deleting task:', error)
-    return { success: false, error: 'タスクの削除に失敗しました' }
   }
 }
