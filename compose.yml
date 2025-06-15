@@ -1,0 +1,12 @@
+services:
+  ynym-portal:
+    build: .
+    image: ynym-portal
+    container_name: ynym-portal
+    hostname: ynym-portal
+    restart: always
+
+networks:
+  default:
+    name: ynym-portal-network
+    external: true
