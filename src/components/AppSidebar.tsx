@@ -40,6 +40,9 @@ const AppSidebar = () => {
                 <SidebarMenuButton onClick={handleClickLink('/task')}>タスク</SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
+                <SidebarMenuButton onClick={handleClickLink('/car')}>車</SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
                 <SidebarMenuButton onClick={handleClickLink('/refueling')}>
                   燃費記録
                 </SidebarMenuButton>
