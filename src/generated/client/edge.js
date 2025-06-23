@@ -143,6 +143,10 @@ const config = {
         "fromEnvVar": null,
         "value": "linux-arm64-openssl-3.0.x",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "linux-musl-arm64-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -150,7 +154,7 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../../../prisma",
@@ -169,8 +173,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\n// Taskモデルの定義\nmodel Task {\n  id          String    @id @default(uuid())\n  title       String\n  description String?\n  dueDate     DateTime?\n  completed   Boolean   @default(false)\n  createdAt   DateTime  @default(now())\n  updatedAt   DateTime  @updatedAt\n}\n",
-  "inlineSchemaHash": "843aa4bcda2fe0d6128007594d01a676c4daecfd0dc40dbccce0f0e854f0d0f7",
+  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  output        = \"../src/generated/client\"\n  binaryTargets = [\"native\", \"linux-musl-arm64-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\n// Taskモデルの定義\nmodel Task {\n  id          String    @id @default(uuid())\n  title       String\n  description String?\n  dueDate     DateTime?\n  completed   Boolean   @default(false)\n  createdAt   DateTime  @default(now())\n  updatedAt   DateTime  @updatedAt\n}\n",
+  "inlineSchemaHash": "08d674bc70b86ab3b1e43ad1446fc990f638e8aadb507183caf704858968ccf8",
   "copyEngine": true
 }
 config.dirname = '/'
