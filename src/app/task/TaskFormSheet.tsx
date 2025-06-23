@@ -43,11 +43,11 @@ const TaskFormSheet = ({ mode = 'create', task }: TaskFormSheetProps) => {
     if (mode === 'edit' && task) {
       formData.append('id', task.id)
       await updateTask(formData)
+      setInternalOpen(false)
     } else {
       await createTask(formData)
+      setInternalOpen(false)
     }
-    if (mode === 'edit') return
-    setInternalOpen(false)
   }
 
   const handleDelete = async () => {
@@ -129,21 +129,23 @@ const TaskFormSheet = ({ mode = 'create', task }: TaskFormSheetProps) => {
                 <span className="ml-2">完了した場合はチェック</span>
               </div>
             )}
-            <button
-              type="submit"
-              className="self-start rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
-            >
-              {mode === 'edit' ? '保存' : '追加'}
-            </button>
-            {mode === 'edit' && (
+            <div className="mt-2 flex w-full items-center justify-between">
               <button
-                type="button"
-                onClick={handleDelete}
-                className="mt-2 self-start rounded bg-red-600 px-6 py-2 font-semibold text-white hover:bg-red-700"
+                type="submit"
+                className="rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
               >
-                削除
+                {mode === 'edit' ? '保存' : '追加'}
               </button>
-            )}
+              {mode === 'edit' && (
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="rounded bg-red-600 px-6 py-2 font-semibold text-white hover:bg-red-700"
+                >
+                  削除
+                </button>
+              )}
+            </div>
           </form>
         </SheetContent>
       </Sheet>
