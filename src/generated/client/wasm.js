@@ -130,6 +130,19 @@ exports.Prisma.TaskScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.RefuelingScalarFieldEnum = {
+  id: 'id',
+  refuelDatetime: 'refuelDatetime',
+  odometer: 'odometer',
+  fuelType: 'fuelType',
+  price: 'price',
+  totalCost: 'totalCost',
+  isFull: 'isFull',
+  gasStand: 'gasStand',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -147,7 +160,8 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
-  Task: 'Task'
+  Task: 'Task',
+  Refueling: 'Refueling'
 };
 
 /**
