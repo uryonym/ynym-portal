@@ -20,7 +20,7 @@ export default tseslint.config(
     files: ['*.ts', '*.tsx'], // 読み込むファイル
   },
   {
-    ignores: ['**/.next/**/*', 'src/components/ui/**/*'], // 無視するファイル
+    ignores: ['**/.next/**/*', 'src/components/ui/**/*', 'src/generated/**/*'], // 無視するファイル
   },
   eslint.configs.recommended,
   tseslint.configs.strictTypeChecked,
