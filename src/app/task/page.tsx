@@ -2,11 +2,11 @@ import React from 'react'
 
 import { type Task } from '@/generated/client'
 
-import TaskFromSheet from './TaskFormSheet'
+import TaskFormSheet from './TaskFormSheet'
 import TaskTable from './TaskTable'
 import { getTasks } from '../actions/tasks'
 
-const Task = async () => {
+export default async function Task() {
   const { tasks, error } = await getTasks()
 
   if (error) {
@@ -16,7 +16,7 @@ const Task = async () => {
   return (
     <div className="p-6">
       <p className="mb-4 text-xl font-bold">タスクページ</p>
-      <TaskFromSheet />
+      <TaskFormSheet mode="create" />
       <div className="overflow-x-auto">
         <table className="min-w-full rounded-lg border border-gray-300 bg-white shadow">
           <thead>
@@ -29,11 +29,9 @@ const Task = async () => {
               <th className="border border-gray-300 px-4 py-2 text-left">操作</th>
             </tr>
           </thead>
-          {tasks && <TaskTable tasks={tasks} />}
+          <TaskTable tasks={tasks ?? []} />
         </table>
       </div>
     </div>
   )
 }
-
-export default Task
