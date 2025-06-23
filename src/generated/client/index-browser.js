@@ -143,6 +143,19 @@ exports.Prisma.RefuelingScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CarScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  seq: 'seq',
+  maker: 'maker',
+  model: 'model',
+  modelYear: 'modelYear',
+  licensePlate: 'licensePlate',
+  tankCapacity: 'tankCapacity',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -161,7 +174,8 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   Task: 'Task',
-  Refueling: 'Refueling'
+  Refueling: 'Refueling',
+  Car: 'Car'
 };
 
 /**
