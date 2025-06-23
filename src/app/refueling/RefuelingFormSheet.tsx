@@ -72,111 +72,122 @@ const RefuelingFormSheet = ({ mode = 'create', refueling }: RefuelingFormSheetPr
     setInternalOpen(false)
   }
 
-  // create時はボタンでopen、edit時はpropsでopen制御
-  const open = mode === 'edit' ? undefined : internalOpen
-  const onOpenChange = mode === 'edit' ? undefined : setInternalOpen
-
   return (
     <>
       {mode === 'create' && (
         <button
-          className="mb-4 rounded bg-blue-500 px-4 py-2 text-white"
+          className="mb-8 rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
           onClick={() => setInternalOpen(true)}
         >
           給油記録を追加
         </button>
       )}
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetHeader>
-          <SheetTitle>{mode === 'edit' ? '給油記録の編集' : '給油記録の追加'}</SheetTitle>
-        </SheetHeader>
-        <SheetContent>
-          <form className="space-y-4" onSubmit={handleSubmit}>
+      {mode === 'edit' && (
+        <button
+          type="button"
+          className="rounded bg-yellow-500 px-3 py-1 text-white hover:bg-yellow-600"
+          onClick={() => setInternalOpen(true)}
+        >
+          編集
+        </button>
+      )}
+      <Sheet open={internalOpen} onOpenChange={setInternalOpen}>
+        <SheetContent side="bottom" className="mx-auto max-w-xl">
+          <SheetHeader>
+            <SheetTitle>{mode === 'edit' ? '給油記録の編集' : '給油記録の追加'}</SheetTitle>
+          </SheetHeader>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 pb-4">
             <div>
-              <label className="block text-sm font-medium">日付・時刻</label>
+              <label className="mb-1 block font-medium">
+                日付・時刻<span className="text-red-500">*</span>
+              </label>
               <input
                 type="datetime-local"
                 name="refuelDatetime"
                 value={form.refuelDatetime}
                 onChange={(e) => setForm({ ...form, refuelDatetime: e.target.value })}
-                className="w-full rounded border px-2 py-1"
+                className="w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium">走行距離</label>
+              <label className="mb-1 block font-medium">走行距離</label>
               <input
                 type="number"
                 name="odometer"
                 value={form.odometer}
                 onChange={(e) => setForm({ ...form, odometer: e.target.value })}
-                className="w-full rounded border px-2 py-1"
+                className="w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium">燃料種別</label>
+              <label className="mb-1 block font-medium">燃料種別</label>
               <input
                 type="text"
                 name="fuelType"
                 value={form.fuelType}
                 onChange={(e) => setForm({ ...form, fuelType: e.target.value })}
-                className="w-full rounded border px-2 py-1"
+                className="w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium">単価</label>
+              <label className="mb-1 block font-medium">単価</label>
               <input
                 type="number"
                 name="price"
                 value={form.price}
                 onChange={(e) => setForm({ ...form, price: e.target.value })}
-                className="w-full rounded border px-2 py-1"
+                className="w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium">合計金額</label>
+              <label className="mb-1 block font-medium">合計金額</label>
               <input
                 type="number"
                 name="totalCost"
                 value={form.totalCost}
                 onChange={(e) => setForm({ ...form, totalCost: e.target.value })}
-                className="w-full rounded border px-2 py-1"
+                className="w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium">満タン</label>
+              <label className="mb-1 block font-medium">満タン</label>
               <input
                 type="checkbox"
                 name="isFull"
                 checked={form.isFull}
                 onChange={(e) => setForm({ ...form, isFull: e.target.checked })}
-                className="ml-2"
+                className="ml-2 h-5 w-5 align-middle"
               />
+              <span className="ml-2">満タンの場合はチェック</span>
             </div>
             <div>
-              <label className="block text-sm font-medium">スタンド</label>
+              <label className="mb-1 block font-medium">スタンド</label>
               <input
                 type="text"
                 name="gasStand"
                 value={form.gasStand}
                 onChange={(e) => setForm({ ...form, gasStand: e.target.value })}
-                className="w-full rounded border px-2 py-1"
+                className="w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
                 required
               />
             </div>
-            <div className="flex gap-2">
-              <button type="submit" className="rounded bg-blue-500 px-4 py-2 text-white">
-                {mode === 'edit' ? '更新' : '追加'}
+            <div className="mt-2 flex w-full items-center justify-between">
+              <button
+                type="submit"
+                className="rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
+              >
+                {mode === 'edit' ? '保存' : '追加'}
               </button>
               {mode === 'edit' && (
                 <button
                   type="button"
                   onClick={handleDelete}
-                  className="rounded bg-red-500 px-4 py-2 text-white"
+                  className="rounded bg-red-600 px-6 py-2 font-semibold text-white hover:bg-red-700"
                 >
                   削除
                 </button>
