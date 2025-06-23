@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../generated/client'
+import { PrismaClient } from '@/generated/client'
 
 // globalThisにPrismaClientのインスタンスをキャッシュするための型定義
 const globalForPrisma = globalThis as unknown as {
@@ -9,8 +9,7 @@ const globalForPrisma = globalThis as unknown as {
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    // 開発環境でのみクエリログを出力したい場合
-    // log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    log: ['query', 'error', 'warn'],
   })
 
 // 本番環境以外では、作成したインスタンスをグローバルオブジェクトに保存

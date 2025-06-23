@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { Task } from '@/../generated/client'
+import { Task } from '@/generated/client'
 
 import TaskFormSheet from './TaskFormSheet'
 
