@@ -18,6 +18,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  * 
  */
 export type Task = $Result.DefaultSelection<Prisma.$TaskPayload>
+/**
+ * Model Refueling
+ * 
+ */
+export type Refueling = $Result.DefaultSelection<Prisma.$RefuelingPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -153,6 +158,16 @@ export class PrismaClient<
     * ```
     */
   get task(): Prisma.TaskDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.refueling`: Exposes CRUD operations for the **Refueling** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Refuelings
+    * const refuelings = await prisma.refueling.findMany()
+    * ```
+    */
+  get refueling(): Prisma.RefuelingDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -593,7 +608,8 @@ export namespace Prisma {
 
 
   export const ModelName: {
-    Task: 'Task'
+    Task: 'Task',
+    Refueling: 'Refueling'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -612,7 +628,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "task"
+      modelProps: "task" | "refueling"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -687,6 +703,80 @@ export namespace Prisma {
           count: {
             args: Prisma.TaskCountArgs<ExtArgs>
             result: $Utils.Optional<TaskCountAggregateOutputType> | number
+          }
+        }
+      }
+      Refueling: {
+        payload: Prisma.$RefuelingPayload<ExtArgs>
+        fields: Prisma.RefuelingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RefuelingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RefuelingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RefuelingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RefuelingPayload>
+          }
+          findFirst: {
+            args: Prisma.RefuelingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RefuelingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RefuelingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RefuelingPayload>
+          }
+          findMany: {
+            args: Prisma.RefuelingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RefuelingPayload>[]
+          }
+          create: {
+            args: Prisma.RefuelingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RefuelingPayload>
+          }
+          createMany: {
+            args: Prisma.RefuelingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RefuelingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RefuelingPayload>[]
+          }
+          delete: {
+            args: Prisma.RefuelingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RefuelingPayload>
+          }
+          update: {
+            args: Prisma.RefuelingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RefuelingPayload>
+          }
+          deleteMany: {
+            args: Prisma.RefuelingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RefuelingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RefuelingUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RefuelingPayload>[]
+          }
+          upsert: {
+            args: Prisma.RefuelingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RefuelingPayload>
+          }
+          aggregate: {
+            args: Prisma.RefuelingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRefueling>
+          }
+          groupBy: {
+            args: Prisma.RefuelingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RefuelingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RefuelingCountArgs<ExtArgs>
+            result: $Utils.Optional<RefuelingCountAggregateOutputType> | number
           }
         }
       }
@@ -775,6 +865,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     task?: TaskOmit
+    refueling?: RefuelingOmit
   }
 
   /* Types for Logging */
@@ -1891,6 +1982,1108 @@ export namespace Prisma {
 
 
   /**
+   * Model Refueling
+   */
+
+  export type AggregateRefueling = {
+    _count: RefuelingCountAggregateOutputType | null
+    _avg: RefuelingAvgAggregateOutputType | null
+    _sum: RefuelingSumAggregateOutputType | null
+    _min: RefuelingMinAggregateOutputType | null
+    _max: RefuelingMaxAggregateOutputType | null
+  }
+
+  export type RefuelingAvgAggregateOutputType = {
+    odometer: number | null
+    price: number | null
+    totalCost: number | null
+  }
+
+  export type RefuelingSumAggregateOutputType = {
+    odometer: number | null
+    price: number | null
+    totalCost: number | null
+  }
+
+  export type RefuelingMinAggregateOutputType = {
+    id: string | null
+    refuelDatetime: Date | null
+    odometer: number | null
+    fuelType: string | null
+    price: number | null
+    totalCost: number | null
+    isFull: boolean | null
+    gasStand: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RefuelingMaxAggregateOutputType = {
+    id: string | null
+    refuelDatetime: Date | null
+    odometer: number | null
+    fuelType: string | null
+    price: number | null
+    totalCost: number | null
+    isFull: boolean | null
+    gasStand: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RefuelingCountAggregateOutputType = {
+    id: number
+    refuelDatetime: number
+    odometer: number
+    fuelType: number
+    price: number
+    totalCost: number
+    isFull: number
+    gasStand: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type RefuelingAvgAggregateInputType = {
+    odometer?: true
+    price?: true
+    totalCost?: true
+  }
+
+  export type RefuelingSumAggregateInputType = {
+    odometer?: true
+    price?: true
+    totalCost?: true
+  }
+
+  export type RefuelingMinAggregateInputType = {
+    id?: true
+    refuelDatetime?: true
+    odometer?: true
+    fuelType?: true
+    price?: true
+    totalCost?: true
+    isFull?: true
+    gasStand?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RefuelingMaxAggregateInputType = {
+    id?: true
+    refuelDatetime?: true
+    odometer?: true
+    fuelType?: true
+    price?: true
+    totalCost?: true
+    isFull?: true
+    gasStand?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RefuelingCountAggregateInputType = {
+    id?: true
+    refuelDatetime?: true
+    odometer?: true
+    fuelType?: true
+    price?: true
+    totalCost?: true
+    isFull?: true
+    gasStand?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type RefuelingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Refueling to aggregate.
+     */
+    where?: RefuelingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Refuelings to fetch.
+     */
+    orderBy?: RefuelingOrderByWithRelationInput | RefuelingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RefuelingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Refuelings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Refuelings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Refuelings
+    **/
+    _count?: true | RefuelingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RefuelingAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RefuelingSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RefuelingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RefuelingMaxAggregateInputType
+  }
+
+  export type GetRefuelingAggregateType<T extends RefuelingAggregateArgs> = {
+        [P in keyof T & keyof AggregateRefueling]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRefueling[P]>
+      : GetScalarType<T[P], AggregateRefueling[P]>
+  }
+
+
+
+
+  export type RefuelingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RefuelingWhereInput
+    orderBy?: RefuelingOrderByWithAggregationInput | RefuelingOrderByWithAggregationInput[]
+    by: RefuelingScalarFieldEnum[] | RefuelingScalarFieldEnum
+    having?: RefuelingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RefuelingCountAggregateInputType | true
+    _avg?: RefuelingAvgAggregateInputType
+    _sum?: RefuelingSumAggregateInputType
+    _min?: RefuelingMinAggregateInputType
+    _max?: RefuelingMaxAggregateInputType
+  }
+
+  export type RefuelingGroupByOutputType = {
+    id: string
+    refuelDatetime: Date
+    odometer: number
+    fuelType: string
+    price: number
+    totalCost: number
+    isFull: boolean
+    gasStand: string
+    createdAt: Date
+    updatedAt: Date
+    _count: RefuelingCountAggregateOutputType | null
+    _avg: RefuelingAvgAggregateOutputType | null
+    _sum: RefuelingSumAggregateOutputType | null
+    _min: RefuelingMinAggregateOutputType | null
+    _max: RefuelingMaxAggregateOutputType | null
+  }
+
+  type GetRefuelingGroupByPayload<T extends RefuelingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RefuelingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RefuelingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RefuelingGroupByOutputType[P]>
+            : GetScalarType<T[P], RefuelingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RefuelingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    refuelDatetime?: boolean
+    odometer?: boolean
+    fuelType?: boolean
+    price?: boolean
+    totalCost?: boolean
+    isFull?: boolean
+    gasStand?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["refueling"]>
+
+  export type RefuelingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    refuelDatetime?: boolean
+    odometer?: boolean
+    fuelType?: boolean
+    price?: boolean
+    totalCost?: boolean
+    isFull?: boolean
+    gasStand?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["refueling"]>
+
+  export type RefuelingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    refuelDatetime?: boolean
+    odometer?: boolean
+    fuelType?: boolean
+    price?: boolean
+    totalCost?: boolean
+    isFull?: boolean
+    gasStand?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["refueling"]>
+
+  export type RefuelingSelectScalar = {
+    id?: boolean
+    refuelDatetime?: boolean
+    odometer?: boolean
+    fuelType?: boolean
+    price?: boolean
+    totalCost?: boolean
+    isFull?: boolean
+    gasStand?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type RefuelingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "refuelDatetime" | "odometer" | "fuelType" | "price" | "totalCost" | "isFull" | "gasStand" | "createdAt" | "updatedAt", ExtArgs["result"]["refueling"]>
+
+  export type $RefuelingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Refueling"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      refuelDatetime: Date
+      odometer: number
+      fuelType: string
+      price: number
+      totalCost: number
+      isFull: boolean
+      gasStand: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["refueling"]>
+    composites: {}
+  }
+
+  type RefuelingGetPayload<S extends boolean | null | undefined | RefuelingDefaultArgs> = $Result.GetResult<Prisma.$RefuelingPayload, S>
+
+  type RefuelingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RefuelingFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RefuelingCountAggregateInputType | true
+    }
+
+  export interface RefuelingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Refueling'], meta: { name: 'Refueling' } }
+    /**
+     * Find zero or one Refueling that matches the filter.
+     * @param {RefuelingFindUniqueArgs} args - Arguments to find a Refueling
+     * @example
+     * // Get one Refueling
+     * const refueling = await prisma.refueling.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RefuelingFindUniqueArgs>(args: SelectSubset<T, RefuelingFindUniqueArgs<ExtArgs>>): Prisma__RefuelingClient<$Result.GetResult<Prisma.$RefuelingPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Refueling that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RefuelingFindUniqueOrThrowArgs} args - Arguments to find a Refueling
+     * @example
+     * // Get one Refueling
+     * const refueling = await prisma.refueling.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RefuelingFindUniqueOrThrowArgs>(args: SelectSubset<T, RefuelingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RefuelingClient<$Result.GetResult<Prisma.$RefuelingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Refueling that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RefuelingFindFirstArgs} args - Arguments to find a Refueling
+     * @example
+     * // Get one Refueling
+     * const refueling = await prisma.refueling.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RefuelingFindFirstArgs>(args?: SelectSubset<T, RefuelingFindFirstArgs<ExtArgs>>): Prisma__RefuelingClient<$Result.GetResult<Prisma.$RefuelingPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Refueling that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RefuelingFindFirstOrThrowArgs} args - Arguments to find a Refueling
+     * @example
+     * // Get one Refueling
+     * const refueling = await prisma.refueling.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RefuelingFindFirstOrThrowArgs>(args?: SelectSubset<T, RefuelingFindFirstOrThrowArgs<ExtArgs>>): Prisma__RefuelingClient<$Result.GetResult<Prisma.$RefuelingPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Refuelings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RefuelingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Refuelings
+     * const refuelings = await prisma.refueling.findMany()
+     * 
+     * // Get first 10 Refuelings
+     * const refuelings = await prisma.refueling.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const refuelingWithIdOnly = await prisma.refueling.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RefuelingFindManyArgs>(args?: SelectSubset<T, RefuelingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RefuelingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Refueling.
+     * @param {RefuelingCreateArgs} args - Arguments to create a Refueling.
+     * @example
+     * // Create one Refueling
+     * const Refueling = await prisma.refueling.create({
+     *   data: {
+     *     // ... data to create a Refueling
+     *   }
+     * })
+     * 
+     */
+    create<T extends RefuelingCreateArgs>(args: SelectSubset<T, RefuelingCreateArgs<ExtArgs>>): Prisma__RefuelingClient<$Result.GetResult<Prisma.$RefuelingPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Refuelings.
+     * @param {RefuelingCreateManyArgs} args - Arguments to create many Refuelings.
+     * @example
+     * // Create many Refuelings
+     * const refueling = await prisma.refueling.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RefuelingCreateManyArgs>(args?: SelectSubset<T, RefuelingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Refuelings and returns the data saved in the database.
+     * @param {RefuelingCreateManyAndReturnArgs} args - Arguments to create many Refuelings.
+     * @example
+     * // Create many Refuelings
+     * const refueling = await prisma.refueling.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Refuelings and only return the `id`
+     * const refuelingWithIdOnly = await prisma.refueling.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RefuelingCreateManyAndReturnArgs>(args?: SelectSubset<T, RefuelingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RefuelingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Refueling.
+     * @param {RefuelingDeleteArgs} args - Arguments to delete one Refueling.
+     * @example
+     * // Delete one Refueling
+     * const Refueling = await prisma.refueling.delete({
+     *   where: {
+     *     // ... filter to delete one Refueling
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RefuelingDeleteArgs>(args: SelectSubset<T, RefuelingDeleteArgs<ExtArgs>>): Prisma__RefuelingClient<$Result.GetResult<Prisma.$RefuelingPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Refueling.
+     * @param {RefuelingUpdateArgs} args - Arguments to update one Refueling.
+     * @example
+     * // Update one Refueling
+     * const refueling = await prisma.refueling.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RefuelingUpdateArgs>(args: SelectSubset<T, RefuelingUpdateArgs<ExtArgs>>): Prisma__RefuelingClient<$Result.GetResult<Prisma.$RefuelingPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Refuelings.
+     * @param {RefuelingDeleteManyArgs} args - Arguments to filter Refuelings to delete.
+     * @example
+     * // Delete a few Refuelings
+     * const { count } = await prisma.refueling.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RefuelingDeleteManyArgs>(args?: SelectSubset<T, RefuelingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Refuelings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RefuelingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Refuelings
+     * const refueling = await prisma.refueling.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RefuelingUpdateManyArgs>(args: SelectSubset<T, RefuelingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Refuelings and returns the data updated in the database.
+     * @param {RefuelingUpdateManyAndReturnArgs} args - Arguments to update many Refuelings.
+     * @example
+     * // Update many Refuelings
+     * const refueling = await prisma.refueling.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Refuelings and only return the `id`
+     * const refuelingWithIdOnly = await prisma.refueling.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RefuelingUpdateManyAndReturnArgs>(args: SelectSubset<T, RefuelingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RefuelingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Refueling.
+     * @param {RefuelingUpsertArgs} args - Arguments to update or create a Refueling.
+     * @example
+     * // Update or create a Refueling
+     * const refueling = await prisma.refueling.upsert({
+     *   create: {
+     *     // ... data to create a Refueling
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Refueling we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RefuelingUpsertArgs>(args: SelectSubset<T, RefuelingUpsertArgs<ExtArgs>>): Prisma__RefuelingClient<$Result.GetResult<Prisma.$RefuelingPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Refuelings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RefuelingCountArgs} args - Arguments to filter Refuelings to count.
+     * @example
+     * // Count the number of Refuelings
+     * const count = await prisma.refueling.count({
+     *   where: {
+     *     // ... the filter for the Refuelings we want to count
+     *   }
+     * })
+    **/
+    count<T extends RefuelingCountArgs>(
+      args?: Subset<T, RefuelingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RefuelingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Refueling.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RefuelingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RefuelingAggregateArgs>(args: Subset<T, RefuelingAggregateArgs>): Prisma.PrismaPromise<GetRefuelingAggregateType<T>>
+
+    /**
+     * Group by Refueling.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RefuelingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RefuelingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RefuelingGroupByArgs['orderBy'] }
+        : { orderBy?: RefuelingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RefuelingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRefuelingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Refueling model
+   */
+  readonly fields: RefuelingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Refueling.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RefuelingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Refueling model
+   */
+  interface RefuelingFieldRefs {
+    readonly id: FieldRef<"Refueling", 'String'>
+    readonly refuelDatetime: FieldRef<"Refueling", 'DateTime'>
+    readonly odometer: FieldRef<"Refueling", 'Int'>
+    readonly fuelType: FieldRef<"Refueling", 'String'>
+    readonly price: FieldRef<"Refueling", 'Int'>
+    readonly totalCost: FieldRef<"Refueling", 'Int'>
+    readonly isFull: FieldRef<"Refueling", 'Boolean'>
+    readonly gasStand: FieldRef<"Refueling", 'String'>
+    readonly createdAt: FieldRef<"Refueling", 'DateTime'>
+    readonly updatedAt: FieldRef<"Refueling", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Refueling findUnique
+   */
+  export type RefuelingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Refueling
+     */
+    select?: RefuelingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Refueling
+     */
+    omit?: RefuelingOmit<ExtArgs> | null
+    /**
+     * Filter, which Refueling to fetch.
+     */
+    where: RefuelingWhereUniqueInput
+  }
+
+  /**
+   * Refueling findUniqueOrThrow
+   */
+  export type RefuelingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Refueling
+     */
+    select?: RefuelingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Refueling
+     */
+    omit?: RefuelingOmit<ExtArgs> | null
+    /**
+     * Filter, which Refueling to fetch.
+     */
+    where: RefuelingWhereUniqueInput
+  }
+
+  /**
+   * Refueling findFirst
+   */
+  export type RefuelingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Refueling
+     */
+    select?: RefuelingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Refueling
+     */
+    omit?: RefuelingOmit<ExtArgs> | null
+    /**
+     * Filter, which Refueling to fetch.
+     */
+    where?: RefuelingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Refuelings to fetch.
+     */
+    orderBy?: RefuelingOrderByWithRelationInput | RefuelingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Refuelings.
+     */
+    cursor?: RefuelingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Refuelings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Refuelings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Refuelings.
+     */
+    distinct?: RefuelingScalarFieldEnum | RefuelingScalarFieldEnum[]
+  }
+
+  /**
+   * Refueling findFirstOrThrow
+   */
+  export type RefuelingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Refueling
+     */
+    select?: RefuelingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Refueling
+     */
+    omit?: RefuelingOmit<ExtArgs> | null
+    /**
+     * Filter, which Refueling to fetch.
+     */
+    where?: RefuelingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Refuelings to fetch.
+     */
+    orderBy?: RefuelingOrderByWithRelationInput | RefuelingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Refuelings.
+     */
+    cursor?: RefuelingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Refuelings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Refuelings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Refuelings.
+     */
+    distinct?: RefuelingScalarFieldEnum | RefuelingScalarFieldEnum[]
+  }
+
+  /**
+   * Refueling findMany
+   */
+  export type RefuelingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Refueling
+     */
+    select?: RefuelingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Refueling
+     */
+    omit?: RefuelingOmit<ExtArgs> | null
+    /**
+     * Filter, which Refuelings to fetch.
+     */
+    where?: RefuelingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Refuelings to fetch.
+     */
+    orderBy?: RefuelingOrderByWithRelationInput | RefuelingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Refuelings.
+     */
+    cursor?: RefuelingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Refuelings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Refuelings.
+     */
+    skip?: number
+    distinct?: RefuelingScalarFieldEnum | RefuelingScalarFieldEnum[]
+  }
+
+  /**
+   * Refueling create
+   */
+  export type RefuelingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Refueling
+     */
+    select?: RefuelingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Refueling
+     */
+    omit?: RefuelingOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Refueling.
+     */
+    data: XOR<RefuelingCreateInput, RefuelingUncheckedCreateInput>
+  }
+
+  /**
+   * Refueling createMany
+   */
+  export type RefuelingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Refuelings.
+     */
+    data: RefuelingCreateManyInput | RefuelingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Refueling createManyAndReturn
+   */
+  export type RefuelingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Refueling
+     */
+    select?: RefuelingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Refueling
+     */
+    omit?: RefuelingOmit<ExtArgs> | null
+    /**
+     * The data used to create many Refuelings.
+     */
+    data: RefuelingCreateManyInput | RefuelingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Refueling update
+   */
+  export type RefuelingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Refueling
+     */
+    select?: RefuelingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Refueling
+     */
+    omit?: RefuelingOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Refueling.
+     */
+    data: XOR<RefuelingUpdateInput, RefuelingUncheckedUpdateInput>
+    /**
+     * Choose, which Refueling to update.
+     */
+    where: RefuelingWhereUniqueInput
+  }
+
+  /**
+   * Refueling updateMany
+   */
+  export type RefuelingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Refuelings.
+     */
+    data: XOR<RefuelingUpdateManyMutationInput, RefuelingUncheckedUpdateManyInput>
+    /**
+     * Filter which Refuelings to update
+     */
+    where?: RefuelingWhereInput
+    /**
+     * Limit how many Refuelings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Refueling updateManyAndReturn
+   */
+  export type RefuelingUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Refueling
+     */
+    select?: RefuelingSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Refueling
+     */
+    omit?: RefuelingOmit<ExtArgs> | null
+    /**
+     * The data used to update Refuelings.
+     */
+    data: XOR<RefuelingUpdateManyMutationInput, RefuelingUncheckedUpdateManyInput>
+    /**
+     * Filter which Refuelings to update
+     */
+    where?: RefuelingWhereInput
+    /**
+     * Limit how many Refuelings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Refueling upsert
+   */
+  export type RefuelingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Refueling
+     */
+    select?: RefuelingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Refueling
+     */
+    omit?: RefuelingOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Refueling to update in case it exists.
+     */
+    where: RefuelingWhereUniqueInput
+    /**
+     * In case the Refueling found by the `where` argument doesn't exist, create a new Refueling with this data.
+     */
+    create: XOR<RefuelingCreateInput, RefuelingUncheckedCreateInput>
+    /**
+     * In case the Refueling was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RefuelingUpdateInput, RefuelingUncheckedUpdateInput>
+  }
+
+  /**
+   * Refueling delete
+   */
+  export type RefuelingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Refueling
+     */
+    select?: RefuelingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Refueling
+     */
+    omit?: RefuelingOmit<ExtArgs> | null
+    /**
+     * Filter which Refueling to delete.
+     */
+    where: RefuelingWhereUniqueInput
+  }
+
+  /**
+   * Refueling deleteMany
+   */
+  export type RefuelingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Refuelings to delete
+     */
+    where?: RefuelingWhereInput
+    /**
+     * Limit how many Refuelings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Refueling without action
+   */
+  export type RefuelingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Refueling
+     */
+    select?: RefuelingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Refueling
+     */
+    omit?: RefuelingOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -1915,6 +3108,22 @@ export namespace Prisma {
   };
 
   export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
+
+
+  export const RefuelingScalarFieldEnum: {
+    id: 'id',
+    refuelDatetime: 'refuelDatetime',
+    odometer: 'odometer',
+    fuelType: 'fuelType',
+    price: 'price',
+    totalCost: 'totalCost',
+    isFull: 'isFull',
+    gasStand: 'gasStand',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type RefuelingScalarFieldEnum = (typeof RefuelingScalarFieldEnum)[keyof typeof RefuelingScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -1993,6 +3202,20 @@ export namespace Prisma {
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
   /**
    * Deep Input Types
    */
@@ -2058,6 +3281,85 @@ export namespace Prisma {
     completed?: BoolWithAggregatesFilter<"Task"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
+  }
+
+  export type RefuelingWhereInput = {
+    AND?: RefuelingWhereInput | RefuelingWhereInput[]
+    OR?: RefuelingWhereInput[]
+    NOT?: RefuelingWhereInput | RefuelingWhereInput[]
+    id?: StringFilter<"Refueling"> | string
+    refuelDatetime?: DateTimeFilter<"Refueling"> | Date | string
+    odometer?: IntFilter<"Refueling"> | number
+    fuelType?: StringFilter<"Refueling"> | string
+    price?: IntFilter<"Refueling"> | number
+    totalCost?: IntFilter<"Refueling"> | number
+    isFull?: BoolFilter<"Refueling"> | boolean
+    gasStand?: StringFilter<"Refueling"> | string
+    createdAt?: DateTimeFilter<"Refueling"> | Date | string
+    updatedAt?: DateTimeFilter<"Refueling"> | Date | string
+  }
+
+  export type RefuelingOrderByWithRelationInput = {
+    id?: SortOrder
+    refuelDatetime?: SortOrder
+    odometer?: SortOrder
+    fuelType?: SortOrder
+    price?: SortOrder
+    totalCost?: SortOrder
+    isFull?: SortOrder
+    gasStand?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RefuelingWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: RefuelingWhereInput | RefuelingWhereInput[]
+    OR?: RefuelingWhereInput[]
+    NOT?: RefuelingWhereInput | RefuelingWhereInput[]
+    refuelDatetime?: DateTimeFilter<"Refueling"> | Date | string
+    odometer?: IntFilter<"Refueling"> | number
+    fuelType?: StringFilter<"Refueling"> | string
+    price?: IntFilter<"Refueling"> | number
+    totalCost?: IntFilter<"Refueling"> | number
+    isFull?: BoolFilter<"Refueling"> | boolean
+    gasStand?: StringFilter<"Refueling"> | string
+    createdAt?: DateTimeFilter<"Refueling"> | Date | string
+    updatedAt?: DateTimeFilter<"Refueling"> | Date | string
+  }, "id">
+
+  export type RefuelingOrderByWithAggregationInput = {
+    id?: SortOrder
+    refuelDatetime?: SortOrder
+    odometer?: SortOrder
+    fuelType?: SortOrder
+    price?: SortOrder
+    totalCost?: SortOrder
+    isFull?: SortOrder
+    gasStand?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: RefuelingCountOrderByAggregateInput
+    _avg?: RefuelingAvgOrderByAggregateInput
+    _max?: RefuelingMaxOrderByAggregateInput
+    _min?: RefuelingMinOrderByAggregateInput
+    _sum?: RefuelingSumOrderByAggregateInput
+  }
+
+  export type RefuelingScalarWhereWithAggregatesInput = {
+    AND?: RefuelingScalarWhereWithAggregatesInput | RefuelingScalarWhereWithAggregatesInput[]
+    OR?: RefuelingScalarWhereWithAggregatesInput[]
+    NOT?: RefuelingScalarWhereWithAggregatesInput | RefuelingScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Refueling"> | string
+    refuelDatetime?: DateTimeWithAggregatesFilter<"Refueling"> | Date | string
+    odometer?: IntWithAggregatesFilter<"Refueling"> | number
+    fuelType?: StringWithAggregatesFilter<"Refueling"> | string
+    price?: IntWithAggregatesFilter<"Refueling"> | number
+    totalCost?: IntWithAggregatesFilter<"Refueling"> | number
+    isFull?: BoolWithAggregatesFilter<"Refueling"> | boolean
+    gasStand?: StringWithAggregatesFilter<"Refueling"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Refueling"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Refueling"> | Date | string
   }
 
   export type TaskCreateInput = {
@@ -2126,6 +3428,97 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RefuelingCreateInput = {
+    id?: string
+    refuelDatetime: Date | string
+    odometer: number
+    fuelType: string
+    price: number
+    totalCost: number
+    isFull: boolean
+    gasStand: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RefuelingUncheckedCreateInput = {
+    id?: string
+    refuelDatetime: Date | string
+    odometer: number
+    fuelType: string
+    price: number
+    totalCost: number
+    isFull: boolean
+    gasStand: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RefuelingUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refuelDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    odometer?: IntFieldUpdateOperationsInput | number
+    fuelType?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    totalCost?: IntFieldUpdateOperationsInput | number
+    isFull?: BoolFieldUpdateOperationsInput | boolean
+    gasStand?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RefuelingUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refuelDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    odometer?: IntFieldUpdateOperationsInput | number
+    fuelType?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    totalCost?: IntFieldUpdateOperationsInput | number
+    isFull?: BoolFieldUpdateOperationsInput | boolean
+    gasStand?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RefuelingCreateManyInput = {
+    id?: string
+    refuelDatetime: Date | string
+    odometer: number
+    fuelType: string
+    price: number
+    totalCost: number
+    isFull: boolean
+    gasStand: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RefuelingUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refuelDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    odometer?: IntFieldUpdateOperationsInput | number
+    fuelType?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    totalCost?: IntFieldUpdateOperationsInput | number
+    isFull?: BoolFieldUpdateOperationsInput | boolean
+    gasStand?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RefuelingUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refuelDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    odometer?: IntFieldUpdateOperationsInput | number
+    fuelType?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    totalCost?: IntFieldUpdateOperationsInput | number
+    isFull?: BoolFieldUpdateOperationsInput | boolean
+    gasStand?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -2294,6 +3687,84 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type RefuelingCountOrderByAggregateInput = {
+    id?: SortOrder
+    refuelDatetime?: SortOrder
+    odometer?: SortOrder
+    fuelType?: SortOrder
+    price?: SortOrder
+    totalCost?: SortOrder
+    isFull?: SortOrder
+    gasStand?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RefuelingAvgOrderByAggregateInput = {
+    odometer?: SortOrder
+    price?: SortOrder
+    totalCost?: SortOrder
+  }
+
+  export type RefuelingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    refuelDatetime?: SortOrder
+    odometer?: SortOrder
+    fuelType?: SortOrder
+    price?: SortOrder
+    totalCost?: SortOrder
+    isFull?: SortOrder
+    gasStand?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RefuelingMinOrderByAggregateInput = {
+    id?: SortOrder
+    refuelDatetime?: SortOrder
+    odometer?: SortOrder
+    fuelType?: SortOrder
+    price?: SortOrder
+    totalCost?: SortOrder
+    isFull?: SortOrder
+    gasStand?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RefuelingSumOrderByAggregateInput = {
+    odometer?: SortOrder
+    price?: SortOrder
+    totalCost?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -2312,6 +3783,14 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -2459,6 +3938,33 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
 
