@@ -55,7 +55,7 @@ const AppSidebar = () => {
               </SidebarMenuItem>
               <SidebarSeparator />
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={handleClickLink('/')}>ログイン</SidebarMenuButton>
+                <SidebarMenuButton onClick={handleClickLink('/login')}>ログイン</SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton>ログアウト</SidebarMenuButton>
