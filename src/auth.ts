@@ -4,42 +4,41 @@ import Google from 'next-auth/providers/google'
 import { prisma } from '@/lib/prisma'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [
-    Google({
-      profile(profile: any) {
-        return {
-          ...profile,
-          id: profile.sub,
-        }
-      },
-    }),
-  ],
+  providers: [Google],
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ profile }) {
       // user.id にはGoogleのsubが入っている想定
-      const dbUser = await prisma.user.findUnique({
-        where: { id: user.id },
-      })
-      if (!dbUser) {
-        // ユーザーがDBに存在しなければサインイン拒否
+      try {
+        if (profile?.sub) {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: profile.sub },
+          })
+          if (!dbUser) {
+            // ユーザーがDBに存在しなければサインイン拒否
+            console.error('User not found in database:', profile.sub)
+            return false
+          }
+          return true
+        }
+        return false
+      } catch (error) {
+        console.error('Error during signIn callback:', error)
         return false
       }
-      return true
     },
-    authorized: ({ auth }) => {
-      return !!auth
+    // JWTが作成・更新される際に呼ばれ
+    jwt: ({ token, account, profile }) => {
+      if (account && profile?.sub) {
+        token.sub = profile.sub
+      }
+      return token
     },
+    // セッションにアクセスされる際に呼ばれる
     session: ({ session, token }) => {
       if (token.sub) {
         session.user.id = token.sub
       }
       return session
-    },
-    jwt: ({ token, user }) => {
-      if (user?.id) {
-        token.sub = user.id
-      }
-      return token
     },
   },
   session: {
