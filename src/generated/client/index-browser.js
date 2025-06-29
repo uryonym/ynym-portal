@@ -164,6 +164,11 @@ exports.Prisma.SectionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -184,7 +189,8 @@ exports.Prisma.ModelName = {
   Task: 'Task',
   Refueling: 'Refueling',
   Car: 'Car',
-  Section: 'Section'
+  Section: 'Section',
+  User: 'User'
 };
 
 /**
