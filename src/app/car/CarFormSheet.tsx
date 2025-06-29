@@ -67,6 +67,7 @@ const CarFormSheet = ({ mode = 'create', car }: CarFormSheetProps) => {
     const formData = new FormData()
     formData.append('id', car.id)
     await deleteCar(formData)
+    if (mode === 'edit') return
     setInternalOpen(false)
   }
 
@@ -74,7 +75,7 @@ const CarFormSheet = ({ mode = 'create', car }: CarFormSheetProps) => {
     <>
       {mode === 'create' && (
         <button
-          className="mb-8 rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
+          className="mb-2 rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
           onClick={() => setInternalOpen(true)}
         >
           車両を追加

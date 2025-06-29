@@ -15,7 +15,6 @@ type TaskFormSheetProps = {
 const TaskFormSheet = ({ mode = 'create', task }: TaskFormSheetProps) => {
   // mode=createのときだけ内部でopenを管理
   const [internalOpen, setInternalOpen] = useState(false)
-
   const [form, setForm] = useState({
     title: '',
     description: '',
