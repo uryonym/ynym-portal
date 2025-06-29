@@ -12,15 +12,39 @@ export default async function Task() {
     return <div className="p-6 text-red-500">Error: {error}</div>
   }
 
+  // 未完了・完了で分割
+  const incompleteTasks = (tasks ?? []).filter((task) => !task.completed)
+  const completedTasks = (tasks ?? []).filter((task) => task.completed)
+
   return (
-    <div className="p-6">
-      <p className="mb-4 text-xl font-bold">タスクページ</p>
+    <div className="p-3">
+      <p className="mb-2 text-xl font-bold">タスクページ</p>
       <TaskFormSheet mode="create" />
-      {/* タスク一覧: シンプルなリスト形式（タイトルと期日のみ） */}
+      {/* 未完了タスク一覧 */}
+      <p className="my-2 font-semibold text-gray-800">未完了タスク</p>
       <ul className="divide-y divide-gray-200 rounded-lg border border-gray-300 bg-white shadow">
-        {(tasks ?? []).map((task) => (
+        {incompleteTasks.length === 0 && (
+          <li className="px-4 py-3 text-gray-400">未完了タスクはありません</li>
+        )}
+        {incompleteTasks.map((task) => (
           <li key={task.id} className="flex items-center justify-between px-4 py-3">
             <span className="font-medium text-gray-900">{task.title}</span>
+            <span className="text-sm text-gray-500">
+              {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : '-'}
+            </span>
+            <TaskFormSheet mode="edit" task={task} />
+          </li>
+        ))}
+      </ul>
+      {/* 完了タスク一覧 */}
+      <p className="my-2 font-semibold text-gray-800">完了タスク</p>
+      <ul className="divide-y divide-gray-200 rounded-lg border border-gray-300 bg-white shadow">
+        {completedTasks.length === 0 && (
+          <li className="px-4 py-3 text-gray-400">完了タスクはありません</li>
+        )}
+        {completedTasks.map((task) => (
+          <li key={task.id} className="flex items-center justify-between px-4 py-3 opacity-60">
+            <span className="font-medium text-gray-900 line-through">{task.title}</span>
             <span className="text-sm text-gray-500">
               {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : '-'}
             </span>

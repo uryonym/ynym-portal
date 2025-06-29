@@ -63,7 +63,7 @@ const TaskFormSheet = ({ mode = 'create', task }: TaskFormSheetProps) => {
     <>
       {mode === 'create' && (
         <button
-          className="mb-8 rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
+          className="mb-2 rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
           onClick={() => setInternalOpen(true)}
         >
           新規タスク追加
