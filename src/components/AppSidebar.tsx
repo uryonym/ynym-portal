@@ -48,7 +48,7 @@ const AppSidebar = () => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={handleClickLink('/')}>ノート</SidebarMenuButton>
+                <SidebarMenuButton onClick={handleClickLink('/section')}>ノート</SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton onClick={handleClickLink('/')}>家計簿</SidebarMenuButton>

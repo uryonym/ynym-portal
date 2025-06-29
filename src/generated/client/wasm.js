@@ -156,6 +156,14 @@ exports.Prisma.CarScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.SectionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  seq: 'seq',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -175,7 +183,8 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   Task: 'Task',
   Refueling: 'Refueling',
-  Car: 'Car'
+  Car: 'Car',
+  Section: 'Section'
 };
 
 /**
