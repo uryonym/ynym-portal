@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { signOut, useSession } from 'next-auth/react'
 
 import {
   Sidebar,
@@ -19,10 +20,16 @@ import {
 const AppSidebar = () => {
   const { setOpenMobile } = useSidebar()
   const router = useRouter()
+  const { data: session } = useSession()
 
   const handleClickLink = (to: string) => () => {
     router.push(to)
     setOpenMobile(false)
+  }
+
+  const handleClickLogout = async () => {
+    setOpenMobile(false)
+    await signOut()
   }
 
   return (
@@ -54,12 +61,17 @@ const AppSidebar = () => {
                 <SidebarMenuButton onClick={handleClickLink('/')}>家計簿</SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarSeparator />
-              <SidebarMenuItem>
-                <SidebarMenuButton onClick={handleClickLink('/')}>ログイン</SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton>ログアウト</SidebarMenuButton>
-              </SidebarMenuItem>
+              {session ? (
+                <SidebarMenuItem>
+                  <SidebarMenuButton onClick={handleClickLogout}>ログアウト</SidebarMenuButton>
+                </SidebarMenuItem>
+              ) : (
+                <SidebarMenuItem>
+                  <SidebarMenuButton onClick={handleClickLink('/login')}>
+                    ログイン
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
