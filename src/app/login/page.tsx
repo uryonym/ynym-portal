@@ -5,7 +5,6 @@ import { login, logout } from '../actions/login'
 
 const Login = async () => {
   const session = await auth()
-  console.log('session', session)
 
   return (
     <>
