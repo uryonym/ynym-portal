@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { SessionProvider } from 'next-auth/react'
+
 import './globals.css'
 
 import AppSidebar from '@/components/AppSidebar'
@@ -20,13 +22,15 @@ const RootLayout = ({
   return (
     <html lang="ja">
       <body>
-        <SidebarProvider defaultOpen>
-          <AppSidebar />
-          <div className="w-full">
-            <Header />
-            {children}
-          </div>
-        </SidebarProvider>
+        <SessionProvider>
+          <SidebarProvider defaultOpen>
+            <AppSidebar />
+            <div className="w-full">
+              <Header />
+              {children}
+            </div>
+          </SidebarProvider>
+        </SessionProvider>
       </body>
     </html>
   )

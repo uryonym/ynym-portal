@@ -1,8 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-
-import { logout } from '@/app/actions/login'
+import { signOut, useSession } from 'next-auth/react'
 
 import {
   Sidebar,
@@ -21,6 +20,8 @@ import {
 const AppSidebar = () => {
   const { setOpenMobile } = useSidebar()
   const router = useRouter()
+  const { data: session } = useSession()
+  console.log(session)
 
   const handleClickLink = (to: string) => () => {
     router.push(to)
@@ -29,7 +30,7 @@ const AppSidebar = () => {
 
   const handleClickLogout = async () => {
     setOpenMobile(false)
-    await logout()
+    await signOut()
   }
 
   return (
