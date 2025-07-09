@@ -26,6 +26,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return false
       }
     },
+    // サインイン後のリダイレクト先を指定
+    redirect({ baseUrl }) {
+      return baseUrl
+    },
     // JWTが作成・更新される際に呼ばれ
     jwt: ({ token, account, profile }) => {
       if (account && profile?.sub) {
