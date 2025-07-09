@@ -2,6 +2,8 @@
 
 import { useRouter } from 'next/navigation'
 
+import { logout } from '@/app/actions/login'
+
 import {
   Sidebar,
   SidebarContent,
@@ -23,6 +25,11 @@ const AppSidebar = () => {
   const handleClickLink = (to: string) => () => {
     router.push(to)
     setOpenMobile(false)
+  }
+
+  const handleClickLogout = async () => {
+    setOpenMobile(false)
+    await logout()
   }
 
   return (
@@ -58,7 +65,7 @@ const AppSidebar = () => {
                 <SidebarMenuButton onClick={handleClickLink('/login')}>ログイン</SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton>ログアウト</SidebarMenuButton>
+                <SidebarMenuButton onClick={handleClickLogout}>ログアウト</SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
