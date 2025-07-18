@@ -174,6 +174,17 @@ exports.Prisma.SectionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.NoteScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  seq: 'seq',
+  uid: 'uid',
+  sectionId: 'sectionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -195,7 +206,8 @@ exports.Prisma.ModelName = {
   Task: 'Task',
   Car: 'Car',
   Refueling: 'Refueling',
-  Section: 'Section'
+  Section: 'Section',
+  Note: 'Note'
 };
 
 /**
