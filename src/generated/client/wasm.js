@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.10.1
- * Query Engine version: 9b628578b3b7cae625e8c927178f15a170e74a9c
+ * Prisma Client JS version: 6.12.0
+ * Query Engine version: 8047c96bbd92db98a2abc7c9323ce77c02c89dbc
  */
 Prisma.prismaVersion = {
-  client: "6.10.1",
-  engine: "9b628578b3b7cae625e8c927178f15a170e74a9c"
+  client: "6.12.0",
+  engine: "8047c96bbd92db98a2abc7c9323ce77c02c89dbc"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -120,25 +120,18 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
 exports.Prisma.TaskScalarFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
   dueDate: 'dueDate',
   completed: 'completed',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.RefuelingScalarFieldEnum = {
-  id: 'id',
-  refuelDatetime: 'refuelDatetime',
-  odometer: 'odometer',
-  fuelType: 'fuelType',
-  price: 'price',
-  totalCost: 'totalCost',
-  isFull: 'isFull',
-  gasStand: 'gasStand',
+  uid: 'uid',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -152,6 +145,22 @@ exports.Prisma.CarScalarFieldEnum = {
   modelYear: 'modelYear',
   licensePlate: 'licensePlate',
   tankCapacity: 'tankCapacity',
+  uid: 'uid',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RefuelingScalarFieldEnum = {
+  id: 'id',
+  refuelDatetime: 'refuelDatetime',
+  odometer: 'odometer',
+  fuelType: 'fuelType',
+  price: 'price',
+  totalCost: 'totalCost',
+  isFull: 'isFull',
+  gasStand: 'gasStand',
+  uid: 'uid',
+  carId: 'carId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -160,13 +169,9 @@ exports.Prisma.SectionScalarFieldEnum = {
   id: 'id',
   name: 'name',
   seq: 'seq',
+  uid: 'uid',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
-};
-
-exports.Prisma.UserScalarFieldEnum = {
-  id: 'id',
-  name: 'name'
 };
 
 exports.Prisma.SortOrder = {
@@ -186,11 +191,11 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
+  User: 'User',
   Task: 'Task',
-  Refueling: 'Refueling',
   Car: 'Car',
-  Section: 'Section',
-  User: 'User'
+  Refueling: 'Refueling',
+  Section: 'Section'
 };
 
 /**

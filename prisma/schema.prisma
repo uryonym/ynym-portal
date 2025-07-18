@@ -9,52 +9,66 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Taskモデルの定義
-model Task {
-  id          String    @id @default(uuid())
-  title       String
-  description String?
-  dueDate     DateTime?
-  completed   Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+model User {
+  id   String @id @map("id")
+  name String @map("name")
+
+  @@map("user")
 }
 
-model Refueling {
-  id             String   @id @default(uuid())
-  refuelDatetime DateTime
-  odometer       Int
-  fuelType       String
-  price          Int
-  totalCost      Int
-  isFull         Boolean
-  gasStand       String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+model Task {
+  id          String    @id @default(uuid()) @map("id")
+  title       String    @map("title")
+  description String?   @map("description")
+  dueDate     DateTime? @map("due_date")
+  completed   Boolean   @default(false) @map("completed")
+  uid         String    @map("uid")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("task")
 }
 
 model Car {
-  id           String   @id @default(uuid())
-  name         String
-  seq          Int
-  maker        String
-  model        String
-  modelYear    Int
-  licensePlate String
-  tankCapacity Int
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id           String   @id @default(uuid()) @map("id")
+  name         String   @map("name")
+  seq          Int      @map("seq")
+  maker        String   @map("maker")
+  model        String   @map("model")
+  modelYear    Int      @map("model_year")
+  licensePlate String   @map("license_plate")
+  tankCapacity Int      @map("tank_capacity")
+  uid          String   @map("uid")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("car")
+}
+
+model Refueling {
+  id             String   @id @default(uuid()) @map("id")
+  refuelDatetime DateTime @map("refuel_datetime")
+  odometer       Int      @map("odometer")
+  fuelType       String   @map("fuel_type")
+  price          Int      @map("price")
+  totalCost      Int      @map("total_cost")
+  isFull         Boolean  @map("is_full")
+  gasStand       String   @map("gas_stand")
+  uid            String   @map("uid")
+  carId          String   @map("car_id")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("refueling")
 }
 
 model Section {
-  id        String   @id @default(uuid())
-  name      String
-  seq       Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+  id        String   @id @default(uuid()) @map("id")
+  name      String   @map("name")
+  seq       Int      @map("seq")
+  uid       String   @map("uid")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-model User {
-  id   String @id
-  name String
+  @@map("section")
 }
