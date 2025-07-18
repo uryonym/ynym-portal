@@ -8,11 +8,12 @@ import { Refueling } from '@/generated/client'
 import { createRefueling, updateRefueling, deleteRefueling } from '../actions/refuelings'
 
 type RefuelingFormSheetProps = {
-  mode?: 'create' | 'edit'
+  mode: 'create' | 'edit'
+  carId: string
   refueling?: Refueling | null
 }
 
-const RefuelingFormSheet = ({ mode = 'create', refueling }: RefuelingFormSheetProps) => {
+const RefuelingFormSheet = ({ mode = 'create', carId, refueling }: RefuelingFormSheetProps) => {
   // mode=createのときだけ内部でopenを管理
   const [internalOpen, setInternalOpen] = useState(false)
   const [form, setForm] = useState({
@@ -53,6 +54,7 @@ const RefuelingFormSheet = ({ mode = 'create', refueling }: RefuelingFormSheetPr
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
     formData.set('isFull', form.isFull ? 'true' : 'false')
+    formData.set('carId', carId)
     if (mode === 'edit' && refueling) {
       formData.append('id', refueling.id)
       await updateRefueling(formData)
@@ -96,7 +98,11 @@ const RefuelingFormSheet = ({ mode = 'create', refueling }: RefuelingFormSheetPr
           <SheetHeader>
             <SheetTitle>{mode === 'edit' ? '給油記録の編集' : '給油記録の追加'}</SheetTitle>
           </SheetHeader>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 pb-4">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-4 overflow-y-auto px-4 pb-4"
+            style={{ maxHeight: '70vh' }}
+          >
             <div>
               <label className="mb-1 block font-medium">
                 日付・時刻<span className="text-red-500">*</span>
