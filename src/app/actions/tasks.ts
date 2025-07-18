@@ -2,12 +2,20 @@
 
 import { revalidatePath } from 'next/cache'
 
+import { auth } from '@/auth'
 import { Task } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
 export const getTasks = async (): Promise<{ tasks?: Task[]; error?: string }> => {
   try {
-    const tasks = await prisma.task.findMany({ orderBy: { createdAt: 'desc' } })
+    const session = await auth()
+    if (!session?.user?.id) {
+      return { error: 'ユーザー情報が取得できませんでした' }
+    }
+    const tasks = await prisma.task.findMany({
+      where: { uid: session.user.id },
+      orderBy: { createdAt: 'desc' },
+    })
     return { tasks }
   } catch (error) {
     console.error('Error fetching tasks:', error)
@@ -17,15 +25,20 @@ export const getTasks = async (): Promise<{ tasks?: Task[]; error?: string }> =>
 
 export const createTask = async (formData: FormData) => {
   try {
+    const session = await auth()
     const title = formData.get('title') as string
     const description = formData.get('description') as string
     const dueDate = formData.get('dueDate') as string
+    if (!session?.user?.id) {
+      throw new Error('ユーザー情報が取得できませんでした')
+    }
     await prisma.task.create({
       data: {
         title,
         description: description || null,
         dueDate: dueDate ? new Date(dueDate) : null,
         completed: false,
+        uid: session.user.id,
       },
     })
     revalidatePath('/task')
