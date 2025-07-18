@@ -2,12 +2,20 @@
 
 import { revalidatePath } from 'next/cache'
 
+import { auth } from '@/auth'
 import { Section } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
 export const getSections = async (): Promise<{ sections?: Section[]; error?: string }> => {
   try {
-    const sections = await prisma.section.findMany({ orderBy: { seq: 'asc' } })
+    const session = await auth()
+    if (!session?.user?.id) {
+      return { error: 'ユーザー情報が取得できませんでした' }
+    }
+    const sections = await prisma.section.findMany({
+      where: { uid: session.user.id },
+      orderBy: { seq: 'asc' },
+    })
     return { sections }
   } catch (error) {
     console.error('Error fetching sections:', error)
@@ -17,9 +25,13 @@ export const getSections = async (): Promise<{ sections?: Section[]; error?: str
 
 export const createSection = async (formData: FormData) => {
   try {
+    const session = await auth()
+    if (!session?.user?.id) {
+      throw new Error('ユーザー情報が取得できませんでした')
+    }
     const name = formData.get('name') as string
     const seq = Number(formData.get('seq'))
-    await prisma.section.create({ data: { name, seq } })
+    await prisma.section.create({ data: { name, seq, uid: session.user.id } })
     revalidatePath('/section')
   } catch (error) {
     console.error('Error creating section:', error)
