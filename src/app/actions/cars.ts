@@ -2,12 +2,20 @@
 
 import { revalidatePath } from 'next/cache'
 
+import { auth } from '@/auth'
 import { Car } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
 export const getCars = async (): Promise<{ cars?: Car[]; error?: string }> => {
   try {
-    const cars = await prisma.car.findMany({ orderBy: { seq: 'asc' } })
+    const session = await auth()
+    if (!session?.user?.id) {
+      return { error: 'ユーザー情報が取得できませんでした' }
+    }
+    const cars = await prisma.car.findMany({
+      where: { uid: session.user.id },
+      orderBy: { seq: 'asc' },
+    })
     return { cars }
   } catch (error) {
     console.error('Error fetching cars:', error)
@@ -17,6 +25,7 @@ export const getCars = async (): Promise<{ cars?: Car[]; error?: string }> => {
 
 export const createCar = async (formData: FormData) => {
   try {
+    const session = await auth()
     const name = formData.get('name') as string
     const seq = Number(formData.get('seq'))
     const maker = formData.get('maker') as string
@@ -24,6 +33,9 @@ export const createCar = async (formData: FormData) => {
     const modelYear = Number(formData.get('modelYear'))
     const licensePlate = formData.get('licensePlate') as string
     const tankCapacity = Number(formData.get('tankCapacity'))
+    if (!session?.user?.id) {
+      throw new Error('ユーザー情報が取得できませんでした')
+    }
     await prisma.car.create({
       data: {
         name,
@@ -33,6 +45,7 @@ export const createCar = async (formData: FormData) => {
         modelYear,
         licensePlate,
         tankCapacity,
+        uid: session.user.id,
       },
     })
     revalidatePath('/car')
