@@ -192,7 +192,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/ryo/develop/ynym-portal/src/generated/client",
+      "value": "/Users/ryo/Develop/ynym-portal/src/generated/client",
       "fromEnvVar": null
     },
     "config": {
@@ -201,7 +201,7 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "linux-arm64-openssl-3.0.x",
+        "value": "darwin-arm64",
         "native": true
       },
       {
@@ -210,7 +210,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/ryo/develop/ynym-portal/prisma/schema.prisma",
+    "sourceFilePath": "/Users/ryo/Develop/ynym-portal/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
