@@ -14,13 +14,16 @@ export default async function NotesPage({ params }: { params: Promise<{ sectionI
   }
 
   return (
-    <div className="p-4">
-      <h2 className="mb-4 text-xl font-bold">セクション {sectionId} のノート一覧</h2>
+    <div className="py-2">
+      <h2 className="mb-2 text-xl font-bold">セクション {sectionId} のノート一覧</h2>
       <NoteFormSheet mode="create" sectionId={sectionId} />
-      <ul className="space-y-2">
+      <ul className="space-y-1">
         {(notes ?? []).map((note) => (
           <li key={note.id} className="rounded border bg-gray-50 p-2">
-            {note.title}
+            <div className="flex items-center justify-between gap-2">
+              <span>{note.title}</span>
+              <NoteFormSheet mode="edit" sectionId={sectionId} note={note} />
+            </div>
           </li>
         ))}
       </ul>
