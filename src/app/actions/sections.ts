@@ -6,20 +6,20 @@ import { auth } from '@/auth'
 import { Section } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
-export const getSections = async (): Promise<{ sections?: Section[]; error?: string }> => {
+export const getSections = async (): Promise<Section[]> => {
   try {
     const session = await auth()
     if (!session?.user?.id) {
-      return { error: 'ユーザー情報が取得できませんでした' }
+      throw new Error('ユーザー情報が取得できませんでした')
     }
     const sections = await prisma.section.findMany({
       where: { uid: session.user.id },
       orderBy: { seq: 'asc' },
     })
-    return { sections }
+    return sections
   } catch (error) {
     console.error('Error fetching sections:', error)
-    return { error: 'セクションの取得に失敗しました' }
+    throw new Error('セクションの取得に失敗しました')
   }
 }
 

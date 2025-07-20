@@ -5,11 +5,7 @@ import SectionTable from './SectionTable'
 import { getSections } from '../actions/sections'
 
 export default async function Section() {
-  const { sections, error } = await getSections()
-
-  if (error) {
-    return <div className="p-6 text-red-500">Error: {error}</div>
-  }
+  const sections = await getSections()
 
   return (
     <div className="py-6">
@@ -17,7 +13,7 @@ export default async function Section() {
       <SectionFormSheet mode="create" />
       <div className="overflow-x-auto">
         <table className="min-w-full rounded-lg border border-gray-300 bg-white shadow">
-          <SectionTable sections={sections ?? []} />
+          <SectionTable sections={sections} />
         </table>
       </div>
     </div>

@@ -6,20 +6,20 @@ import { auth } from '@/auth'
 import { Note } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
-export const getNotes = async (sectionId?: string): Promise<{ notes?: Note[]; error?: string }> => {
+export const getNotes = async (sectionId?: string): Promise<Note[]> => {
   try {
     const session = await auth()
     if (!session?.user?.id) {
-      return { error: 'ユーザー情報が取得できませんでした' }
+      throw new Error('ユーザー情報が取得できませんでした')
     }
     const notes = await prisma.note.findMany({
       where: { uid: session.user.id, sectionId: sectionId },
       orderBy: { seq: 'asc' },
     })
-    return { notes }
+    return notes
   } catch (error) {
     console.error('Error fetching notes:', error)
-    return { error: 'ノートの取得に失敗しました' }
+    throw new Error('ノートの取得に失敗しました')
   }
 }
 
