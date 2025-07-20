@@ -1,18 +1,24 @@
-import React from 'react'
+'use client'
+
+import React, { useState, useEffect } from 'react'
 
 import { type Task } from '@/generated/client'
 
 import TaskFormSheet from './TaskFormSheet'
 import { getTasks } from '../actions/tasks'
 
-export default async function Task() {
-  const { tasks, error } = await getTasks()
+export default function Task() {
+  const [tasks, setTasks] = useState<Task[]>()
+  const [showCompleted, setShowCompleted] = useState(false)
 
-  if (error) {
-    return <div className="p-6 text-red-500">Error: {error}</div>
-  }
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const { tasks } = await getTasks()
+      setTasks(tasks)
+    }
+    void fetchTasks()
+  }, [])
 
-  // 未完了・完了で分割し、dueDate昇順で並び替え（dueDateが空は最後）
   const sortByDueDate = (a: Task, b: Task) => {
     if (!a.dueDate && !b.dueDate) return 0
     if (!a.dueDate) return 1
@@ -42,22 +48,34 @@ export default async function Task() {
           </li>
         ))}
       </ul>
-      {/* 完了タスク一覧 */}
-      <p className="my-2 font-semibold text-gray-800">完了タスク</p>
-      <ul className="divide-y divide-gray-200 rounded-lg border border-gray-300 bg-white shadow">
-        {completedTasks.length === 0 && (
-          <li className="px-4 py-3 text-gray-400">完了タスクはありません</li>
+      {/* 完了タスク一覧 折りたたみ */}
+      <div className="my-2">
+        <button
+          type="button"
+          className="flex items-center gap-2 font-semibold text-gray-800"
+          onClick={() => setShowCompleted((prev) => !prev)}
+          aria-expanded={showCompleted}
+        >
+          <span>{showCompleted ? '▼' : '▶'}</span>
+          完了タスク（{completedTasks.length}）
+        </button>
+        {showCompleted && (
+          <ul className="mt-2 divide-y divide-gray-200 rounded-lg border border-gray-300 bg-white shadow">
+            {completedTasks.length === 0 && (
+              <li className="px-4 py-3 text-gray-400">完了タスクはありません</li>
+            )}
+            {completedTasks.map((task) => (
+              <li key={task.id} className="flex items-center justify-between px-4 py-3 opacity-60">
+                <span className="font-medium text-gray-900 line-through">{task.title}</span>
+                <span className="text-sm text-gray-500">
+                  {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : '-'}
+                </span>
+                <TaskFormSheet mode="edit" task={task} />
+              </li>
+            ))}
+          </ul>
         )}
-        {completedTasks.map((task) => (
-          <li key={task.id} className="flex items-center justify-between px-4 py-3 opacity-60">
-            <span className="font-medium text-gray-900 line-through">{task.title}</span>
-            <span className="text-sm text-gray-500">
-              {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : '-'}
-            </span>
-            <TaskFormSheet mode="edit" task={task} />
-          </li>
-        ))}
-      </ul>
+      </div>
     </div>
   )
 }
