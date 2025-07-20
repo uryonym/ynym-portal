@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useState } from 'react'
 
 import { createNote, deleteNote, updateNote } from '@/app/actions/notes'
@@ -5,11 +7,12 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { Note } from '@/generated/client'
 
 type NoteFormSheetProps = {
-  mode?: 'create' | 'edit'
+  mode: 'create' | 'edit'
+  sectionId: string
   note?: Note | null
 }
 
-const NoteFormSheet = ({ mode = 'create', note }: NoteFormSheetProps) => {
+const NoteFormSheet = ({ mode = 'create', sectionId, note }: NoteFormSheetProps) => {
   const [internalOpen, setInternalOpen] = useState(false)
   const [form, setForm] = useState({
     title: '',
@@ -32,6 +35,7 @@ const NoteFormSheet = ({ mode = 'create', note }: NoteFormSheetProps) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
+    formData.set('sectionId', sectionId)
     if (mode === 'edit' && note) {
       formData.append('id', note.id)
       await updateNote(formData)
@@ -57,7 +61,7 @@ const NoteFormSheet = ({ mode = 'create', note }: NoteFormSheetProps) => {
           className="mb-8 rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
           onClick={() => setInternalOpen(true)}
         >
-          セクションを追加
+          新規作成
         </button>
       )}
       {mode === 'edit' && (
