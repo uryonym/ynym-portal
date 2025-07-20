@@ -12,9 +12,15 @@ export default async function Task() {
     return <div className="p-6 text-red-500">Error: {error}</div>
   }
 
-  // 未完了・完了で分割
-  const incompleteTasks = (tasks ?? []).filter((task) => !task.completed)
-  const completedTasks = (tasks ?? []).filter((task) => task.completed)
+  // 未完了・完了で分割し、dueDate昇順で並び替え（dueDateが空は最後）
+  const sortByDueDate = (a: Task, b: Task) => {
+    if (!a.dueDate && !b.dueDate) return 0
+    if (!a.dueDate) return 1
+    if (!b.dueDate) return -1
+    return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
+  }
+  const incompleteTasks = (tasks ?? []).filter((task) => !task.completed).sort(sortByDueDate)
+  const completedTasks = (tasks ?? []).filter((task) => task.completed).sort(sortByDueDate)
 
   return (
     <div className="p-3">
