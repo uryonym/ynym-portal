@@ -72,3 +72,16 @@ model Section {
 
   @@map("section")
 }
+
+model Note {
+  id        String   @id @default(uuid()) @map("id")
+  title     String   @map("title")
+  content   String   @map("content")
+  seq       Int      @map("seq")
+  uid       String   @map("uid")
+  sectionId String   @map("section_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("note")
+}
