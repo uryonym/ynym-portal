@@ -15,7 +15,7 @@ export default function RefuelingPage() {
 
   useEffect(() => {
     const fetchCars = async () => {
-      const { cars } = await getCars()
+      const cars = await getCars()
       setCars(cars)
     }
     void fetchCars()
@@ -24,7 +24,7 @@ export default function RefuelingPage() {
   const handleCarChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCarId = e.target.value
     setCarId(selectedCarId)
-    const { refuelings } = await getRefuelings(selectedCarId)
+    const refuelings = await getRefuelings(selectedCarId)
     setRefuelings(refuelings)
   }
 

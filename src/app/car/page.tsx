@@ -4,18 +4,14 @@ import CarFormSheet from './CarFormSheet'
 import { getCars } from '../actions/cars'
 
 export default async function Car() {
-  const { cars, error } = await getCars()
-
-  if (error) {
-    return <div className="p-6 text-red-500">Error: {error}</div>
-  }
+  const cars = await getCars()
 
   return (
     <div className="p-4">
       <p className="mb-4 text-xl font-bold">車両一覧ページ</p>
       <CarFormSheet mode="create" />
       <div className="mt-4 flex flex-col gap-4">
-        {(cars ?? []).map((car) => (
+        {cars.map((car) => (
           <div
             key={car.id}
             className="flex flex-col gap-2 rounded-lg border border-gray-300 bg-white p-4 shadow"

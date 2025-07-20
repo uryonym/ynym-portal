@@ -8,20 +8,20 @@ import { prisma } from '@/lib/prisma'
 
 export const getRefuelings = async (
   carId: string,
-): Promise<{ refuelings?: Refueling[]; error?: string }> => {
+): Promise<Refueling[]> => {
   try {
     const session = await auth()
     if (!session?.user?.id) {
-      return { error: 'ユーザー情報が取得できませんでした' }
+      throw new Error('ユーザー情報が取得できませんでした')
     }
     const refuelings = await prisma.refueling.findMany({
       where: { uid: session.user.id, carId },
       orderBy: { refuelDatetime: 'desc' },
     })
-    return { refuelings }
+    return refuelings
   } catch (error) {
     console.error('Error fetching refuelings:', error)
-    return { error: '給油記録の取得に失敗しました' }
+    throw new Error('給油記録の取得に失敗しました')
   }
 }
 

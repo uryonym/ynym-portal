@@ -6,20 +6,20 @@ import { auth } from '@/auth'
 import { Car } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
-export const getCars = async (): Promise<{ cars?: Car[]; error?: string }> => {
+export const getCars = async (): Promise<Car[]> => {
   try {
     const session = await auth()
     if (!session?.user?.id) {
-      return { error: 'ユーザー情報が取得できませんでした' }
+      throw new Error('ユーザー情報が取得できませんでした')
     }
     const cars = await prisma.car.findMany({
       where: { uid: session.user.id },
       orderBy: { seq: 'asc' },
     })
-    return { cars }
+    return cars
   } catch (error) {
     console.error('Error fetching cars:', error)
-    return { error: '車両の取得に失敗しました' }
+    throw new Error('車両の取得に失敗しました')
   }
 }
 
