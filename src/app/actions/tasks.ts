@@ -6,20 +6,20 @@ import { auth } from '@/auth'
 import { Task } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
-export const getTasks = async (): Promise<{ tasks?: Task[]; error?: string }> => {
+export const getTasks = async (): Promise<Task[]> => {
   try {
     const session = await auth()
     if (!session?.user?.id) {
-      return { error: 'ユーザー情報が取得できませんでした' }
+      throw new Error('ユーザー情報が取得できませんでした')
     }
     const tasks = await prisma.task.findMany({
       where: { uid: session.user.id },
       orderBy: { createdAt: 'desc' },
     })
-    return { tasks }
+    return tasks
   } catch (error) {
     console.error('Error fetching tasks:', error)
-    return { error: 'タスクの取得に失敗しました' }
+    throw new Error('タスクの取得に失敗しました')
   }
 }
 
