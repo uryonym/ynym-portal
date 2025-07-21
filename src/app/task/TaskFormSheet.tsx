@@ -10,9 +10,10 @@ import { createTask, updateTask, deleteTask } from '../actions/tasks'
 type TaskFormSheetProps = {
   mode?: 'create' | 'edit'
   task?: Task | null
+  onSuccess?: () => void
 }
 
-const TaskFormSheet = ({ mode = 'create', task }: TaskFormSheetProps) => {
+const TaskFormSheet = ({ mode = 'create', task, onSuccess }: TaskFormSheetProps) => {
   // mode=createのときだけ内部でopenを管理
   const [internalOpen, setInternalOpen] = useState(false)
   const [form, setForm] = useState({
@@ -37,25 +38,28 @@ const TaskFormSheet = ({ mode = 'create', task }: TaskFormSheetProps) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    formData.set('completed', form.completed ? 'true' : 'false')
     if (mode === 'edit' && task) {
-      formData.append('id', task.id)
-      await updateTask(formData)
-      setInternalOpen(false)
+      await updateTask({
+        id: task.id,
+        title: form.title,
+        description: form.description,
+        completed: form.completed,
+      })
     } else {
-      await createTask(formData)
-      setInternalOpen(false)
+      await createTask({
+        title: form.title,
+        description: form.description,
+      })
     }
+    setInternalOpen(false)
+    onSuccess?.()
   }
 
   const handleDelete = async () => {
     if (!task) return
-    const formData = new FormData()
-    formData.append('id', task.id)
-    await deleteTask(formData)
-    if (mode === 'edit') return
+    await deleteTask(task.id)
     setInternalOpen(false)
+    onSuccess?.()
   }
 
   return (

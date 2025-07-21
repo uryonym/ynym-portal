@@ -6,76 +6,59 @@ import { auth } from '@/auth'
 import { Task } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
-export const getTasks = async (): Promise<Task[]> => {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      throw new Error('ユーザー情報が取得できませんでした')
-    }
-    const tasks = await prisma.task.findMany({
-      where: { uid: session.user.id },
-      orderBy: { createdAt: 'desc' },
-    })
-    return tasks
-  } catch (error) {
-    console.error('Error fetching tasks:', error)
-    throw new Error('タスクの取得に失敗しました')
+export async function getTasks(options?: { completed?: boolean }): Promise<Task[]> {
+  const session = await auth()
+  if (!session?.user?.id) {
+    throw new Error('ユーザー情報が取得できませんでした')
   }
+  const { completed } = options ?? {}
+  return await prisma.task.findMany({
+    where: {
+      completed,
+      uid: session.user.id,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  })
 }
 
-export const createTask = async (formData: FormData) => {
-  try {
-    const session = await auth()
-    const title = formData.get('title') as string
-    const description = formData.get('description') as string
-    const dueDate = formData.get('dueDate') as string
-    if (!session?.user?.id) {
-      throw new Error('ユーザー情報が取得できませんでした')
-    }
-    await prisma.task.create({
-      data: {
-        title,
-        description: description || null,
-        dueDate: dueDate ? new Date(dueDate) : null,
-        completed: false,
-        uid: session.user.id,
-      },
-    })
-    revalidatePath('/task')
-  } catch (error) {
-    console.error('Error creating task:', error)
+export async function createTask(data: { title: string; description?: string }) {
+  const session = await auth()
+  if (!session?.user?.id) {
+    throw new Error('ユーザー情報が取得できませんでした')
   }
+  const { title, description } = data
+  const result = await prisma.task.create({
+    data: {
+      title,
+      description,
+      uid: session.user.id,
+    },
+  })
+  revalidatePath('/task')
+  return result
 }
 
-export const updateTask = async (formData: FormData) => {
-  try {
-    const id = formData.get('id') as string
-    const title = formData.get('title') as string
-    const description = formData.get('description') as string
-    const dueDate = formData.get('dueDate') as string
-    const completedRaw = formData.get('completed')
-    const completed = completedRaw === 'true'
-    await prisma.task.update({
-      where: { id },
-      data: {
-        title,
-        description: description || null,
-        dueDate: dueDate ? new Date(dueDate) : null,
-        completed,
-      },
-    })
-    revalidatePath('/task')
-  } catch (error) {
-    console.error('Error updating task:', error)
-  }
+export async function updateTask(data: {
+  id: string
+  title: string
+  description?: string
+  completed?: boolean
+}) {
+  const { id, ...rest } = data
+  const result = await prisma.task.update({
+    where: { id },
+    data: rest,
+  })
+  revalidatePath('/task')
+  return result
 }
 
-export const deleteTask = async (formData: FormData) => {
-  try {
-    const id = formData.get('id') as string
-    await prisma.task.delete({ where: { id } })
-    revalidatePath('/task')
-  } catch (error) {
-    console.error('Error deleting task:', error)
-  }
+export async function deleteTask(id: string) {
+  const result = await prisma.task.delete({
+    where: { id },
+  })
+  revalidatePath('/task')
+  return result
 }
