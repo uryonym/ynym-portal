@@ -11,11 +11,23 @@ type TaskFormSheetProps = {
   mode?: 'create' | 'edit'
   task?: Task | null
   onSuccess?: () => void
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
-const TaskFormSheet = ({ mode = 'create', task, onSuccess }: TaskFormSheetProps) => {
+const TaskFormSheet = ({
+  mode = 'create',
+  task,
+  onSuccess,
+  open,
+  onOpenChange,
+}: TaskFormSheetProps) => {
   // mode=createのときだけ内部でopenを管理
   const [internalOpen, setInternalOpen] = useState(false)
+
+  const isOpen = mode === 'edit' ? open : internalOpen
+  const setIsOpen = mode === 'edit' ? onOpenChange : setInternalOpen
+
   const [form, setForm] = useState({
     title: '',
     description: '',
@@ -34,7 +46,7 @@ const TaskFormSheet = ({ mode = 'create', task, onSuccess }: TaskFormSheetProps)
     } else {
       setForm({ title: '', description: '', dueDate: '', completed: false })
     }
-  }, [mode, task, internalOpen])
+  }, [mode, task, isOpen])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -51,14 +63,14 @@ const TaskFormSheet = ({ mode = 'create', task, onSuccess }: TaskFormSheetProps)
         description: form.description,
       })
     }
-    setInternalOpen(false)
+    setIsOpen?.(false)
     onSuccess?.()
   }
 
   const handleDelete = async () => {
     if (!task) return
     await deleteTask(task.id)
-    setInternalOpen(false)
+    setIsOpen?.(false)
     onSuccess?.()
   }
 
@@ -67,21 +79,12 @@ const TaskFormSheet = ({ mode = 'create', task, onSuccess }: TaskFormSheetProps)
       {mode === 'create' && (
         <button
           className="mb-2 rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
-          onClick={() => setInternalOpen(true)}
+          onClick={() => setIsOpen?.(true)}
         >
           新規タスク追加
         </button>
       )}
-      {mode === 'edit' && (
-        <button
-          type="button"
-          className="rounded bg-yellow-500 px-3 py-1 text-white hover:bg-yellow-600"
-          onClick={() => setInternalOpen(true)}
-        >
-          編集
-        </button>
-      )}
-      <Sheet open={internalOpen} onOpenChange={setInternalOpen}>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetContent side="bottom" className="mx-auto max-w-xl">
           <SheetHeader>
             <SheetTitle>{mode === 'edit' ? 'タスク編集' : '新規タスク追加'}</SheetTitle>
