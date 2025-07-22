@@ -1,8 +1,10 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
 import {
   Table,
   TableBody,
@@ -16,11 +18,14 @@ import { type Task } from '@/generated/client'
 import TaskFormSheet from './TaskFormSheet'
 import { updateTask } from '../actions/tasks'
 
-type Props = {
-  tasks: Task[]
-  onSuccess?: () => void
-}
-export default function TaskList({ tasks, onSuccess }: Props) {
+export default function TaskList({
+  initialTasks,
+  showCompleted,
+}: {
+  initialTasks: Task[]
+  showCompleted: boolean
+}) {
+  const router = useRouter()
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
 
@@ -30,7 +35,6 @@ export default function TaskList({ tasks, onSuccess }: Props) {
       description: task.description ?? undefined,
       completed: !task.completed,
     })
-    onSuccess?.()
   }
 
   const handleRowClick = (task: Task) => {
@@ -38,8 +42,23 @@ export default function TaskList({ tasks, onSuccess }: Props) {
     setIsSheetOpen(true)
   }
 
+  const handleShowCompletedChange = (checked: boolean) => {
+    router.replace(`/task?completed=${checked ? 'true' : 'false'}`)
+  }
+
   return (
     <>
+      <div className="flex justify-between">
+        <TaskFormSheet mode="create" />
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="show-completed"
+            checked={showCompleted}
+            onCheckedChange={handleShowCompletedChange}
+          />
+          <Label htmlFor="show-completed">完了タスク表示</Label>
+        </div>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
@@ -49,7 +68,7 @@ export default function TaskList({ tasks, onSuccess }: Props) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {tasks.map((task) => (
+          {initialTasks.map((task) => (
             <TableRow key={task.id} onClick={() => handleRowClick(task)}>
               <TableCell
                 onClick={(e: React.MouseEvent<HTMLTableCellElement>) => {
@@ -72,10 +91,7 @@ export default function TaskList({ tasks, onSuccess }: Props) {
       <TaskFormSheet
         mode="edit"
         task={selectedTask}
-        onSuccess={() => {
-          onSuccess?.()
-          setIsSheetOpen(false)
-        }}
+        onSuccess={() => setIsSheetOpen(false)}
         open={isSheetOpen}
         onOpenChange={setIsSheetOpen}
       />

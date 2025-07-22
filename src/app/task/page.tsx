@@ -1,4 +1,4 @@
-import TaskPageClient from './TaskPageClient'
+import TaskList from './TaskList'
 import { getTasks } from '../actions/tasks'
 
 export default async function TaskPage({
@@ -12,7 +12,7 @@ export default async function TaskPage({
   return (
     <div className="p-3">
       <p className="mb-2 text-xl font-bold">タスクページ</p>
-      <TaskPageClient initialTasks={tasks} showCompleted={completed} />
+      <TaskList initialTasks={tasks} showCompleted={completed} />
     </div>
   )
 }
