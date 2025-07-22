@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { Task } from '@/generated/client'
 
 import { createTask, updateTask, deleteTask } from '../actions/tasks'
@@ -84,11 +84,11 @@ const TaskFormSheet = ({
           新規タスク追加
         </button>
       )}
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetContent side="bottom" className="mx-auto max-w-xl">
-          <SheetHeader>
-            <SheetTitle>{mode === 'edit' ? 'タスク編集' : '新規タスク追加'}</SheetTitle>
-          </SheetHeader>
+      <Drawer open={isOpen} onOpenChange={setIsOpen}>
+        <DrawerContent className="mx-auto max-w-xl">
+          <DrawerHeader>
+            <DrawerTitle>{mode === 'edit' ? 'タスク編集' : '新規タスク追加'}</DrawerTitle>
+          </DrawerHeader>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 pb-4">
             <div>
               <label className="mb-1 block font-medium">
@@ -153,8 +153,8 @@ const TaskFormSheet = ({
               )}
             </div>
           </form>
-        </SheetContent>
-      </Sheet>
+        </DrawerContent>
+      </Drawer>
     </>
   )
 }
