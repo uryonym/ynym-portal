@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from 'react'
 
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer'
 import { Refueling } from '@/generated/client'
 
 import { createRefueling, updateRefueling, deleteRefueling } from '../actions/refuelings'
@@ -97,6 +103,7 @@ const RefuelingFormSheet = ({ mode = 'create', carId, refueling }: RefuelingForm
         <DrawerContent className="mx-auto max-w-xl">
           <DrawerHeader>
             <DrawerTitle>{mode === 'edit' ? '給油記録の編集' : '給油記録の追加'}</DrawerTitle>
+            <DrawerDescription />
           </DrawerHeader>
           <form
             onSubmit={handleSubmit}

@@ -3,7 +3,13 @@
 import { useEffect, useState } from 'react'
 
 import { createNote, deleteNote, updateNote } from '@/app/actions/notes'
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer'
 import { Note } from '@/generated/client'
 
 type NoteFormSheetProps = {
@@ -77,6 +83,7 @@ const NoteFormSheet = ({ mode = 'create', sectionId, note }: NoteFormSheetProps)
         <DrawerContent className="mx-auto max-w-xl">
           <DrawerHeader>
             <DrawerTitle>{mode === 'edit' ? 'ノート集' : 'ノート追加'}</DrawerTitle>
+            <DrawerDescription />
           </DrawerHeader>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 pb-4">
             <div>

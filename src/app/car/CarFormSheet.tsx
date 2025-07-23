@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from 'react'
 
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer'
 import { Car } from '@/generated/client'
 
 import { createCar, updateCar, deleteCar } from '../actions/cars'
@@ -94,6 +100,7 @@ const CarFormSheet = ({ mode = 'create', car }: CarFormSheetProps) => {
         <DrawerContent className="mx-auto max-w-xl">
           <DrawerHeader>
             <DrawerTitle>{mode === 'edit' ? '車両編集' : '車両追加'}</DrawerTitle>
+            <DrawerDescription />
           </DrawerHeader>
           <form
             onSubmit={handleSubmit}

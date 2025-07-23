@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from 'react'
 
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer'
 import { Section } from '@/generated/client'
 
 import { createSection, updateSection, deleteSection } from '../actions/sections'
@@ -75,6 +81,7 @@ const SectionFormSheet = ({ mode = 'create', section }: SectionFormSheetProps) =
         <DrawerContent className="mx-auto max-w-xl">
           <DrawerHeader>
             <DrawerTitle>{mode === 'edit' ? 'セクション編集' : 'セクション追加'}</DrawerTitle>
+            <DrawerDescription />
           </DrawerHeader>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 pb-4">
             <div>
