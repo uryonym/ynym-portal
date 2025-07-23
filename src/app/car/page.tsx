@@ -1,5 +1,3 @@
-import React from 'react'
-
 import CarFormSheet from './CarFormSheet'
 import { getCars } from '../actions/cars'
 
@@ -7,8 +5,8 @@ export default async function Car() {
   const cars = await getCars()
 
   return (
-    <div className="p-4">
-      <p className="mb-4 text-xl font-bold">車両一覧ページ</p>
+    <div className="p-3">
+      <p className="mb-2 text-xl font-bold">車両一覧ページ</p>
       <CarFormSheet mode="create" />
       <div className="mt-4 flex flex-col gap-4">
         {cars.map((car) => (

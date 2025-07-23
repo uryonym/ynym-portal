@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from 'react'
 
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer'
 import { Task } from '@/generated/client'
 
 import { createTask, updateTask, deleteTask } from '../actions/tasks'
@@ -10,23 +16,10 @@ import { createTask, updateTask, deleteTask } from '../actions/tasks'
 type TaskFormSheetProps = {
   mode?: 'create' | 'edit'
   task?: Task | null
-  onSuccess?: () => void
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
 }
 
-const TaskFormSheet = ({
-  mode = 'create',
-  task,
-  onSuccess,
-  open,
-  onOpenChange,
-}: TaskFormSheetProps) => {
-  // mode=createのときだけ内部でopenを管理
-  const [internalOpen, setInternalOpen] = useState(false)
-
-  const isOpen = mode === 'edit' ? open : internalOpen
-  const setIsOpen = mode === 'edit' ? onOpenChange : setInternalOpen
+const TaskFormSheet = ({ mode = 'create', task }: TaskFormSheetProps) => {
+  const [isOpen, setIsOpen] = useState(false)
 
   const [form, setForm] = useState({
     title: '',
@@ -34,6 +27,12 @@ const TaskFormSheet = ({
     dueDate: '',
     completed: false,
   })
+
+  useEffect(() => {
+    if (mode === 'edit' && task) {
+      setIsOpen(true)
+    }
+  }, [mode, task])
 
   useEffect(() => {
     if (mode === 'edit' && task) {
@@ -63,15 +62,13 @@ const TaskFormSheet = ({
         description: form.description,
       })
     }
-    setIsOpen?.(false)
-    onSuccess?.()
+    setIsOpen(false)
   }
 
   const handleDelete = async () => {
     if (!task) return
     await deleteTask(task.id)
-    setIsOpen?.(false)
-    onSuccess?.()
+    setIsOpen(false)
   }
 
   return (
@@ -79,7 +76,7 @@ const TaskFormSheet = ({
       {mode === 'create' && (
         <button
           className="mb-2 rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
-          onClick={() => setIsOpen?.(true)}
+          onClick={() => setIsOpen(true)}
         >
           新規タスク追加
         </button>
@@ -88,6 +85,7 @@ const TaskFormSheet = ({
         <DrawerContent className="mx-auto max-w-xl">
           <DrawerHeader>
             <DrawerTitle>{mode === 'edit' ? 'タスク編集' : '新規タスク追加'}</DrawerTitle>
+            <DrawerDescription />
           </DrawerHeader>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 pb-4">
             <div>

@@ -5,8 +5,6 @@ import { useState } from 'react'
 
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import {} from // ...existing code...
-'@/components/ui/table'
 import { type Task } from '@/generated/client'
 
 import TaskFormSheet from './TaskFormSheet'
@@ -21,7 +19,6 @@ export default function TaskList({
 }) {
   const router = useRouter()
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
-  const [isSheetOpen, setIsSheetOpen] = useState(false)
 
   const handleCompletedChange = async (task: Task) => {
     await updateTask({
@@ -33,7 +30,6 @@ export default function TaskList({
 
   const handleRowClick = (task: Task) => {
     setSelectedTask(task)
-    setIsSheetOpen(true)
   }
 
   const handleShowCompletedChange = (checked: boolean) => {
@@ -85,9 +81,6 @@ export default function TaskList({
       <TaskFormSheet
         mode="edit"
         task={selectedTask}
-        onSuccess={() => setIsSheetOpen(false)}
-        open={isSheetOpen}
-        onOpenChange={setIsSheetOpen}
       />
     </>
   )
