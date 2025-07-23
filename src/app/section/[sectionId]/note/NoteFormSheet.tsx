@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 
 import { createNote, deleteNote, updateNote } from '@/app/actions/notes'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { Note } from '@/generated/client'
 
 type NoteFormSheetProps = {
@@ -73,11 +73,11 @@ const NoteFormSheet = ({ mode = 'create', sectionId, note }: NoteFormSheetProps)
           編集
         </button>
       )}
-      <Sheet open={internalOpen} onOpenChange={setInternalOpen}>
-        <SheetContent side="bottom" className="mx-auto max-w-xl">
-          <SheetHeader>
-            <SheetTitle>{mode === 'edit' ? 'ノート集' : 'ノート追加'}</SheetTitle>
-          </SheetHeader>
+      <Drawer open={internalOpen} onOpenChange={setInternalOpen}>
+        <DrawerContent className="mx-auto max-w-xl">
+          <DrawerHeader>
+            <DrawerTitle>{mode === 'edit' ? 'ノート集' : 'ノート追加'}</DrawerTitle>
+          </DrawerHeader>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 pb-4">
             <div>
               <label className="mb-1 block font-medium">
@@ -137,8 +137,8 @@ const NoteFormSheet = ({ mode = 'create', sectionId, note }: NoteFormSheetProps)
               )}
             </div>
           </form>
-        </SheetContent>
-      </Sheet>
+        </DrawerContent>
+      </Drawer>
     </>
   )
 }

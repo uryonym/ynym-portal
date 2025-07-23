@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { Section } from '@/generated/client'
 
 import { createSection, updateSection, deleteSection } from '../actions/sections'
@@ -71,11 +71,11 @@ const SectionFormSheet = ({ mode = 'create', section }: SectionFormSheetProps) =
           編集
         </button>
       )}
-      <Sheet open={internalOpen} onOpenChange={setInternalOpen}>
-        <SheetContent side="bottom" className="mx-auto max-w-xl">
-          <SheetHeader>
-            <SheetTitle>{mode === 'edit' ? 'セクション編集' : 'セクション追加'}</SheetTitle>
-          </SheetHeader>
+      <Drawer open={internalOpen} onOpenChange={setInternalOpen}>
+        <DrawerContent className="mx-auto max-w-xl">
+          <DrawerHeader>
+            <DrawerTitle>{mode === 'edit' ? 'セクション編集' : 'セクション追加'}</DrawerTitle>
+          </DrawerHeader>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 pb-4">
             <div>
               <label className="mb-1 block font-medium">
@@ -121,8 +121,8 @@ const SectionFormSheet = ({ mode = 'create', section }: SectionFormSheetProps) =
               )}
             </div>
           </form>
-        </SheetContent>
-      </Sheet>
+        </DrawerContent>
+      </Drawer>
     </>
   )
 }
