@@ -16,23 +16,17 @@ import { createTask, updateTask, deleteTask } from '../actions/tasks'
 type TaskFormSheetProps = {
   mode?: 'create' | 'edit'
   task?: Task | null
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
 }
 
-const TaskFormSheet = ({ mode = 'create', task }: TaskFormSheetProps) => {
-  const [isOpen, setIsOpen] = useState(false)
-
+const TaskFormSheet = ({ mode = 'create', task, isOpen, setIsOpen }: TaskFormSheetProps) => {
   const [form, setForm] = useState({
     title: '',
     description: '',
     dueDate: '',
     completed: false,
   })
-
-  useEffect(() => {
-    if (mode === 'edit' && task) {
-      setIsOpen(true)
-    }
-  }, [mode, task])
 
   useEffect(() => {
     if (mode === 'edit' && task) {
@@ -73,15 +67,7 @@ const TaskFormSheet = ({ mode = 'create', task }: TaskFormSheetProps) => {
 
   return (
     <>
-      {mode === 'create' && (
-        <button
-          className="mb-2 rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
-          onClick={() => setIsOpen(true)}
-        >
-          新規タスク追加
-        </button>
-      )}
-      <Drawer open={isOpen} onOpenChange={setIsOpen}>
+      <Drawer open={isOpen} onOpenChange={setIsOpen} autoFocus>
         <DrawerContent className="mx-auto max-w-xl">
           <DrawerHeader>
             <DrawerTitle>{mode === 'edit' ? 'タスク編集' : '新規タスク追加'}</DrawerTitle>

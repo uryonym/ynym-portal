@@ -18,7 +18,21 @@ export default function TaskList({
   showCompleted: boolean
 }) {
   const router = useRouter()
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedTask, setSelectedTask] = useState<Task>()
+  const [formMode, setFormMode] = useState<'create' | 'edit'>('create')
+
+  const handleNewTaskClick = () => {
+    setSelectedTask(undefined)
+    setFormMode('create')
+    setIsOpen(true)
+  }
+
+  const handleRowClick = (task: Task) => {
+    setSelectedTask(task)
+    setFormMode('edit')
+    setIsOpen(true)
+  }
 
   const handleCompletedChange = async (task: Task) => {
     await updateTask({
@@ -28,10 +42,6 @@ export default function TaskList({
     })
   }
 
-  const handleRowClick = (task: Task) => {
-    setSelectedTask(task)
-  }
-
   const handleShowCompletedChange = (checked: boolean) => {
     router.replace(`/task?completed=${checked ? 'true' : 'false'}`)
   }
@@ -39,7 +49,12 @@ export default function TaskList({
   return (
     <>
       <div className="mb-4 flex justify-between">
-        <TaskFormSheet mode="create" />
+        <button
+          className="mb-2 rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
+          onClick={handleNewTaskClick}
+        >
+          新規タスク追加
+        </button>
         <div className="flex items-center space-x-2">
           <Checkbox
             id="show-completed"
@@ -78,10 +93,7 @@ export default function TaskList({
           </li>
         ))}
       </ul>
-      <TaskFormSheet
-        mode="edit"
-        task={selectedTask}
-      />
+      <TaskFormSheet mode={formMode} task={selectedTask} isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
   )
 }
