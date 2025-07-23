@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { Car } from '@/generated/client'
 
 import { createCar, updateCar, deleteCar } from '../actions/cars'
@@ -90,12 +90,15 @@ const CarFormSheet = ({ mode = 'create', car }: CarFormSheetProps) => {
           編集
         </button>
       )}
-      <Sheet open={internalOpen} onOpenChange={setInternalOpen}>
-        <SheetContent side="bottom" className="mx-auto max-w-xl">
-          <SheetHeader>
-            <SheetTitle>{mode === 'edit' ? '車両編集' : '車両追加'}</SheetTitle>
-          </SheetHeader>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 pb-4">
+      <Drawer open={internalOpen} onOpenChange={setInternalOpen}>
+        <DrawerContent className="mx-auto max-w-xl">
+          <DrawerHeader>
+            <DrawerTitle>{mode === 'edit' ? '車両編集' : '車両追加'}</DrawerTitle>
+          </DrawerHeader>
+          <form
+            onSubmit={handleSubmit}
+            className="flex max-h-[80vh] flex-col gap-4 overflow-y-auto px-4 pb-4"
+          >
             <div>
               <label className="mb-1 block font-medium">
                 車名
@@ -194,8 +197,8 @@ const CarFormSheet = ({ mode = 'create', car }: CarFormSheetProps) => {
               )}
             </div>
           </form>
-        </SheetContent>
-      </Sheet>
+        </DrawerContent>
+      </Drawer>
     </>
   )
 }
