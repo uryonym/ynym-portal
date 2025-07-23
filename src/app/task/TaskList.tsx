@@ -5,14 +5,8 @@ import { useState } from 'react'
 
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import {} from // ...existing code...
+'@/components/ui/table'
 import { type Task } from '@/generated/client'
 
 import TaskFormSheet from './TaskFormSheet'
@@ -48,7 +42,7 @@ export default function TaskList({
 
   return (
     <>
-      <div className="flex justify-between">
+      <div className="mb-4 flex justify-between">
         <TaskFormSheet mode="create" />
         <div className="flex items-center space-x-2">
           <Checkbox
@@ -59,35 +53,35 @@ export default function TaskList({
           <Label htmlFor="show-completed">完了タスク表示</Label>
         </div>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[60px]">完了</TableHead>
-            <TableHead>タイトル</TableHead>
-            <TableHead>期限</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {initialTasks.map((task) => (
-            <TableRow key={task.id} onClick={() => handleRowClick(task)}>
-              <TableCell
-                onClick={(e: React.MouseEvent<HTMLTableCellElement>) => {
-                  e.stopPropagation()
-                }}
+      <ul className="space-y-1">
+        {initialTasks.map((task) => (
+          <li
+            key={task.id}
+            className="flex cursor-pointer items-start rounded border border-gray-200 bg-white p-3 hover:bg-gray-50"
+            onClick={() => handleRowClick(task)}
+          >
+            <Checkbox
+              checked={task.completed}
+              onCheckedChange={() => {
+                void handleCompletedChange(task)
+              }}
+              className="mt-1 mr-3"
+            />
+            <div className="flex flex-col">
+              <span
+                className={
+                  task.completed ? 'text-gray-400 line-through' : 'font-medium text-gray-900'
+                }
               >
-                <Checkbox
-                  checked={task.completed}
-                  onCheckedChange={() => handleCompletedChange(task)}
-                />
-              </TableCell>
-              <TableCell>{task.title}</TableCell>
-              <TableCell>
+                {task.title}
+              </span>
+              <span className="mt-1 text-xs text-gray-500">
                 {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+              </span>
+            </div>
+          </li>
+        ))}
+      </ul>
       <TaskFormSheet
         mode="edit"
         task={selectedTask}
