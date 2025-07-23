@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { Refueling } from '@/generated/client'
 
 import { createRefueling, updateRefueling, deleteRefueling } from '../actions/refuelings'
@@ -93,15 +93,14 @@ const RefuelingFormSheet = ({ mode = 'create', carId, refueling }: RefuelingForm
           編集
         </button>
       )}
-      <Sheet open={internalOpen} onOpenChange={setInternalOpen}>
-        <SheetContent side="bottom" className="mx-auto max-w-xl">
-          <SheetHeader>
-            <SheetTitle>{mode === 'edit' ? '給油記録の編集' : '給油記録の追加'}</SheetTitle>
-          </SheetHeader>
+      <Drawer open={internalOpen} onOpenChange={setInternalOpen}>
+        <DrawerContent className="mx-auto max-w-xl">
+          <DrawerHeader>
+            <DrawerTitle>{mode === 'edit' ? '給油記録の編集' : '給油記録の追加'}</DrawerTitle>
+          </DrawerHeader>
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col gap-4 overflow-y-auto px-4 pb-4"
-            style={{ maxHeight: '70vh' }}
+            className="flex max-h-[80vh] flex-col gap-4 overflow-y-auto px-4 pb-4"
           >
             <div>
               <label className="mb-1 block font-medium">
@@ -200,8 +199,8 @@ const RefuelingFormSheet = ({ mode = 'create', carId, refueling }: RefuelingForm
               )}
             </div>
           </form>
-        </SheetContent>
-      </Sheet>
+        </DrawerContent>
+      </Drawer>
     </>
   )
 }
