@@ -14,13 +14,13 @@ import { Task } from '@/generated/client'
 import { createTask, updateTask, deleteTask } from '../actions/tasks'
 
 type TaskFormSheetProps = {
-  mode?: 'create' | 'edit'
-  task?: Task | null
+  mode: 'create' | 'edit'
+  task?: Task
   isOpen: boolean
   setIsOpen: (open: boolean) => void
 }
 
-const TaskFormSheet = ({ mode = 'create', task, isOpen, setIsOpen }: TaskFormSheetProps) => {
+const TaskFormSheet = ({ mode, task, isOpen, setIsOpen }: TaskFormSheetProps) => {
   const [form, setForm] = useState({
     title: '',
     description: '',

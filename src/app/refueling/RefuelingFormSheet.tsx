@@ -16,12 +16,18 @@ import { createRefueling, updateRefueling, deleteRefueling } from '../actions/re
 type RefuelingFormSheetProps = {
   mode: 'create' | 'edit'
   carId: string
-  refueling?: Refueling | null
+  refueling?: Refueling
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
 }
 
-const RefuelingFormSheet = ({ mode = 'create', carId, refueling }: RefuelingFormSheetProps) => {
-  // mode=createのときだけ内部でopenを管理
-  const [internalOpen, setInternalOpen] = useState(false)
+const RefuelingFormSheet = ({
+  mode,
+  carId,
+  refueling,
+  isOpen,
+  setIsOpen,
+}: RefuelingFormSheetProps) => {
   const [form, setForm] = useState({
     refuelDatetime: '',
     odometer: '',
@@ -54,7 +60,7 @@ const RefuelingFormSheet = ({ mode = 'create', carId, refueling }: RefuelingForm
         gasStand: '',
       })
     }
-  }, [mode, refueling, internalOpen])
+  }, [mode, refueling, isOpen])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -64,10 +70,8 @@ const RefuelingFormSheet = ({ mode = 'create', carId, refueling }: RefuelingForm
     if (mode === 'edit' && refueling) {
       formData.append('id', refueling.id)
       await updateRefueling(formData)
-      setInternalOpen(false)
     } else {
       await createRefueling(formData)
-      setInternalOpen(false)
     }
   }
 
@@ -76,30 +80,12 @@ const RefuelingFormSheet = ({ mode = 'create', carId, refueling }: RefuelingForm
     const formData = new FormData()
     formData.append('id', refueling.id)
     await deleteRefueling(formData)
-    if (mode === 'edit') return
-    setInternalOpen(false)
+    setIsOpen(false)
   }
 
   return (
     <>
-      {mode === 'create' && (
-        <button
-          className="mb-8 rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
-          onClick={() => setInternalOpen(true)}
-        >
-          給油記録を追加
-        </button>
-      )}
-      {mode === 'edit' && (
-        <button
-          type="button"
-          className="rounded bg-yellow-500 px-3 py-1 text-white hover:bg-yellow-600"
-          onClick={() => setInternalOpen(true)}
-        >
-          編集
-        </button>
-      )}
-      <Drawer open={internalOpen} onOpenChange={setInternalOpen} autoFocus>
+      <Drawer open={isOpen} onOpenChange={setIsOpen} autoFocus>
         <DrawerContent className="mx-auto max-w-xl">
           <DrawerHeader>
             <DrawerTitle>{mode === 'edit' ? '給油記録の編集' : '給油記録の追加'}</DrawerTitle>
