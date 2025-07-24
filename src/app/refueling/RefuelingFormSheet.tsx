@@ -99,7 +99,7 @@ const RefuelingFormSheet = ({ mode = 'create', carId, refueling }: RefuelingForm
           編集
         </button>
       )}
-      <Drawer open={internalOpen} onOpenChange={setInternalOpen}>
+      <Drawer open={internalOpen} onOpenChange={setInternalOpen} autoFocus>
         <DrawerContent className="mx-auto max-w-xl">
           <DrawerHeader>
             <DrawerTitle>{mode === 'edit' ? '給油記録の編集' : '給油記録の追加'}</DrawerTitle>

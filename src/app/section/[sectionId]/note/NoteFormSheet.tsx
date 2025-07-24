@@ -79,7 +79,7 @@ const NoteFormSheet = ({ mode = 'create', sectionId, note }: NoteFormSheetProps)
           編集
         </button>
       )}
-      <Drawer open={internalOpen} onOpenChange={setInternalOpen}>
+      <Drawer open={internalOpen} onOpenChange={setInternalOpen} autoFocus>
         <DrawerContent className="mx-auto max-w-xl">
           <DrawerHeader>
             <DrawerTitle>{mode === 'edit' ? 'ノート集' : 'ノート追加'}</DrawerTitle>

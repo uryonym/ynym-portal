@@ -96,7 +96,7 @@ const CarFormSheet = ({ mode = 'create', car }: CarFormSheetProps) => {
           編集
         </button>
       )}
-      <Drawer open={internalOpen} onOpenChange={setInternalOpen}>
+      <Drawer open={internalOpen} onOpenChange={setInternalOpen} autoFocus>
         <DrawerContent className="mx-auto max-w-xl">
           <DrawerHeader>
             <DrawerTitle>{mode === 'edit' ? '車両編集' : '車両追加'}</DrawerTitle>

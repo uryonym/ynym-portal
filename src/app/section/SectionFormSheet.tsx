@@ -77,7 +77,7 @@ const SectionFormSheet = ({ mode = 'create', section }: SectionFormSheetProps) =
           編集
         </button>
       )}
-      <Drawer open={internalOpen} onOpenChange={setInternalOpen}>
+      <Drawer open={internalOpen} onOpenChange={setInternalOpen} autoFocus>
         <DrawerContent className="mx-auto max-w-xl">
           <DrawerHeader>
             <DrawerTitle>{mode === 'edit' ? 'セクション編集' : 'セクション追加'}</DrawerTitle>
