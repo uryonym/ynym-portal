@@ -23,16 +23,21 @@ export async function getTasks(options?: { completed?: boolean }): Promise<Task[
   })
 }
 
-export async function createTask(data: { title: string; description?: string }) {
+export async function createTask(data: {
+  title: string
+  description?: string
+  dueDate?: Date 
+}) {
   const session = await auth()
   if (!session?.user?.id) {
     throw new Error('ユーザー情報が取得できませんでした')
   }
-  const { title, description } = data
+  const { title, description, dueDate } = data
   const result = await prisma.task.create({
     data: {
       title,
       description,
+      dueDate: dueDate ?? null,
       uid: session.user.id,
     },
   })
@@ -44,12 +49,16 @@ export async function updateTask(data: {
   id: string
   title: string
   description?: string
+  dueDate?: Date 
   completed?: boolean
 }) {
   const { id, ...rest } = data
   const result = await prisma.task.update({
     where: { id },
-    data: rest,
+    data: {
+      ...rest,
+      dueDate: rest.dueDate ?? null,
+    },
   })
   revalidatePath('/task')
   return result

@@ -43,17 +43,20 @@ const TaskFormSheet = ({ mode, task, isOpen, setIsOpen }: TaskFormSheetProps) =>
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const dueDateValue = form.dueDate ? new Date(form.dueDate) : undefined
     if (mode === 'edit' && task) {
       await updateTask({
         id: task.id,
         title: form.title,
         description: form.description,
+        dueDate: dueDateValue,
         completed: form.completed,
       })
     } else {
       await createTask({
         title: form.title,
         description: form.description,
+        dueDate: dueDateValue,
       })
     }
     setIsOpen(false)
