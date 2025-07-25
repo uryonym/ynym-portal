@@ -17,17 +17,18 @@ export async function getTasks(options?: { completed?: boolean }): Promise<Task[
       completed,
       uid: session.user.id,
     },
-    orderBy: {
-      createdAt: 'desc',
-    },
+    orderBy: [
+      {
+        dueDate: 'asc', // 期日昇順
+      },
+      {
+        createdAt: 'desc', // 期日が同じ場合は新しい順
+      },
+    ],
   })
 }
 
-export async function createTask(data: {
-  title: string
-  description?: string
-  dueDate?: Date 
-}) {
+export async function createTask(data: { title: string; description?: string; dueDate?: Date }) {
   const session = await auth()
   if (!session?.user?.id) {
     throw new Error('ユーザー情報が取得できませんでした')
@@ -49,7 +50,7 @@ export async function updateTask(data: {
   id: string
   title: string
   description?: string
-  dueDate?: Date 
+  dueDate?: Date
   completed?: boolean
 }) {
   const { id, ...rest } = data
