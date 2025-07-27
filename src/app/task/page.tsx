@@ -7,7 +7,7 @@ export default async function TaskPage({
   searchParams: Promise<{ completed: string }>
 }) {
   const completed = (await searchParams).completed === 'true'
-  const tasks = await getTasks({ completed })
+  const tasks = await getTasks(completed)
 
   return (
     <div className="p-3">

@@ -6,12 +6,11 @@ import { auth } from '@/auth'
 import { Task } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
-export async function getTasks(options?: { completed?: boolean }): Promise<Task[]> {
+export async function getTasks(completed?: boolean): Promise<Task[]> {
   const session = await auth()
   if (!session?.user?.id) {
     throw new Error('ユーザー情報が取得できませんでした')
   }
-  const { completed } = options ?? {}
   return await prisma.task.findMany({
     where: {
       completed,
