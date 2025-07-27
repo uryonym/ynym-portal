@@ -14,13 +14,13 @@ import { Section } from '@/generated/client'
 import { createSection, updateSection, deleteSection } from '../actions/sections'
 
 type SectionFormSheetProps = {
-  mode?: 'create' | 'edit'
-  section?: Section | null
+  mode: 'create' | 'edit'
+  section?: Section
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
 }
 
-const SectionFormSheet = ({ mode = 'create', section }: SectionFormSheetProps) => {
-  // mode=createのときだけ内部でopenを管理
-  const [internalOpen, setInternalOpen] = useState(false)
+export default function SectionFormSheet({ mode, section, isOpen, setIsOpen }: SectionFormSheetProps) {
   const [form, setForm] = useState({
     name: '',
     seq: '',
@@ -35,7 +35,7 @@ const SectionFormSheet = ({ mode = 'create', section }: SectionFormSheetProps) =
     } else {
       setForm({ name: '', seq: '' })
     }
-  }, [mode, section, internalOpen])
+  }, [mode, section, isOpen])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -43,11 +43,10 @@ const SectionFormSheet = ({ mode = 'create', section }: SectionFormSheetProps) =
     if (mode === 'edit' && section) {
       formData.append('id', section.id)
       await updateSection(formData)
-      setInternalOpen(false)
     } else {
       await createSection(formData)
-      setInternalOpen(false)
     }
+    setIsOpen(false)
   }
 
   const handleDelete = async () => {
@@ -55,29 +54,12 @@ const SectionFormSheet = ({ mode = 'create', section }: SectionFormSheetProps) =
     const formData = new FormData()
     formData.append('id', section.id)
     await deleteSection(formData)
-    setInternalOpen(false)
+    setIsOpen(false)
   }
 
   return (
     <>
-      {mode === 'create' && (
-        <button
-          className="mb-8 rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
-          onClick={() => setInternalOpen(true)}
-        >
-          セクションを追加
-        </button>
-      )}
-      {mode === 'edit' && (
-        <button
-          type="button"
-          className="rounded bg-yellow-500 px-3 py-1 text-white hover:bg-yellow-600"
-          onClick={() => setInternalOpen(true)}
-        >
-          編集
-        </button>
-      )}
-      <Drawer open={internalOpen} onOpenChange={setInternalOpen} autoFocus>
+      <Drawer open={isOpen} onOpenChange={setIsOpen} autoFocus>
         <DrawerContent className="mx-auto max-w-xl">
           <DrawerHeader>
             <DrawerTitle>{mode === 'edit' ? 'セクション編集' : 'セクション追加'}</DrawerTitle>
@@ -133,5 +115,3 @@ const SectionFormSheet = ({ mode = 'create', section }: SectionFormSheetProps) =
     </>
   )
 }
-
-export default SectionFormSheet
