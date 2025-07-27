@@ -73,6 +73,7 @@ const RefuelingFormSheet = ({
     } else {
       await createRefueling(formData)
     }
+    setIsOpen(false)
   }
 
   const handleDelete = async () => {

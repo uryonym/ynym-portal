@@ -6,9 +6,7 @@ import { auth } from '@/auth'
 import { Refueling } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
-export const getRefuelings = async (
-  carId: string,
-): Promise<Refueling[]> => {
+export async function getRefuelings(carId: string): Promise<Refueling[]> { 
   try {
     const session = await auth()
     if (!session?.user?.id) {

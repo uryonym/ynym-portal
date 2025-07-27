@@ -22,6 +22,12 @@ export default function RefuelingList({
     setIsOpen(true)
   }
 
+  const handleEditRefueling = (refueling: Refueling) => {
+    setSelectedRefueling(refueling)
+    setFormMode('edit')
+    setIsOpen(true)
+  }
+
   return (
     <>
       {carId && (
@@ -44,6 +50,12 @@ export default function RefuelingList({
               <span className="text-lg font-bold">
                 {new Date(refueling.refuelDatetime).toLocaleDateString()}
               </span>
+              <button
+                className="rounded bg-yellow-400 px-4 py-1 text-sm font-semibold text-white transition-colors hover:bg-yellow-500"
+                onClick={() => handleEditRefueling(refueling)}
+              >
+                編集
+              </button>
             </div>
             <div className="text-sm text-gray-600">
               走行距離: <span className="text-gray-900">{refueling.odometer} km</span>
