@@ -6,7 +6,7 @@ import { auth } from '@/auth'
 import { Section } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
-export const getSections = async (): Promise<Section[]> => {
+export async function getSections(): Promise<Section[]> {
   try {
     const session = await auth()
     if (!session?.user?.id) {
@@ -23,7 +23,7 @@ export const getSections = async (): Promise<Section[]> => {
   }
 }
 
-export const createSection = async (formData: FormData) => {
+export async function createSection(formData: FormData) {
   try {
     const session = await auth()
     if (!session?.user?.id) {
@@ -38,7 +38,7 @@ export const createSection = async (formData: FormData) => {
   }
 }
 
-export const updateSection = async (formData: FormData) => {
+export async function updateSection(formData: FormData) {
   try {
     const id = formData.get('id') as string
     const name = formData.get('name') as string
@@ -50,7 +50,7 @@ export const updateSection = async (formData: FormData) => {
   }
 }
 
-export const deleteSection = async (formData: FormData) => {
+export async function deleteSection(formData: FormData) {
   try {
     const id = formData.get('id') as string
     await prisma.section.delete({ where: { id } })

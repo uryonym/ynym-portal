@@ -6,7 +6,7 @@ import { auth } from '@/auth'
 import { Note } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
-export const getNotes = async (sectionId?: string): Promise<Note[]> => {
+export async function getNotes(sectionId?: string): Promise<Note[]> {
   try {
     const session = await auth()
     if (!session?.user?.id) {
@@ -23,7 +23,7 @@ export const getNotes = async (sectionId?: string): Promise<Note[]> => {
   }
 }
 
-export const createNote = async (formData: FormData) => {
+export async function createNote(formData: FormData) {
   try {
     const session = await auth()
     if (!session?.user?.id) {
@@ -40,7 +40,7 @@ export const createNote = async (formData: FormData) => {
   }
 }
 
-export const updateNote = async (formData: FormData) => {
+export async function updateNote(formData: FormData) {
   try {
     const id = formData.get('id') as string
     const title = formData.get('title') as string
@@ -53,7 +53,7 @@ export const updateNote = async (formData: FormData) => {
   }
 }
 
-export const deleteNote = async (formData: FormData) => {
+export async function deleteNote(formData: FormData) {
   try {
     const id = formData.get('id') as string
     await prisma.note.delete({ where: { id } })

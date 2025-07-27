@@ -6,7 +6,7 @@ import { auth } from '@/auth'
 import { Refueling } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
-export async function getRefuelings(carId: string): Promise<Refueling[]> { 
+export async function getRefuelings(carId: string): Promise<Refueling[]> {
   try {
     const session = await auth()
     if (!session?.user?.id) {
@@ -23,7 +23,7 @@ export async function getRefuelings(carId: string): Promise<Refueling[]> {
   }
 }
 
-export const createRefueling = async (formData: FormData) => {
+export async function createRefueling(formData: FormData) {
   try {
     const session = await auth()
     if (!session?.user?.id) {
@@ -56,7 +56,7 @@ export const createRefueling = async (formData: FormData) => {
   }
 }
 
-export const updateRefueling = async (formData: FormData) => {
+export async function updateRefueling(formData: FormData) {
   try {
     const id = formData.get('id') as string
     const refuelDatetime = formData.get('refuelDatetime') as string
@@ -84,7 +84,7 @@ export const updateRefueling = async (formData: FormData) => {
   }
 }
 
-export const deleteRefueling = async (formData: FormData) => {
+export async function deleteRefueling(formData: FormData) {
   try {
     const id = formData.get('id') as string
     await prisma.refueling.delete({ where: { id } })

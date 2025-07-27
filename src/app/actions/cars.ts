@@ -6,7 +6,7 @@ import { auth } from '@/auth'
 import { Car } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
-export const getCars = async (): Promise<Car[]> => {
+export async function getCars(): Promise<Car[]> {
   try {
     const session = await auth()
     if (!session?.user?.id) {
@@ -23,7 +23,7 @@ export const getCars = async (): Promise<Car[]> => {
   }
 }
 
-export const createCar = async (formData: FormData) => {
+export async function createCar(formData: FormData) {
   try {
     const session = await auth()
     const name = formData.get('name') as string
@@ -54,7 +54,7 @@ export const createCar = async (formData: FormData) => {
   }
 }
 
-export const updateCar = async (formData: FormData) => {
+export async function updateCar(formData: FormData) {
   try {
     const id = formData.get('id') as string
     const name = formData.get('name') as string
@@ -82,7 +82,7 @@ export const updateCar = async (formData: FormData) => {
   }
 }
 
-export const deleteCar = async (formData: FormData) => {
+export async function deleteCar(formData: FormData) {
   try {
     const id = formData.get('id') as string
     await prisma.car.delete({ where: { id } })
