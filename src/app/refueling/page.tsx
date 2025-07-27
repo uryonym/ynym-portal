@@ -13,8 +13,8 @@ export default async function RefuelingPage({
   const refuelings = carId ? await getRefuelings(carId) : []
 
   return (
-    <div className="p-4">
-      <p className="mb-4 text-xl font-bold">給油記録ページ</p>
+    <div className="p-3">
+      <p className="mb-2 text-xl font-bold">給油記録ページ</p>
       <SelectCar cars={cars} carId={carId} />
       <RefuelingList carId={carId} refuelings={refuelings} />
     </div>
