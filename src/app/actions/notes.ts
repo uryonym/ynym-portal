@@ -6,21 +6,15 @@ import { auth } from '@/auth'
 import { Note } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
-export async function getNotes(sectionId?: string): Promise<Note[]> {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      throw new Error('ユーザー情報が取得できませんでした')
-    }
-    const notes = await prisma.note.findMany({
-      where: { uid: session.user.id, sectionId: sectionId },
-      orderBy: { seq: 'asc' },
-    })
-    return notes
-  } catch (error) {
-    console.error('Error fetching notes:', error)
-    throw new Error('ノートの取得に失敗しました')
+export async function getNotes(sectionId: string): Promise<Note[]> {
+  const session = await auth()
+  if (!session?.user?.id) {
+    throw new Error('ユーザー情報が取得できませんでした')
   }
+  return await prisma.note.findMany({
+    where: { sectionId: sectionId, uid: session.user.id },
+    orderBy: { seq: 'asc' },
+  })
 }
 
 export async function createNote(formData: FormData) {

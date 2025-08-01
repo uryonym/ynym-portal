@@ -7,20 +7,24 @@ import { Section } from '@/generated/client'
 import { prisma } from '@/lib/prisma'
 
 export async function getSections(): Promise<Section[]> {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      throw new Error('ユーザー情報が取得できませんでした')
-    }
-    const sections = await prisma.section.findMany({
-      where: { uid: session.user.id },
-      orderBy: { seq: 'asc' },
-    })
-    return sections
-  } catch (error) {
-    console.error('Error fetching sections:', error)
-    throw new Error('セクションの取得に失敗しました')
+  const session = await auth()
+  if (!session?.user?.id) {
+    throw new Error('ユーザー情報が取得できませんでした')
   }
+  return await prisma.section.findMany({
+    where: { uid: session.user.id },
+    orderBy: { seq: 'asc' },
+  })
+}
+
+export async function getSection(sectionId: string): Promise<Section | null> {
+  const session = await auth()
+  if (!session?.user?.id) {
+    throw new Error('ユーザー情報が取得できませんでした')
+  }
+  return await prisma.section.findUnique({
+    where: { id: sectionId },
+  })
 }
 
 export async function createSection(formData: FormData) {

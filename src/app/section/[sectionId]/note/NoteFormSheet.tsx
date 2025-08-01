@@ -15,11 +15,18 @@ import { Note } from '@/generated/client'
 type NoteFormSheetProps = {
   mode: 'create' | 'edit'
   sectionId: string
-  note?: Note | null
+  note?: Note
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
 }
 
-const NoteFormSheet = ({ mode = 'create', sectionId, note }: NoteFormSheetProps) => {
-  const [internalOpen, setInternalOpen] = useState(false)
+export default function NoteFormSheet({
+  mode,
+  sectionId,
+  note,
+  isOpen,
+  setIsOpen,
+}: NoteFormSheetProps) {
   const [form, setForm] = useState({
     title: '',
     content: '',
@@ -36,7 +43,7 @@ const NoteFormSheet = ({ mode = 'create', sectionId, note }: NoteFormSheetProps)
     } else {
       setForm({ title: '', content: '', seq: '' })
     }
-  }, [mode, note, internalOpen])
+  }, [mode, note, isOpen])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -45,11 +52,10 @@ const NoteFormSheet = ({ mode = 'create', sectionId, note }: NoteFormSheetProps)
     if (mode === 'edit' && note) {
       formData.append('id', note.id)
       await updateNote(formData)
-      setInternalOpen(false)
     } else {
       await createNote(formData)
-      setInternalOpen(false)
     }
+    setIsOpen(false)
   }
 
   const handleDelete = async () => {
@@ -57,32 +63,15 @@ const NoteFormSheet = ({ mode = 'create', sectionId, note }: NoteFormSheetProps)
     const formData = new FormData()
     formData.append('id', note.id)
     await deleteNote(formData)
-    setInternalOpen(false)
+    setIsOpen(false)
   }
 
   return (
     <>
-      {mode === 'create' && (
-        <button
-          className="mb-2 rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
-          onClick={() => setInternalOpen(true)}
-        >
-          新規作成
-        </button>
-      )}
-      {mode === 'edit' && (
-        <button
-          type="button"
-          className="rounded bg-yellow-500 px-3 py-1 text-white hover:bg-yellow-600"
-          onClick={() => setInternalOpen(true)}
-        >
-          編集
-        </button>
-      )}
-      <Drawer open={internalOpen} onOpenChange={setInternalOpen} autoFocus>
+      <Drawer open={isOpen} onOpenChange={setIsOpen} autoFocus>
         <DrawerContent className="mx-auto max-w-xl">
           <DrawerHeader>
-            <DrawerTitle>{mode === 'edit' ? 'ノート集' : 'ノート追加'}</DrawerTitle>
+            <DrawerTitle>{mode === 'edit' ? 'ノート編集' : 'ノート追加'}</DrawerTitle>
             <DrawerDescription />
           </DrawerHeader>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 pb-4">
@@ -149,5 +138,3 @@ const NoteFormSheet = ({ mode = 'create', sectionId, note }: NoteFormSheetProps)
     </>
   )
 }
-
-export default NoteFormSheet
