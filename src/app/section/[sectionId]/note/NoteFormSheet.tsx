@@ -29,7 +29,6 @@ export default function NoteFormSheet({
 }: NoteFormSheetProps) {
   const [form, setForm] = useState({
     title: '',
-    content: '',
     seq: '',
   })
 
@@ -37,11 +36,10 @@ export default function NoteFormSheet({
     if (mode === 'edit' && note) {
       setForm({
         title: note.title,
-        content: note.content,
         seq: note.seq.toString(),
       })
     } else {
-      setForm({ title: '', content: '', seq: '' })
+      setForm({ title: '', seq: '' })
     }
   }, [mode, note, isOpen])
 
@@ -90,27 +88,13 @@ export default function NoteFormSheet({
               />
             </div>
             <div>
-              <label className="mb-1 block font-medium">
-                内容
-                <span className="text-red-500">*</span>
-              </label>
-              <input
-                name="content"
-                value={form.content}
-                onChange={(e) => setForm({ ...form, content: e.target.value })}
-                placeholder="ノート内容"
-                required
-                className="w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block font-medium">順序</label>
+              <label className="mb-1 block font-medium">Seq</label>
               <input
                 name="seq"
                 type="number"
                 value={form.seq}
                 onChange={(e) => setForm({ ...form, seq: e.target.value })}
-                placeholder="順序"
+                placeholder="Seq"
                 required
                 className="w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
               />

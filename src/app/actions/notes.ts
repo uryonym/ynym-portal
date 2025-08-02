@@ -17,6 +17,16 @@ export async function getNotes(sectionId: string): Promise<Note[]> {
   })
 }
 
+export async function getNote(noteId: string): Promise<Note | null> {
+  const session = await auth()
+  if (!session?.user?.id) {
+    throw new Error('ユーザー情報が取得できませんでした')
+  }
+  return await prisma.note.findUnique({
+    where: { id: noteId },
+  })
+}
+
 export async function createNote(formData: FormData) {
   try {
     const session = await auth()
