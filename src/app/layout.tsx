@@ -25,7 +25,7 @@ const RootLayout = ({
         <SessionProvider>
           <SidebarProvider defaultOpen>
             <AppSidebar />
-            <div className="w-full">
+            <div className="flex h-screen w-screen flex-col">
               <Header />
               {children}
             </div>

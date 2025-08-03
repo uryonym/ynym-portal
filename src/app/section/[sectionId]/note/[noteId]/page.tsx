@@ -10,7 +10,7 @@ export default async function NotePage({ params }: { params: Promise<{ noteId: s
   const note = await getNote(noteId)
 
   return (
-    <div className="p-3">
+    <div className="flex-1 p-3">
       {note ? (
         <NoteContent note={note} />
       ) : (
