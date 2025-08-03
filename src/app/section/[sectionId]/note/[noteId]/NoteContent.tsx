@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 
 import { updateNote } from '@/app/actions/notes'
 import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
 import { Note } from '@/generated/client'
 
 type NoteContentProps = {
