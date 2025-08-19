@@ -4,10 +4,9 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { updateNote } from '@/app/actions/notes'
+import LoadingButton from '@/components/LoadingButton'
 import { Button } from '@/components/ui/button'
 import { Note } from '@/generated/client'
-import { Loader2Icon } from 'lucide-react'
-import LoadingButton from '@/components/LoadingButton'
 
 type NoteContentProps = {
   note: Note
