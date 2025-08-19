@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react'
 import { updateNote } from '@/app/actions/notes'
 import { Button } from '@/components/ui/button'
 import { Note } from '@/generated/client'
+import { Loader2Icon } from 'lucide-react'
+import LoadingButton from '@/components/LoadingButton'
 
 type NoteContentProps = {
   note: Note
@@ -14,6 +16,7 @@ type NoteContentProps = {
 export default function NoteContent({ note }: NoteContentProps) {
   const router = useRouter()
 
+  const [isLoading, setIsLoading] = useState(false)
   const [form, setForm] = useState({
     content: '',
   })
@@ -25,12 +28,16 @@ export default function NoteContent({ note }: NoteContentProps) {
   }, [note])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setIsLoading(true)
     e.preventDefault()
+
     const formData = new FormData(e.currentTarget)
     formData.append('id', note.id)
     formData.append('title', note.title)
     formData.append('seq', note.seq.toString())
     await updateNote(formData)
+
+    setIsLoading(false)
   }
 
   const handleBack = () => {
@@ -51,9 +58,7 @@ export default function NoteContent({ note }: NoteContentProps) {
           <Button variant="link" onClick={handleBack}>
             戻る
           </Button>
-          <Button className="mt-2" type="submit">
-            保存
-          </Button>
+          <LoadingButton title="保存" isLoading={isLoading} />
         </div>
       </form>
     </div>
