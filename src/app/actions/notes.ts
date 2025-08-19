@@ -34,7 +34,7 @@ export async function createNote(formData: FormData) {
       throw new Error('ユーザー情報が取得できませんでした')
     }
     const title = formData.get('title') as string
-    const content = formData.get('content') as string
+    const content = ''
     const seq = Number(formData.get('seq'))
     const sectionId = formData.get('sectionId') as string
     await prisma.note.create({ data: { title, content, seq, uid: session.user.id, sectionId } })
