@@ -6,10 +6,11 @@ services:
     hostname: ynym-portal
     restart: always
     networks:
+      - ynym-portal-network
       - nginx-proxy-network
 
 networks:
-  default:
+  ynym-portal-network:
     name: ynym-portal-network
     external: true
   nginx-proxy-network:
