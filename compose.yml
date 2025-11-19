@@ -5,8 +5,13 @@ services:
     container_name: ynym-portal
     hostname: ynym-portal
     restart: always
+    networks:
+      - nginx-proxy-network
 
 networks:
   default:
     name: ynym-portal-network
+    external: true
+  nginx-proxy-network:
+    name: nginx-proxy-network
     external: true
