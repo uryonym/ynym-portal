@@ -1,9 +1,23 @@
 services:
   ynym-portal-backend:
-    build: .
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     image: ynym-portal-backend
     container_name: ynym-portal-backend
     hostname: ynym-portal-backend
+    restart: always
+    networks:
+      - ynym-portal-network
+      - nginx-proxy-network
+
+  ynym-portal-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: ynym-portal-frontend
+    container_name: ynym-portal-frontend
+    hostname: ynym-portal-frontend
     restart: always
     networks:
       - ynym-portal-network
