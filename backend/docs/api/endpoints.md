@@ -1,0 +1,884 @@
+# API Endpoints
+
+This page documents all available API endpoints.
+
+## Health Check
+
+### GET /api/health
+
+Health check endpoint to verify the API is running.
+
+**Response:**
+
+```json
+{
+  "status": "ok",
+  "environment": "development"
+}
+```
+
+---
+
+## Tasks
+
+### GET /api/tasks
+
+タスク一覧を取得します。
+
+**説明:**
+
+ユーザーのすべてのタスクを取得します。タスクは以下のルールに従ってソートされます：
+
+1. **期日昇順 (最も近い期日が最初)**: `due_date ASC NULLS LAST`
+2. **期日なしのタスク**: 期日ありのタスク後に表示
+3. **同一グループ内での作成日時昇順**: `created_at ASC`
+
+**Query Parameters:**
+
+| Parameter | Type    | Default | Description                     |
+| --------- | ------- | ------- | ------------------------------- |
+| skip      | integer | 0       | スキップするレコード数          |
+| limit     | integer | 100     | 取得するレコード数（最大 1000） |
+
+**Response (200 OK):**
+
+```json
+{
+  "data": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "user_id": "550e8400-e29b-41d4-a716-446655440001",
+      "title": "期日ありのタスク",
+      "description": "これはタスクの説明です",
+      "is_completed": false,
+      "completed_at": null,
+      "due_date": "2025-11-30",
+      "order": 0,
+      "created_at": "2025-11-12T10:30:00",
+      "updated_at": "2025-11-12T10:30:00"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440002",
+      "user_id": "550e8400-e29b-41d4-a716-446655440001",
+      "title": "期日なしのタスク",
+      "description": "期日が設定されていません",
+      "is_completed": false,
+      "completed_at": null,
+      "due_date": null,
+      "order": 0,
+      "created_at": "2025-11-12T11:00:00",
+      "updated_at": "2025-11-12T11:00:00"
+    }
+  ],
+  "message": "タスク一覧を取得しました"
+}
+```
+
+**Response (500 Internal Server Error):**
+
+```json
+{
+  "detail": "Internal server error"
+}
+```
+
+---
+
+### POST /api/tasks
+
+新規タスクを作成します。
+
+**説明:**
+
+ユーザーが新しいタスクを作成します。タスク作成後、created_at と updated_at は自動的に現在の JST 時刻に設定されます。
+
+**Request Body:**
+
+| Field        | Type    | Required | Description                      |
+| ------------ | ------- | -------- | -------------------------------- |
+| title        | string  | Yes      | タスクのタイトル (1-255 文字)    |
+| description  | string  | No       | タスクの説明 (0-2000 文字)       |
+| due_date     | string  | No       | 期日 (ISO 8601 形式: YYYY-MM-DD) |
+| is_completed | boolean | No       | 完了状態 (デフォルト: false)     |
+
+**Example Request:**
+
+```json
+{
+  "title": "新規タスク",
+  "description": "これはテストタスクです",
+  "due_date": "2025-12-31",
+  "is_completed": false
+}
+```
+
+**Response (201 Created):**
+
+```json
+{
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440003",
+    "user_id": "550e8400-e29b-41d4-a716-446655440000",
+    "title": "新規タスク",
+    "description": "これはテストタスクです",
+    "is_completed": false,
+    "completed_at": null,
+    "due_date": "2025-12-31",
+    "order": 0,
+    "created_at": "2025-11-14T20:54:07+09:00",
+    "updated_at": "2025-11-14T20:54:07+09:00"
+  },
+  "message": "タスクが作成されました"
+}
+```
+
+**Response (400 Bad Request):**
+
+バリデーションエラーが発生した場合。
+
+```json
+{
+  "errors": ["title: Field required"],
+  "message": "入力データが正しくありません"
+}
+```
+
+例：
+
+- `title` が省略された場合: `"title: Field required"`
+- `title` が空文字列の場合: `"title: String should have at least 1 character"`
+- `title` が 255 文字を超える場合: `"title: String should have at most 255 characters"`
+- `description` が 2000 文字を超える場合: `"description: String should have at most 2000 characters"`
+
+**Response (500 Internal Server Error):**
+
+サーバーエラーが発生した場合。
+
+```json
+{
+  "detail": "Internal server error"
+}
+```
+
+---
+
+## Users
+
+## Notes
+
+### GET /api/notes
+
+ノート一覧を取得します。
+
+**説明:**
+
+ユーザーにひも付くノートを取得します。既定の並び順はカテゴリ名の昇順、次にタイトルの昇順で、カテゴリ未設定のノートは末尾に並びます。
+
+**Query Parameters:**
+
+| Parameter | Type    | Default | Description            |
+| --------- | ------- | ------- | ---------------------- |
+| skip      | integer | 0       | スキップするレコード数 |
+| limit     | integer | 100     | 取得するレコード数     |
+
+**Response (200 OK):**
+
+```json
+{
+  "data": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440100",
+      "user_id": "550e8400-e29b-41d4-a716-446655440000",
+      "category_id": "550e8400-e29b-41d4-a716-446655440010",
+      "title": "買い物メモ",
+      "body": "牛乳とパン",
+      "created_at": "2026-02-10T10:00:00+09:00",
+      "updated_at": "2026-02-10T10:00:00+09:00"
+    }
+  ],
+  "message": "ノート一覧を取得しました"
+}
+```
+
+---
+
+### POST /api/notes
+
+新規ノートを作成します。
+
+**Request Body:**
+
+| Field       | Type   | Required | Description           |
+| ----------- | ------ | -------- | --------------------- |
+| title       | string | Yes      | タイトル (1-255 文字) |
+| body        | string | Yes      | 本文                  |
+| category_id | string | No       | カテゴリ ID (UUID)    |
+
+**Response (201 Created):**
+
+```json
+{
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440101",
+    "user_id": "550e8400-e29b-41d4-a716-446655440000",
+    "category_id": null,
+    "title": "新しいノート",
+    "body": "本文",
+    "created_at": "2026-02-10T10:05:00+09:00",
+    "updated_at": "2026-02-10T10:05:00+09:00"
+  },
+  "message": "ノートが作成されました"
+}
+```
+
+---
+
+### GET /api/notes/{note_id}
+
+ノートを取得します。
+
+**Response (200 OK):**
+
+```json
+{
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440100",
+    "user_id": "550e8400-e29b-41d4-a716-446655440000",
+    "category_id": null,
+    "title": "買い物メモ",
+    "body": "牛乳とパン",
+    "created_at": "2026-02-10T10:00:00+09:00",
+    "updated_at": "2026-02-10T10:00:00+09:00"
+  },
+  "message": "ノートが取得されました"
+}
+```
+
+---
+
+### PUT /api/notes/{note_id}
+
+ノートを更新します。
+
+**Request Body:**
+
+| Field       | Type   | Required | Description        |
+| ----------- | ------ | -------- | ------------------ |
+| title       | string | No       | タイトル           |
+| body        | string | No       | 本文               |
+| category_id | string | No       | カテゴリ ID (UUID) |
+
+**Response (200 OK):**
+
+```json
+{
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440100",
+    "user_id": "550e8400-e29b-41d4-a716-446655440000",
+    "category_id": "550e8400-e29b-41d4-a716-446655440010",
+    "title": "更新後タイトル",
+    "body": "更新後本文",
+    "created_at": "2026-02-10T10:00:00+09:00",
+    "updated_at": "2026-02-10T10:10:00+09:00"
+  },
+  "message": "ノートが更新されました"
+}
+```
+
+---
+
+### DELETE /api/notes/{note_id}
+
+ノートを削除します。
+
+**Response (200 OK):**
+
+```json
+{
+  "message": "ノートが削除されました"
+}
+```
+
+---
+
+### GET /api/note-categories
+
+カテゴリ一覧を取得します。
+
+**Query Parameters:**
+
+| Parameter | Type    | Default | Description            |
+| --------- | ------- | ------- | ---------------------- |
+| skip      | integer | 0       | スキップするレコード数 |
+| limit     | integer | 100     | 取得するレコード数     |
+
+**Response (200 OK):**
+
+```json
+{
+  "data": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440010",
+      "user_id": "550e8400-e29b-41d4-a716-446655440000",
+      "name": "仕事",
+      "created_at": "2026-02-10T09:00:00+09:00",
+      "updated_at": "2026-02-10T09:00:00+09:00"
+    }
+  ],
+  "message": "カテゴリ一覧を取得しました"
+}
+```
+
+---
+
+### POST /api/note-categories
+
+新規カテゴリを作成します。
+
+**Request Body:**
+
+| Field | Type   | Required | Description             |
+| ----- | ------ | -------- | ----------------------- |
+| name  | string | Yes      | カテゴリ名 (1-255 文字) |
+
+**Response (201 Created):**
+
+```json
+{
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440010",
+    "user_id": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "仕事",
+    "created_at": "2026-02-10T09:00:00+09:00",
+    "updated_at": "2026-02-10T09:00:00+09:00"
+  },
+  "message": "カテゴリが作成されました"
+}
+```
+
+---
+
+### GET /api/note-categories/{category_id}
+
+カテゴリを取得します。
+
+**Response (200 OK):**
+
+```json
+{
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440010",
+    "user_id": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "仕事",
+    "created_at": "2026-02-10T09:00:00+09:00",
+    "updated_at": "2026-02-10T09:00:00+09:00"
+  },
+  "message": "カテゴリが取得されました"
+}
+```
+
+---
+
+### PUT /api/note-categories/{category_id}
+
+カテゴリを更新します。
+
+**Request Body:**
+
+| Field | Type   | Required | Description |
+| ----- | ------ | -------- | ----------- |
+| name  | string | No       | カテゴリ名  |
+
+**Response (200 OK):**
+
+```json
+{
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440010",
+    "user_id": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "更新後カテゴリ",
+    "created_at": "2026-02-10T09:00:00+09:00",
+    "updated_at": "2026-02-10T09:10:00+09:00"
+  },
+  "message": "カテゴリが更新されました"
+}
+```
+
+---
+
+### DELETE /api/note-categories/{category_id}
+
+カテゴリを削除します。
+
+**Response (200 OK):**
+
+```json
+{
+  "message": "カテゴリが削除されました"
+}
+```
+
+(Documentation to be added as endpoints are implemented)
+
+---
+
+## Items
+
+(Documentation to be added as endpoints are implemented)
+
+---
+
+## Authentication
+
+## (Documentation to be added as authentication endpoints are implemented)
+
+## Vehicles
+
+### GET /api/vehicles
+
+所有する車一覧を取得します。
+
+**説明:**
+
+ユーザーが所有するすべての車を取得します。作成日時の新しい順でソートされて返されます。
+
+**クエリパラメータ:**
+
+| パラメータ | デフォルト | 説明                           |
+| ---------- | ---------- | ------------------------------ |
+| skip       | 0          | スキップするレコード数         |
+| limit      | 100        | 取得するレコード数 (最大 1000) |
+
+**成功レスポンス (200):**
+
+```json
+{
+  "data": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "user_id": "550e8400-e29b-41d4-a716-446655440000",
+      "name": "マイカー",
+      "seq": "MG-001",
+      "maker": "Toyota",
+      "model": "Prius",
+      "year": 2023,
+      "number": "東京 123あ 1234",
+      "tank_capacity": 50.0,
+      "created_at": "2025-11-16T16:00:00+09:00",
+      "updated_at": "2025-11-16T16:00:00+09:00"
+    }
+  ],
+  "message": "車一覧を取得しました"
+}
+```
+
+---
+
+### POST /api/vehicles
+
+新規車を作成します。
+
+**説明:**
+
+ユーザーが所有する新しい車を作成します。
+
+**リクエストボディ:**
+
+```json
+{
+  "name": "マイカー",
+  "seq": "MG-001",
+  "maker": "Toyota",
+  "model": "Prius",
+  "year": 2023,
+  "number": "東京 123あ 1234",
+  "tank_capacity": 50.0
+}
+```
+
+**バリデーション:**
+
+- `name`: 必須、1-255 文字
+- `seq`: 必須、1-100 文字
+- `maker`: 必須、1-100 文字
+- `model`: 必須、1-100 文字
+- `year`: オプション
+- `number`: オプション、1-50 文字
+- `tank_capacity`: オプション、正の数
+
+**成功レスポンス (201):**
+
+```json
+{
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440001",
+    "user_id": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "マイカー",
+    "seq": "MG-001",
+    "maker": "Toyota",
+    "model": "Prius",
+    "year": 2023,
+    "number": "東京 123あ 1234",
+    "tank_capacity": 50.0,
+    "created_at": "2025-11-16T16:00:00+09:00",
+    "updated_at": "2025-11-16T16:00:00+09:00"
+  },
+  "message": "車が作成されました"
+}
+```
+
+**エラーレスポンス (400):**
+
+```json
+{
+  "errors": ["name: 車名は必須項目です"],
+  "message": "入力データが正しくありません"
+}
+```
+
+---
+
+### GET /api/vehicles/{vehicle_id}
+
+特定の車を取得します。
+
+**説明:**
+
+指定した車 ID の車情報を取得します。
+
+**パスパラメータ:**
+
+- `vehicle_id`: 車 ID (UUID)
+
+**成功レスポンス (200):**
+
+```json
+{
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440001",
+    "user_id": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "マイカー",
+    "seq": "MG-001",
+    "maker": "Toyota",
+    "model": "Prius",
+    "year": 2023,
+    "number": "東京 123あ 1234",
+    "tank_capacity": 50.0,
+    "created_at": "2025-11-16T16:00:00+09:00",
+    "updated_at": "2025-11-16T16:00:00+09:00"
+  },
+  "message": "車が取得されました"
+}
+```
+
+**エラーレスポンス (404):**
+
+```json
+{
+  "error": "車 ID 550e8400-e29b-41d4-a716-446655440099 が見つかりません",
+  "message": "車が見つかりません"
+}
+```
+
+---
+
+### PUT /api/vehicles/{vehicle_id}
+
+車情報を更新します。
+
+**説明:**
+
+指定した車 ID の車情報を更新します。指定されたフィールドのみが更新されます（部分更新対応）。
+
+**パスパラメータ:**
+
+- `vehicle_id`: 車 ID (UUID)
+
+**リクエストボディ（すべてのフィールドはオプション）:**
+
+```json
+{
+  "name": "新しい名前",
+  "year": 2024
+}
+```
+
+**成功レスポンス (200):**
+
+```json
+{
+  "data": {
+    "id": "550e8400-e29b-41d4-a716-446655440001",
+    "user_id": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "新しい名前",
+    "seq": "MG-001",
+    "maker": "Toyota",
+    "model": "Prius",
+    "year": 2024,
+    "number": "東京 123あ 1234",
+    "tank_capacity": 50.0,
+    "created_at": "2025-11-16T16:00:00+09:00",
+    "updated_at": "2025-11-16T16:05:00+09:00"
+  },
+  "message": "車が更新されました"
+}
+```
+
+**エラーレスポンス (404):**
+
+```json
+{
+  "error": "車 ID 550e8400-e29b-41d4-a716-446655440099 が見つかりません",
+  "message": "車が見つかりません"
+}
+```
+
+---
+
+### DELETE /api/vehicles/{vehicle_id}
+
+車を削除します。
+
+**説明:**
+
+指定した車 ID の車を削除します。
+
+**パスパラメータ:**
+
+- `vehicle_id`: 車 ID (UUID)
+
+**成功レスポンス (204):**
+
+レスポンスボディなし
+
+**エラーレスポンス (404):**
+
+```json
+{
+  "error": "車 ID 550e8400-e29b-41d4-a716-446655440099 が見つかりません",
+  "message": "車が見つかりません"
+}
+```
+
+---
+
+## Fuel Records
+
+### GET /api/fuel-records
+
+燃費記録一覧を取得します。
+
+**説明:**
+
+指定した車の燃費記録を取得します。新規作成順です。
+
+**クエリパラメータ:**
+
+| パラメータ | 型      | デフォルト | 説明                  |
+| ---------- | ------- | ---------- | --------------------- |
+| vehicle_id | UUID    | 必須       | 車 ID                 |
+| limit      | integer | 100        | 取得件数（最大 1000） |
+| offset     | integer | 0          | オフセット            |
+
+**成功レスポンス (200):**
+
+```json
+[
+  {
+    "id": "650e8400-e29b-41d4-a716-446655440001",
+    "vehicle_id": "550e8400-e29b-41d4-a716-446655440001",
+    "user_id": "550e8400-e29b-41d4-a716-446655440000",
+    "refuel_datetime": "2025-11-19T10:00:00+09:00",
+    "total_mileage": 10000.5,
+    "fuel_type": "ハイオク",
+    "unit_price": 165.0,
+    "total_cost": 6600.0,
+    "is_full_tank": true,
+    "gas_station_name": "ENEOS 東京駅前",
+    "created_at": "2025-11-19T10:30:00+09:00",
+    "updated_at": "2025-11-19T10:30:00+09:00"
+  }
+]
+```
+
+---
+
+### POST /api/fuel-records
+
+燃費記録を作成します。
+
+**説明:**
+
+新しい燃費記録を作成します。
+
+**リクエストボディ:**
+
+```json
+{
+  "vehicle_id": "550e8400-e29b-41d4-a716-446655440001",
+  "refuel_datetime": "2025-11-19T10:00:00+09:00",
+  "total_mileage": 10000.5,
+  "fuel_type": "ハイオク",
+  "unit_price": 165.0,
+  "total_cost": 6600.0,
+  "is_full_tank": true,
+  "gas_station_name": "ENEOS 東京駅前"
+}
+```
+
+**成功レスポンス (201 Created):**
+
+```json
+{
+  "id": "650e8400-e29b-41d4-a716-446655440001",
+  "vehicle_id": "550e8400-e29b-41d4-a716-446655440001",
+  "user_id": "550e8400-e29b-41d4-a716-446655440000",
+  "refuel_datetime": "2025-11-19T10:00:00+09:00",
+  "total_mileage": 10000.5,
+  "fuel_type": "ハイオク",
+  "unit_price": 165.0,
+  "total_cost": 6600.0,
+  "is_full_tank": true,
+  "gas_station_name": "ENEOS 東京駅前",
+  "created_at": "2025-11-19T10:30:00+09:00",
+  "updated_at": "2025-11-19T10:30:00+09:00"
+}
+```
+
+---
+
+### GET /api/fuel-records/{fuel_record_id}
+
+燃費記録を取得します。
+
+**説明:**
+
+指定した ID の燃費記録を取得します。
+
+**パスパラメータ:**
+
+- `fuel_record_id`: 燃費記録 ID (UUID)
+
+**成功レスポンス (200):**
+
+```json
+{
+  "id": "650e8400-e29b-41d4-a716-446655440001",
+  "vehicle_id": "550e8400-e29b-41d4-a716-446655440001",
+  "user_id": "550e8400-e29b-41d4-a716-446655440000",
+  "refuel_datetime": "2025-11-19T10:00:00+09:00",
+  "total_mileage": 10000.5,
+  "fuel_type": "ハイオク",
+  "unit_price": 165.0,
+  "total_cost": 6600.0,
+  "is_full_tank": true,
+  "gas_station_name": "ENEOS 東京駅前",
+  "created_at": "2025-11-19T10:30:00+09:00",
+  "updated_at": "2025-11-19T10:30:00+09:00"
+}
+```
+
+**エラーレスポンス (404):**
+
+```json
+{
+  "detail": "燃費記録が見つかりません"
+}
+```
+
+---
+
+### PUT /api/fuel-records/{fuel_record_id}
+
+燃費記録を更新します。
+
+**説明:**
+
+指定した燃費記録を更新します。指定されたフィールドのみ更新します（部分更新対応）。
+
+**パスパラメータ:**
+
+- `fuel_record_id`: 燃費記録 ID (UUID)
+
+**リクエストボディ（すべてオプション）:**
+
+```json
+{
+  "refuel_datetime": "2025-11-19T11:00:00+09:00",
+  "total_mileage": 10100.5,
+  "fuel_type": "レギュラー",
+  "unit_price": 160.0,
+  "total_cost": 6400.0,
+  "is_full_tank": false,
+  "gas_station_name": "JOMO 神宮前"
+}
+```
+
+**成功レスポンス (200):**
+
+```json
+{
+  "id": "650e8400-e29b-41d4-a716-446655440001",
+  "vehicle_id": "550e8400-e29b-41d4-a716-446655440001",
+  "user_id": "550e8400-e29b-41d4-a716-446655440000",
+  "refuel_datetime": "2025-11-19T11:00:00+09:00",
+  "total_mileage": 10100.5,
+  "fuel_type": "レギュラー",
+  "unit_price": 160.0,
+  "total_cost": 6400.0,
+  "is_full_tank": false,
+  "gas_station_name": "JOMO 神宮前",
+  "created_at": "2025-11-19T10:30:00+09:00",
+  "updated_at": "2025-11-19T11:30:00+09:00"
+}
+```
+
+**エラーレスポンス (404):**
+
+```json
+{
+  "detail": "燃費記録が見つかりません"
+}
+```
+
+---
+
+### DELETE /api/fuel-records/{fuel_record_id}
+
+燃費記録を削除します。
+
+**説明:**
+
+指定した燃費記録 ID の燃費記録を削除します（論理削除）。
+
+**パスパラメータ:**
+
+- `fuel_record_id`: 燃費記録 ID (UUID)
+
+**成功レスポンス (204):**
+
+レスポンスボディなし
+
+**エラーレスポンス (404):**
+
+```json
+{
+  "detail": "燃費記録が見つかりません"
+}
+```
+
+---
+
+## Error Codes
+
+| Code | Description           |
+| ---- | --------------------- |
+| 200  | OK                    |
+| 201  | Created               |
+| 204  | No Content            |
+| 400  | Bad Request           |
+| 401  | Unauthorized          |
+| 403  | Forbidden             |
+| 404  | Not Found             |
+| 422  | Validation Error      |
+| 500  | Internal Server Error |
