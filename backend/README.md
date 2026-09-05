@@ -21,20 +21,16 @@ ynym portal 向けの FastAPI バックエンドシステム。
 
 ## クイックスタート
 
-### 1. リポジトリのクローン
+本リポジトリのルートディレクトリから `make` コマンドで起動することも可能です（詳細はルートの [README.md](../README.md) を参照）。  
+個別でバックエンドを操作する場合は、`backend` ディレクトリに移動して以下の手順を行います。
+
+### 1. 依存パッケージのインストール
 
 ```bash
-git clone <repository-url>
-cd ynym-portal-backend
+uv sync --all-groups
 ```
 
-### 2. 依存パッケージのインストール
-
-```bash
-uv sync
-```
-
-### 3. 環境変数の設定
+### 2. 環境変数の設定
 
 `.env.sample` を `.env` にコピーし、環境に合わせて設定を更新します。
 
@@ -51,12 +47,12 @@ cp .env.sample .env
 - `ENVIRONMENT`: 動作環境 (`development`, `production` など)
 - `LOG_LEVEL`: ログレベル (`DEBUG`, `INFO`, `WARNING`, `ERROR`)
 
-### 4. データベースのセットアップ
+### 3. データベースのセットアップ
 
 `migrations/` ディレクトリ内の SQL スクリプトを使用してテーブルの作成を行います。  
 詳細は [migrations/README.md](migrations/README.md) を参照してください。
 
-### 5. 開発サーバーの起動
+### 4. 開発サーバーの起動
 
 ```bash
 uv run uvicorn app.main:app --reload
@@ -116,8 +112,8 @@ uv run mkdocs serve
 
 ## プロジェクト構成
 
-```
-ynym-portal-backend/
+```text
+backend/
 ├── app/                  # アプリケーションコード
 │   ├── core/            # コア設定・DB 接続定義 (config.py, db.py)
 │   ├── middleware/      # ミドルウェア (ロギング等)
@@ -134,7 +130,6 @@ ynym-portal-backend/
 ├── tests/               # テストコード
 │   ├── unit/            # ユニットテスト
 │   └── integration/     # 統合テスト
-├── compose.yml          # Docker Compose 設定
 ├── Dockerfile           # Docker ビルド設定
 ├── pyproject.toml       # プロジェクト設定・依存関係定義
 └── uv.lock              # 依存関係ロックファイル
