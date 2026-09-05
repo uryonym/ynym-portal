@@ -1,19 +1,10 @@
 """タスク API エンドポイント統合テスト."""
 
-import pytest
 from fastapi.testclient import TestClient
 from zoneinfo import ZoneInfo
 
-from app.main import app
-
 # 日本標準時 (JST)
 JST = ZoneInfo("Asia/Tokyo")
-
-
-@pytest.fixture
-def client() -> TestClient:
-    """FastAPI テストクライアント."""
-    return TestClient(app)
 
 
 class TestTaskListEndpoint:

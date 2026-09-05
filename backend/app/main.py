@@ -1,6 +1,6 @@
 """FastAPI アプリケーションインスタンスとスタートアップ/シャットダウンイベント."""
 
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
@@ -39,11 +39,15 @@ app.add_middleware(
 app.add_middleware(LoggingMiddleware)
 
 
-# ルータをマウント
-app.include_router(auth_router)
-app.include_router(users_router)
-app.include_router(tasks_router)
-app.include_router(vehicles_router)
-app.include_router(fuel_records_router)
-app.include_router(note_categories_router)
-app.include_router(notes_router)
+# API ルータをまとめてマウント
+api_router = APIRouter(prefix="/api")
+api_router.include_router(auth_router)
+api_router.include_router(users_router)
+api_router.include_router(tasks_router)
+api_router.include_router(vehicles_router)
+api_router.include_router(fuel_records_router)
+api_router.include_router(note_categories_router)
+api_router.include_router(notes_router)
+
+app.include_router(api_router)
+
