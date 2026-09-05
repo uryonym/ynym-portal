@@ -1,4 +1,6 @@
-常に日本語で出力してください。
+# Frontend AI Agent Rules
+
+プロジェクト全体の共通指示はルートの [AGENTS.md](../AGENTS.md) を参照してください。
 
 <!-- BEGIN:nextjs-agent-rules -->
 
