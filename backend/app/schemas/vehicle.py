@@ -1,6 +1,7 @@
 """Vehicle（車）スキーマ."""
 
-from typing import Optional
+from datetime import datetime
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, field_validator
 
@@ -20,9 +21,9 @@ class VehicleCreate(BaseModel):
     name: str
     maker: str
     model: str
-    year: Optional[int] = None
-    number: Optional[str] = None
-    tank_capacity: Optional[float] = None
+    year: int | None = None
+    number: str | None = None
+    tank_capacity: float | None = None
 
     @field_validator("name")
     @classmethod
@@ -56,7 +57,7 @@ class VehicleCreate(BaseModel):
 
     @field_validator("number")
     @classmethod
-    def validate_number(cls, v: Optional[str]) -> Optional[str]:
+    def validate_number(cls, v: str | None) -> str | None:
         """ナンバーのバリデーション."""
         if v is None:
             return None
@@ -66,7 +67,7 @@ class VehicleCreate(BaseModel):
 
     @field_validator("tank_capacity")
     @classmethod
-    def validate_tank_capacity(cls, v: Optional[float]) -> Optional[float]:
+    def validate_tank_capacity(cls, v: float | None) -> float | None:
         """タンク容量のバリデーション."""
         if v is None:
             return None
@@ -88,17 +89,17 @@ class VehicleUpdate(BaseModel):
         tank_capacity: タンク容量（オプション）
     """
 
-    name: Optional[str] = None
-    seq: Optional[int] = None
-    maker: Optional[str] = None
-    model: Optional[str] = None
-    year: Optional[int] = None
-    number: Optional[str] = None
-    tank_capacity: Optional[float] = None
+    name: str | None = None
+    seq: int | None = None
+    maker: str | None = None
+    model: str | None = None
+    year: int | None = None
+    number: str | None = None
+    tank_capacity: float | None = None
 
     @field_validator("name")
     @classmethod
-    def validate_name(cls, v: Optional[str]) -> Optional[str]:
+    def validate_name(cls, v: str | None) -> str | None:
         """車名のバリデーション."""
         if v is not None:
             if not v.strip():
@@ -110,16 +111,15 @@ class VehicleUpdate(BaseModel):
 
     @field_validator("seq")
     @classmethod
-    def validate_seq(cls, v: Optional[int]) -> Optional[int]:
+    def validate_seq(cls, v: int | None) -> int | None:
         """シーケンスのバリデーション."""
-        if v is not None:
-            if v <= 0:
-                raise ValueError("シーケンスは正の整数である必要があります")
+        if v is not None and v <= 0:
+            raise ValueError("シーケンスは正の整数である必要があります")
         return v
 
     @field_validator("maker")
     @classmethod
-    def validate_maker(cls, v: Optional[str]) -> Optional[str]:
+    def validate_maker(cls, v: str | None) -> str | None:
         """メーカーのバリデーション."""
         if v is not None:
             if not v.strip():
@@ -131,7 +131,7 @@ class VehicleUpdate(BaseModel):
 
     @field_validator("model")
     @classmethod
-    def validate_model(cls, v: Optional[str]) -> Optional[str]:
+    def validate_model(cls, v: str | None) -> str | None:
         """型式のバリデーション."""
         if v is not None:
             if not v.strip():
@@ -143,7 +143,7 @@ class VehicleUpdate(BaseModel):
 
     @field_validator("number")
     @classmethod
-    def validate_number(cls, v: Optional[str]) -> Optional[str]:
+    def validate_number(cls, v: str | None) -> str | None:
         """ナンバーのバリデーション."""
         if v is not None:
             if len(v) > 50:
@@ -153,11 +153,10 @@ class VehicleUpdate(BaseModel):
 
     @field_validator("tank_capacity")
     @classmethod
-    def validate_tank_capacity(cls, v: Optional[float]) -> Optional[float]:
+    def validate_tank_capacity(cls, v: float | None) -> float | None:
         """タンク容量のバリデーション."""
-        if v is not None:
-            if v <= 0:
-                raise ValueError("タンク容量は 0 より大きい値である必要があります")
+        if v is not None and v <= 0:
+            raise ValueError("タンク容量は 0 より大きい値である必要があります")
         return v
 
 
@@ -178,16 +177,16 @@ class VehicleResponse(BaseModel):
         updated_at: 更新日時（ISO 8601）
     """
 
-    id: str
-    user_id: str
+    id: UUID
+    user_id: UUID
     name: str
     seq: int
     maker: str
     model: str
-    year: Optional[int] = None
-    number: Optional[str] = None
-    tank_capacity: Optional[float] = None
-    created_at: str
-    updated_at: str
+    year: int | None = None
+    number: str | None = None
+    tank_capacity: float | None = None
+    created_at: datetime
+    updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)

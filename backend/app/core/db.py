@@ -1,4 +1,5 @@
-from typing import Annotated, Generator
+from collections.abc import Generator
+from typing import Annotated
 
 from fastapi import Depends
 from sqlalchemy import NullPool, create_engine
@@ -15,8 +16,11 @@ session_local = sessionmaker(engine)
 
 # セッション生成
 def get_db() -> Generator[Session, None, None]:
-    with session_local.begin() as session:
+    session = session_local()
+    try:
         yield session
+    finally:
+        session.close()
 
 
 # 互換性のためのエイリアス

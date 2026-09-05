@@ -1,5 +1,7 @@
 """Vehicle（車）スキーマバリデーションテスト."""
 
+from datetime import UTC
+
 import pytest
 from pydantic import ValidationError
 
@@ -142,3 +144,38 @@ class TestVehicleUpdateSchema:
         with pytest.raises(ValidationError) as exc_info:
             VehicleUpdate(tank_capacity=0)
         assert "タンク容量は 0 より大きい値である必要があります" in str(exc_info.value)
+
+
+class TestVehicleResponseSchema:
+    """VehicleResponse スキーマバリデーション."""
+
+    def test_vehicle_response_from_orm_object(self) -> None:
+        """UUID や datetime を持つ ORM オブジェクトから正常に変換できる."""
+        from datetime import datetime
+        from uuid import uuid4
+
+        from app.schemas.vehicle import VehicleResponse
+
+        now = datetime.now(UTC)
+        v_id = uuid4()
+        u_id = uuid4()
+
+        class DummyVehicle:
+            def __init__(self) -> None:
+                self.id = v_id
+                self.user_id = u_id
+                self.name = "マイカー"
+                self.seq = 1
+                self.maker = "Toyota"
+                self.model = "Prius"
+                self.year = 2023
+                self.number = "東京 123"
+                self.tank_capacity = 45.0
+                self.created_at = now
+                self.updated_at = now
+
+        response = VehicleResponse.model_validate(DummyVehicle())
+        assert response.id == v_id
+        assert response.user_id == u_id
+        assert response.created_at == now
+        assert response.updated_at == now
