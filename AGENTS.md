@@ -16,7 +16,7 @@
   - テスト: `pytest`
   - リント・フォーマット: `ruff`
 - **`frontend/`**: Next.js 16 App Router (Node.js 24, React 19, TypeScript, npm)
-  - UI: Tailwind CSS v4, shadcn/ui, Radix UI
+  - UI: Tailwind CSS v4, shadcn/ui (Base UI)
   - リント・フォーマット: `eslint`, `prettier`
 - **ランタイム管理**: `asdf`（`.tool-versions`）※ `mise` は使用しません
 - **タスクランナー**: ルートの `Makefile`（`make dev`, `make test`, `make lint`, `make format`）
@@ -44,3 +44,7 @@
    - フロントエンド: `frontend/.env.local`
 3. **コマンド実行**:
    - 基本的なテスト・リント・開発起動はルートの `make` コマンドを使用してください。
+4. **shadcn/ui 管理コンポーネントの修正禁止**:
+   - `frontend/components/ui/` 配下のコンポーネントは shadcn/ui CLI によって生成・管理されるコンポーネントです。
+   - AI エージェントが勝手に独自改変・拡張を行わないでください（公式 CLI から取得した状態を維持すること）。
+   - 振る舞いやアクセシビリティの調整は、コンポーネント自体の改修ではなく、呼び出し元（Page や Feature コンポーネント側）のプロップス指定（例: `render` や `nativeButton={false}` 等）で行ってください。
