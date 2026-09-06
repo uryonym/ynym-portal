@@ -10,6 +10,7 @@ from app.models.fuel_record import FuelRecord
 from app.repositories.fuel_record_repository import FuelRecordRepository
 from app.schemas.fuel_record import FuelRecordCreate, FuelRecordUpdate
 from app.services.fuel_record_service import FuelRecordService
+from app.utils.exceptions import NotFoundException
 
 JST = timezone(timedelta(hours=9))
 USER_ID = UUID("550e8400-e29b-41d4-a716-446655440000")
@@ -115,6 +116,27 @@ class TestFuelRecordServiceListFuelRecords:
         mock_repo.list_all_by_vehicle_asc.assert_not_called()
 
 
+class TestFuelRecordServiceGetFuelRecord:
+    """get_fuel_record tests."""
+
+    def test_get_success(self, mock_repo):
+        """Gets a fuel record."""
+        record = _make_record(
+            RECORD_ID, total_mileage=500, total_cost=8500, unit_price=170
+        )
+        mock_repo.get_by_id_and_user.return_value = record
+        service = FuelRecordService(mock_repo)
+        result = service.get_fuel_record(RECORD_ID, USER_ID)
+        assert result.id == RECORD_ID
+
+    def test_get_not_found_raises(self, mock_repo):
+        """Raises NotFoundException when record not found."""
+        mock_repo.get_by_id_and_user.return_value = None
+        service = FuelRecordService(mock_repo)
+        with pytest.raises(NotFoundException):
+            service.get_fuel_record(RECORD_ID, USER_ID)
+
+
 class TestFuelRecordServiceCreateFuelRecord:
     """create_fuel_record tests."""
 
@@ -175,17 +197,16 @@ class TestFuelRecordServiceUpdateFuelRecord:
         result = service.update_fuel_record(
             RECORD_ID, FuelRecordUpdate(total_mileage=200), USER_ID
         )
-        assert result is not None
         assert result.total_mileage == 200
 
-    def test_update_not_found_returns_none(self, mock_repo):
-        """Returns None when record not found."""
+    def test_update_not_found_raises(self, mock_repo):
+        """Raises NotFoundException when record not found."""
         mock_repo.get_by_id_and_user.return_value = None
         service = FuelRecordService(mock_repo)
-        result = service.update_fuel_record(
-            RECORD_ID, FuelRecordUpdate(total_mileage=200), USER_ID
-        )
-        assert result is None
+        with pytest.raises(NotFoundException):
+            service.update_fuel_record(
+                RECORD_ID, FuelRecordUpdate(total_mileage=200), USER_ID
+            )
 
 
 class TestFuelRecordServiceDeleteFuelRecord:
@@ -207,13 +228,13 @@ class TestFuelRecordServiceDeleteFuelRecord:
         rec.deleted_at = None
         mock_repo.get_by_id_and_user.return_value = rec
         service = FuelRecordService(mock_repo)
-        result = service.delete_fuel_record(RECORD_ID, USER_ID)
-        assert result is True
+        service.delete_fuel_record(RECORD_ID, USER_ID)
         assert rec.deleted_at is not None
+        mock_repo.save.assert_called_once_with(rec)
 
-    def test_delete_not_found_returns_false(self, mock_repo):
-        """Returns False when record not found."""
+    def test_delete_not_found_raises(self, mock_repo):
+        """Raises NotFoundException when record not found."""
         mock_repo.get_by_id_and_user.return_value = None
         service = FuelRecordService(mock_repo)
-        result = service.delete_fuel_record(RECORD_ID, USER_ID)
-        assert result is False
+        with pytest.raises(NotFoundException):
+            service.delete_fuel_record(RECORD_ID, USER_ID)

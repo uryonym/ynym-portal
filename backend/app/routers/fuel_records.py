@@ -14,7 +14,6 @@ from app.schemas.fuel_record import (
 )
 from app.security.deps import CurrentUser
 from app.services.fuel_record_service import FuelRecordService
-from app.utils.exceptions import NotFoundException
 
 router = APIRouter(prefix="/fuel-records", tags=["fuel-records"])
 
@@ -86,8 +85,6 @@ def get_fuel_record(
 ) -> dict:
     """燃費記録を取得."""
     record = service.get_fuel_record(fuel_record_id, current_user.id)
-    if not record:
-        raise NotFoundException("燃費記録が見つかりません")
     return {
         "data": _to_fuel_record_response(record),
         "message": "燃費記録を取得しました",
@@ -103,8 +100,6 @@ def update_fuel_record(
 ) -> dict:
     """燃費記録を更新."""
     updated = service.update_fuel_record(fuel_record_id, payload, current_user.id)
-    if not updated:
-        raise NotFoundException("燃費記録が見つかりません")
     return {
         "data": _to_fuel_record_response(updated),
         "message": "燃費記録が更新されました",
@@ -118,7 +113,5 @@ def delete_fuel_record(
     service: FuelRecordService = Depends(_get_fuel_service),
 ) -> Response:
     """燃費記録を削除."""
-    deleted = service.delete_fuel_record(fuel_record_id, current_user.id)
-    if not deleted:
-        raise NotFoundException("燃費記録が見つかりません")
+    service.delete_fuel_record(fuel_record_id, current_user.id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

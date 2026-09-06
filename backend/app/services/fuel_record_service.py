@@ -8,6 +8,7 @@ from app.models.base import JST
 from app.models.fuel_record import FuelRecord
 from app.repositories.fuel_record_repository import FuelRecordRepository
 from app.schemas.fuel_record import FuelRecordCreate, FuelRecordUpdate
+from app.utils.exceptions import NotFoundException
 
 
 @dataclass
@@ -93,9 +94,16 @@ class FuelRecordService:
 
         return results
 
-    def get_fuel_record(self, fuel_record_id: UUID, user_id: UUID) -> FuelRecord | None:
-        """燃費記録を取得（見つからない場合は None）."""
-        return self.fuel_record_repo.get_by_id_and_user(fuel_record_id, user_id)
+    def get_fuel_record(self, fuel_record_id: UUID, user_id: UUID) -> FuelRecord:
+        """燃費記録を取得.
+
+        Raises:
+            NotFoundException: 燃費記録が存在しない場合
+        """
+        record = self.fuel_record_repo.get_by_id_and_user(fuel_record_id, user_id)
+        if not record:
+            raise NotFoundException(f"燃費記録 ID {fuel_record_id} が見つかりません")
+        return record
 
     def create_fuel_record(
         self, fuel_record_create: FuelRecordCreate, user_id: UUID
@@ -119,21 +127,16 @@ class FuelRecordService:
         fuel_record_id: UUID,
         fuel_record_update: FuelRecordUpdate,
         user_id: UUID,
-    ) -> FuelRecord | None:
+    ) -> FuelRecord:
         """燃費記録を部分更新."""
         fuel_record = self.get_fuel_record(fuel_record_id, user_id)
-        if not fuel_record:
-            return None
         for key, value in fuel_record_update.model_dump(exclude_unset=True).items():
             if value is not None:
                 setattr(fuel_record, key, value)
         return self.fuel_record_repo.save(fuel_record)
 
-    def delete_fuel_record(self, fuel_record_id: UUID, user_id: UUID) -> bool:
+    def delete_fuel_record(self, fuel_record_id: UUID, user_id: UUID) -> None:
         """燃費記録を論理削除."""
         fuel_record = self.get_fuel_record(fuel_record_id, user_id)
-        if not fuel_record:
-            return False
         fuel_record.deleted_at = datetime.now(JST)
         self.fuel_record_repo.save(fuel_record)
-        return True
