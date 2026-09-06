@@ -12,7 +12,7 @@ export default function DashboardLayout({
     <ProtectedRoute>
       <SidebarProvider>
         <AppSidebar />
-        <SidebarInset>
+        <SidebarInset className="bg-slate-50/60 min-h-screen">
           <Header />
           {children}
         </SidebarInset>

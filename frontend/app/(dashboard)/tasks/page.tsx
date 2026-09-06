@@ -43,7 +43,7 @@ export default function TasksPage() {
 
   return (
     <>
-      <main className="flex-1 p-4 sm:p-6">
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto w-full">
         <TodoList
           todos={todos}
           onToggleComplete={toggleComplete}

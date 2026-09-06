@@ -74,33 +74,58 @@ export default function FuelRecordsPage() {
 
   return (
     <>
-      <main className="flex-1 p-4 sm:p-6">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">燃費管理</h1>
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto w-full space-y-6">
+        {/* Header */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+              燃費管理
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+              給油履歴と燃費を記録します
+            </p>
+          </div>
+          {activeVehicleId && (
+            <Button
+              onClick={handleOpenDialog}
+              className="h-10 px-4 gap-2 w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white rounded-xl shadow-xs cursor-pointer"
+            >
+              <span>給油を記録</span>
+            </Button>
+          )}
+        </div>
 
-          {vehiclesLoading ? (
-            <p className="text-center text-gray-500 py-8">読み込み中...</p>
-          ) : vehicles.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-gray-500 mb-4">
-                燃費記録を開始するには、先に車両を登録してください。
-              </p>
-              <Button render={<Link href="/vehicles" />} nativeButton={false}>
-                車両管理へ
-              </Button>
-            </div>
-          ) : (
-            <>
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  対象車両を選択
-                </label>
+        {vehiclesLoading ? (
+          <div className="flex justify-center py-16">
+            <div className="h-7 w-7 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : vehicles.length === 0 ? (
+          <div className="text-center py-16 bg-white rounded-2xl border border-slate-200/80 p-8 space-y-4">
+            <p className="text-sm text-slate-500">
+              燃費を記録するには、先に車両を登録してください。
+            </p>
+            <Button
+              render={<Link href="/vehicles" />}
+              nativeButton={false}
+              className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl"
+            >
+              車両管理へ
+            </Button>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {/* Vehicle Selector */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 bg-white rounded-2xl border border-slate-200/80 shadow-xs">
+              <label className="text-xs font-semibold text-slate-500 whitespace-nowrap">
+                表示中の車両
+              </label>
+              <div className="flex-1 max-w-xs">
                 <Select
                   value={activeVehicleId || ''}
                   onValueChange={(val) => setSelectedVehicleId(val)}
                 >
-                  <SelectTrigger className="w-full h-10 bg-white">
-                    <SelectValue placeholder="車両を選択してください" />
+                  <SelectTrigger className="w-full h-9 bg-slate-50 border-slate-200 rounded-lg text-sm">
+                    <SelectValue placeholder="車両を選択" />
                   </SelectTrigger>
                   <SelectContent>
                     {vehicles.map((vehicle) => (
@@ -111,17 +136,13 @@ export default function FuelRecordsPage() {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
 
-              {activeVehicleId && (
-                <FuelRecordList
-                  records={records}
-                  onEdit={handleEditRecord}
-                  onAddNew={handleOpenDialog}
-                />
-              )}
-            </>
-          )}
-        </div>
+            {activeVehicleId && (
+              <FuelRecordList records={records} onEdit={handleEditRecord} />
+            )}
+          </div>
+        )}
       </main>
 
       {activeVehicleId && (

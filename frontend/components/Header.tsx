@@ -11,11 +11,13 @@ export default function Header() {
   const { user, logout, isLoading } = useAuth()
 
   return (
-    <header className="sticky top-0 z-40 h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 gap-4">
-      <div className="flex items-center gap-4">
-        <SidebarTrigger className="-ml-1" />
-        <Separator orientation="vertical" className="h-6" />
-        <h1 className="text-2xl font-bold text-gray-900">Ynym Portal</h1>
+    <header className="sticky top-0 z-40 h-14 bg-white/90 backdrop-blur-xs border-b border-slate-200/80 flex items-center justify-between px-4 sm:px-6 gap-4">
+      <div className="flex items-center gap-3">
+        <SidebarTrigger className="-ml-1 text-slate-600 hover:text-slate-900" />
+        <Separator orientation="vertical" className="h-5 bg-slate-200" />
+        <span className="text-base font-semibold text-slate-900 tracking-tight">
+          Ynym Portal
+        </span>
       </div>
 
       {!isLoading && user && (
@@ -25,27 +27,27 @@ export default function Header() {
               <Image
                 src={user.avatar_url}
                 alt={user.name}
-                width={32}
-                height={32}
-                className="h-8 w-8 rounded-full object-cover"
+                width={28}
+                height={28}
+                className="h-7 w-7 rounded-full object-cover ring-1 ring-slate-200"
               />
             ) : (
-              <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                <User className="h-4 w-4 text-gray-600" />
+              <div className="h-7 w-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
+                <User className="h-4 w-4" />
               </div>
             )}
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-xs sm:text-sm font-medium text-slate-700 hidden sm:inline">
               {user.name}
             </span>
           </div>
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
             onClick={logout}
-            className="gap-2"
+            className="h-8 text-xs text-slate-500 hover:text-slate-900 gap-1.5 cursor-pointer"
           >
-            <LogOut className="h-4 w-4" />
-            ログアウト
+            <LogOut className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">ログアウト</span>
           </Button>
         </div>
       )}

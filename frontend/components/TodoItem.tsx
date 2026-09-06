@@ -13,48 +13,47 @@ interface TodoItemProps {
 }
 
 export function TodoItem({ todo, onToggleComplete, onEdit }: TodoItemProps) {
-
   return (
-    <div className="flex items-start gap-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+    <div className="group flex items-start gap-3.5 p-4 bg-white rounded-xl border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all">
       <Checkbox
         checked={todo.is_completed}
         onCheckedChange={() => onToggleComplete(todo.id)}
-        className="mt-1"
+        className="mt-0.5"
         aria-label="タスク完了状態"
       />
 
       <div className="flex-1 min-w-0">
         <h3
-          className={`text-base font-medium wrap-break-word ${
-            todo.is_completed ? 'line-through text-gray-400' : 'text-gray-900'
+          className={`text-sm sm:text-base font-medium wrap-break-word leading-snug transition-colors ${
+            todo.is_completed ? 'line-through text-slate-400' : 'text-slate-900'
           }`}
         >
           {todo.title}
         </h3>
 
         {todo.description && (
-          <p className="text-sm text-gray-600 mt-1 wrap-break-word">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1 wrap-break-word leading-relaxed">
             {todo.description}
           </p>
         )}
 
         {todo.due_date && (
-          <div className="flex items-center gap-1 mt-2 text-sm text-gray-500">
-            <Calendar className="h-4 w-4" />
+          <div className="inline-flex items-center gap-1.5 mt-2 px-2 py-0.5 rounded-md bg-slate-50 text-xs text-slate-500 border border-slate-100">
+            <Calendar className="h-3 w-3" />
             <span>{formatDisplayDate(todo.due_date, 'MM月dd日')}</span>
           </div>
         )}
       </div>
 
-      <div className="flex gap-2 shrink-0">
+      <div className="shrink-0">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => onEdit(todo)}
-          className="h-10 w-10 p-0"
+          className="h-8 w-8 p-0 text-slate-400 hover:text-slate-900 opacity-60 group-hover:opacity-100 transition-opacity cursor-pointer"
           aria-label="編集"
         >
-          <Pencil className="h-4 w-4" />
+          <Pencil className="h-3.5 w-3.5" />
         </Button>
       </div>
     </div>

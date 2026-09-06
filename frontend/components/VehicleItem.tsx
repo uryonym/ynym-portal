@@ -1,7 +1,7 @@
 'use client'
 
 import { Vehicle } from '@/lib/types/vehicle'
-import { Edit } from 'lucide-react'
+import { Pencil, Car } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 interface VehicleItemProps {
@@ -11,30 +11,54 @@ interface VehicleItemProps {
 
 export function VehicleItem({ vehicle, onEdit }: VehicleItemProps) {
   return (
-    <div className="flex items-start justify-between gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-2">
-          <h3 className="text-sm font-semibold text-gray-900">
-            {vehicle.name}
-          </h3>
-          <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">
-            {vehicle.maker} {vehicle.model}
-          </span>
+    <div className="group flex flex-col justify-between p-4 bg-white rounded-xl border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all">
+      <div>
+        <div className="flex items-start justify-between gap-2 mb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
+              <Car className="h-4 w-4" />
+            </div>
+            <div>
+              <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-tight">
+                {vehicle.name}
+              </h3>
+              <p className="text-xs text-slate-500">
+                {vehicle.maker} {vehicle.model}
+              </p>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onEdit(vehicle)}
+            className="h-8 w-8 p-0 text-slate-400 hover:text-slate-900 opacity-60 group-hover:opacity-100 transition-opacity shrink-0 cursor-pointer"
+            aria-label="編集"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+          </Button>
         </div>
-        <div className="space-y-1 text-xs text-gray-600">
-          <p>年式: {vehicle.year}年</p>
-          <p>ナンバー: {vehicle.number}</p>
-          <p>タンク容量: {vehicle.tank_capacity}L</p>
+
+        <div className="grid grid-cols-3 gap-2 pt-3 border-t border-slate-100 text-center text-xs">
+          <div className="bg-slate-50/70 p-1.5 rounded-lg">
+            <span className="block text-[10px] text-slate-400">年式</span>
+            <span className="font-medium text-slate-700">
+              {vehicle.year ? `${vehicle.year}年` : '-'}
+            </span>
+          </div>
+          <div className="bg-slate-50/70 p-1.5 rounded-lg">
+            <span className="block text-[10px] text-slate-400">ナンバー</span>
+            <span className="font-medium text-slate-700">
+              {vehicle.number || '-'}
+            </span>
+          </div>
+          <div className="bg-slate-50/70 p-1.5 rounded-lg">
+            <span className="block text-[10px] text-slate-400">タンク</span>
+            <span className="font-medium text-slate-700">
+              {vehicle.tank_capacity ? `${vehicle.tank_capacity}L` : '-'}
+            </span>
+          </div>
         </div>
       </div>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => onEdit(vehicle)}
-        className="h-8 w-8 p-0 shrink-0"
-      >
-        <Edit className="h-4 w-4" />
-      </Button>
     </div>
   )
 }

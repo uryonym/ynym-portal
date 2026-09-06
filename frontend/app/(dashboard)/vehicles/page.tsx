@@ -43,15 +43,12 @@ export default function VehiclesPage() {
 
   return (
     <>
-      <main className="flex-1 p-4 sm:p-6">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">車両管理</h1>
-          <VehicleList
-            vehicles={vehicles}
-            onEdit={handleEditVehicle}
-            onAddNew={handleAddNew}
-          />
-        </div>
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto w-full">
+        <VehicleList
+          vehicles={vehicles}
+          onEdit={handleEditVehicle}
+          onAddNew={handleAddNew}
+        />
       </main>
 
       <VehicleDialog

@@ -1,7 +1,7 @@
 'use client'
 
 import { FuelRecord } from '@/lib/types/fuel-record'
-import { Edit } from 'lucide-react'
+import { Pencil, Fuel } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { formatDisplayDateTime } from '@/lib/date'
 
@@ -14,53 +14,97 @@ export function FuelRecordItem({ record, onEdit }: FuelRecordItemProps) {
   const refuelDate = formatDisplayDateTime(record.refuel_datetime)
 
   return (
-    <div className="flex items-start justify-between gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-2">
-          <h3 className="text-sm font-semibold text-gray-900">{refuelDate}</h3>
-          <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">
+    <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-white rounded-xl border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all">
+      <div className="flex-1 min-w-0 space-y-2">
+        {/* Header line */}
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="w-6 h-6 rounded-md bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
+            <Fuel className="h-3.5 w-3.5" />
+          </div>
+          <span className="text-sm font-semibold text-slate-900">
+            {refuelDate}
+          </span>
+          <span className="text-[11px] font-medium px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md">
             {record.fuel_type}
           </span>
           {record.is_full_tank && (
-            <span className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded">
+            <span className="text-[11px] font-medium px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200/60 rounded-md">
               満タン
             </span>
           )}
         </div>
-        <div className="space-y-1 text-xs text-gray-600">
-          <div className="flex flex-wrap gap-x-4 gap-y-1">
-            <span>総走行距離: {record.total_mileage.toLocaleString()}km</span>
-            {record.distance_traveled != null && (
-              <span>
-                走行距離: {record.distance_traveled.toLocaleString()}km
-              </span>
-            )}
-          </div>
-          <div className="flex flex-wrap gap-x-4 gap-y-1">
-            <span>単価: ¥{record.unit_price.toLocaleString()}</span>
-            <span>合計: ¥{record.total_cost.toLocaleString()}</span>
-            {record.fuel_amount != null && (
-              <span>給油量: {record.fuel_amount.toFixed(2)}L</span>
-            )}
-          </div>
-          {record.fuel_efficiency != null && (
-            <p className="font-medium text-blue-600">
-              燃費: {record.fuel_efficiency.toFixed(2)}km/L
-            </p>
+
+        {/* Stats Grid */}
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600">
+          <span>
+            総走行:{' '}
+            <strong className="font-semibold text-slate-800">
+              {record.total_mileage.toLocaleString()}
+            </strong>{' '}
+            km
+          </span>
+          {record.distance_traveled != null && (
+            <span>
+              走行:{' '}
+              <strong className="font-semibold text-slate-800">
+                {record.distance_traveled.toLocaleString()}
+              </strong>{' '}
+              km
+            </span>
           )}
-          {record.gas_station_name && (
-            <p>スタンド: {record.gas_station_name}</p>
+          {record.fuel_amount != null && (
+            <span>
+              給油量:{' '}
+              <strong className="font-semibold text-slate-800">
+                {record.fuel_amount.toFixed(2)}
+              </strong>{' '}
+              L
+            </span>
+          )}
+          <span>
+            合計:{' '}
+            <strong className="font-semibold text-slate-800">
+              ¥{record.total_cost.toLocaleString()}
+            </strong>
+          </span>
+          {record.unit_price != null && (
+            <span className="text-slate-400">(¥{record.unit_price}/L)</span>
           )}
         </div>
+
+        {record.gas_station_name && (
+          <p className="text-[11px] text-slate-400">
+            {record.gas_station_name}
+          </p>
+        )}
       </div>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => onEdit(record)}
-        className="h-8 w-8 p-0 shrink-0"
-      >
-        <Edit className="h-4 w-4" />
-      </Button>
+
+      {/* Fuel efficiency badge & edit button */}
+      <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+        {record.fuel_efficiency != null ? (
+          <div className="text-left sm:text-right">
+            <span className="text-[10px] text-slate-400 block">燃費</span>
+            <span className="text-base font-bold text-slate-900">
+              {record.fuel_efficiency.toFixed(2)}
+              <span className="text-xs font-normal text-slate-500 ml-0.5">
+                km/L
+              </span>
+            </span>
+          </div>
+        ) : (
+          <div />
+        )}
+
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onEdit(record)}
+          className="h-8 w-8 p-0 text-slate-400 hover:text-slate-900 opacity-60 group-hover:opacity-100 transition-opacity shrink-0 cursor-pointer"
+          aria-label="編集"
+        >
+          <Pencil className="h-3.5 w-3.5" />
+        </Button>
+      </div>
     </div>
   )
 }
