@@ -10,6 +10,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '@/components/ui/sidebar'
 import { Home, CheckSquare, Car, Fuel, User } from 'lucide-react'
 import { useAuth } from '@/providers/AuthProvider'
@@ -43,11 +44,16 @@ const menuItems = [
 export function AppSidebar() {
   const { user, isLoading } = useAuth()
   const pathname = usePathname()
+  const { setOpenMobile } = useSidebar()
 
   return (
     <Sidebar className="border-r border-slate-200/80 bg-white">
       <SidebarHeader className="p-4 border-b border-slate-100">
-        <Link href="/" className="flex items-center gap-2.5 px-2 py-1">
+        <Link
+          href="/"
+          onClick={() => setOpenMobile(false)}
+          className="flex items-center gap-2.5 px-2 py-1"
+        >
           <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center shadow-xs">
             <Home className="h-4 w-4" />
           </div>
@@ -72,6 +78,7 @@ export function AppSidebar() {
                     <SidebarMenuButton
                       render={<Link href={item.url} />}
                       isActive={isActive}
+                      onClick={() => setOpenMobile(false)}
                       className="h-10 px-3 text-sm font-medium rounded-lg transition-colors"
                     >
                       <item.icon className="h-4 w-4 shrink-0" />
