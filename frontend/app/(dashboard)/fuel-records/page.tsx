@@ -39,6 +39,13 @@ export default function FuelRecordsPage() {
   // 選択中の車両ID（未選択の場合はデフォルトを使用）
   const activeVehicleId = selectedVehicleId ?? defaultVehicleId
 
+  // 表示用の車両名マッピング（SelectValue で ID ではなく車両名を表示するため）
+  const vehicleItems = useMemo(() => {
+    return Object.fromEntries(
+      vehicles.map((v) => [v.id, `${v.name} (${v.maker} ${v.model})`]),
+    )
+  }, [vehicles])
+
   const {
     records,
     isLoading,
@@ -121,6 +128,7 @@ export default function FuelRecordsPage() {
               </label>
               <div className="flex-1 max-w-xs">
                 <Select
+                  items={vehicleItems}
                   value={activeVehicleId || ''}
                   onValueChange={(val) => setSelectedVehicleId(val)}
                 >
