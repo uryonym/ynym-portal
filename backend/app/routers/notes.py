@@ -2,9 +2,7 @@
 
 from uuid import UUID
 
-from fastapi import APIRouter, Body, Depends, Query, status
-from fastapi.responses import JSONResponse
-from pydantic import ValidationError
+from fastapi import APIRouter, Depends, Query, Response, status
 
 from app.core.db import SessionDep
 from app.repositories.note_category_repository import NoteCategoryRepository
@@ -13,21 +11,12 @@ from app.schemas.base import SuccessResponse
 from app.schemas.note import NoteCreate, NoteResponse, NoteUpdate
 from app.security.deps import CurrentUser
 from app.services.note_service import NoteService
-from app.utils.exceptions import NotFoundException
 
 router = APIRouter(prefix="/notes", tags=["notes"])
 
 
 def _get_note_service(db: SessionDep) -> NoteService:
     return NoteService(NoteRepository(db), NoteCategoryRepository(db))
-
-
-def _not_found_message(error: NotFoundException) -> str:
-    return (
-        "カテゴリが見つかりません"
-        if "カテゴリ ID" in str(error)
-        else "ノートが見つかりません"
-    )
 
 
 @router.get("", response_model=SuccessResponse[list[NoteResponse]])
@@ -52,33 +41,11 @@ def list_notes(
 )
 def create_note(
     current_user: CurrentUser,
-    body: dict = Body(default={}),
+    payload: NoteCreate,
     service: NoteService = Depends(_get_note_service),
-) -> dict | JSONResponse:
+) -> dict:
     """新規ノートを作成."""
-    try:
-        note_create = NoteCreate(**body)
-    except ValidationError as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={
-                "errors": [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()],
-                "message": "入力データが正しくありません",
-            },
-        )
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"errors": [str(e)], "message": "リクエストボディが不正です"},
-        )
-
-    try:
-        created = service.create_note(note_create, current_user.id)
-    except NotFoundException as e:
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={"error": str(e), "message": _not_found_message(e)},
-        )
+    created = service.create_note(payload, current_user.id)
     return {
         "data": NoteResponse.model_validate(created),
         "message": "ノートが作成されました",
@@ -90,15 +57,9 @@ def get_note(
     current_user: CurrentUser,
     note_id: UUID,
     service: NoteService = Depends(_get_note_service),
-) -> dict | JSONResponse:
+) -> dict:
     """ノートを取得."""
-    try:
-        note = service.get_note(note_id, current_user.id)
-    except NotFoundException as e:
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={"error": str(e), "message": "ノートが見つかりません"},
-        )
+    note = service.get_note(note_id, current_user.id)
     return {
         "data": NoteResponse.model_validate(note),
         "message": "ノートが取得されました",
@@ -109,33 +70,11 @@ def get_note(
 def update_note(
     current_user: CurrentUser,
     note_id: UUID,
-    body: dict = Body(default={}),
+    payload: NoteUpdate,
     service: NoteService = Depends(_get_note_service),
-) -> dict | JSONResponse:
+) -> dict:
     """ノートを更新."""
-    try:
-        note_update = NoteUpdate(**body)
-    except ValidationError as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={
-                "errors": [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()],
-                "message": "入力データが正しくありません",
-            },
-        )
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"errors": [str(e)], "message": "リクエストボディが不正です"},
-        )
-
-    try:
-        updated = service.update_note(note_id, note_update, current_user.id)
-    except NotFoundException as e:
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={"error": str(e), "message": _not_found_message(e)},
-        )
+    updated = service.update_note(note_id, payload, current_user.id)
     return {
         "data": NoteResponse.model_validate(updated),
         "message": "ノートが更新されました",
@@ -147,9 +86,7 @@ def delete_note(
     current_user: CurrentUser,
     note_id: UUID,
     service: NoteService = Depends(_get_note_service),
-) -> None:
+) -> Response:
     """ノートを削除."""
-    try:
-        service.delete_note(note_id, current_user.id)
-    except NotFoundException:
-        raise
+    service.delete_note(note_id, current_user.id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

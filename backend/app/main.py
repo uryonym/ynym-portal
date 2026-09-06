@@ -14,6 +14,7 @@ from app.routers import (
     users_router,
     vehicles_router,
 )
+from app.utils.exceptions import register_exception_handlers
 from app.utils.logging import setup_logging
 
 # ロギング設定
@@ -25,6 +26,9 @@ app = FastAPI(
     description="ynym portal 向け FastAPI バックエンドシステム",
     version="0.1.0",
 )
+
+# 例外ハンドラー登録
+register_exception_handlers(app)
 
 # CORS ミドルウェア設定
 app.add_middleware(

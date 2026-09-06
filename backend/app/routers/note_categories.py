@@ -2,9 +2,7 @@
 
 from uuid import UUID
 
-from fastapi import APIRouter, Body, Depends, Query, status
-from fastapi.responses import JSONResponse
-from pydantic import ValidationError
+from fastapi import APIRouter, Depends, Query, Response, status
 
 from app.core.db import SessionDep
 from app.repositories.note_category_repository import NoteCategoryRepository
@@ -17,7 +15,6 @@ from app.schemas.note_category import (
 )
 from app.security.deps import CurrentUser
 from app.services.note_category_service import NoteCategoryService
-from app.utils.exceptions import NotFoundException
 
 router = APIRouter(prefix="/note-categories", tags=["note-categories"])
 
@@ -50,27 +47,11 @@ def list_categories(
 )
 def create_category(
     current_user: CurrentUser,
-    body: dict = Body(default={}),
+    payload: NoteCategoryCreate,
     service: NoteCategoryService = Depends(_get_note_category_service),
-) -> dict | JSONResponse:
+) -> dict:
     """新規カテゴリを作成."""
-    try:
-        category_create = NoteCategoryCreate(**body)
-    except ValidationError as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={
-                "errors": [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()],
-                "message": "入力データが正しくありません",
-            },
-        )
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"errors": [str(e)], "message": "リクエストボディが不正です"},
-        )
-
-    created = service.create_category(category_create, current_user.id)
+    created = service.create_category(payload, current_user.id)
     return {
         "data": NoteCategoryResponse.model_validate(created),
         "message": "カテゴリが作成されました",
@@ -82,15 +63,9 @@ def get_category(
     current_user: CurrentUser,
     category_id: UUID,
     service: NoteCategoryService = Depends(_get_note_category_service),
-) -> dict | JSONResponse:
+) -> dict:
     """カテゴリを取得."""
-    try:
-        category = service.get_category(category_id, current_user.id)
-    except NotFoundException as e:
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={"error": str(e), "message": "カテゴリが見つかりません"},
-        )
+    category = service.get_category(category_id, current_user.id)
     return {
         "data": NoteCategoryResponse.model_validate(category),
         "message": "カテゴリが取得されました",
@@ -101,33 +76,11 @@ def get_category(
 def update_category(
     current_user: CurrentUser,
     category_id: UUID,
-    body: dict = Body(default={}),
+    payload: NoteCategoryUpdate,
     service: NoteCategoryService = Depends(_get_note_category_service),
-) -> dict | JSONResponse:
+) -> dict:
     """カテゴリを更新."""
-    try:
-        category_update = NoteCategoryUpdate(**body)
-    except ValidationError as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={
-                "errors": [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()],
-                "message": "入力データが正しくありません",
-            },
-        )
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"errors": [str(e)], "message": "リクエストボディが不正です"},
-        )
-
-    try:
-        updated = service.update_category(category_id, category_update, current_user.id)
-    except NotFoundException as e:
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={"error": str(e), "message": "カテゴリが見つかりません"},
-        )
+    updated = service.update_category(category_id, payload, current_user.id)
     return {
         "data": NoteCategoryResponse.model_validate(updated),
         "message": "カテゴリが更新されました",
@@ -139,9 +92,7 @@ def delete_category(
     current_user: CurrentUser,
     category_id: UUID,
     service: NoteCategoryService = Depends(_get_note_category_service),
-) -> None:
+) -> Response:
     """カテゴリを削除."""
-    try:
-        service.delete_category(category_id, current_user.id)
-    except NotFoundException:
-        raise
+    service.delete_category(category_id, current_user.id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

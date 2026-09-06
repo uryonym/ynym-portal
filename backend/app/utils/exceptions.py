@@ -46,3 +46,62 @@ class AuthorizationException(ApplicationException):
     def __init__(self, message: str = "アクセス権限が不足しています"):
         """認可例外を初期化."""
         super().__init__(message, status_code=403)
+
+
+def _format_not_found_message(detail: str) -> str:
+    """リソース固有の見つからないメッセージを生成."""
+    if "タスク" in detail:
+        return "タスクが見つかりません"
+    if "カテゴリ" in detail:
+        return "カテゴリが見つかりません"
+    if "車" in detail or "車両" in detail:
+        return "車が見つかりません"
+    if "ノート" in detail:
+        return "ノートが見つかりません"
+    if "燃費記録" in detail:
+        return "燃費記録が見つかりません"
+    return detail
+
+
+def register_exception_handlers(app) -> None:
+    """FastAPI アプリケーションにグローバル例外ハンドラーを登録."""
+    from fastapi import Request, status
+    from fastapi.exceptions import RequestValidationError
+    from fastapi.responses import JSONResponse
+
+    @app.exception_handler(NotFoundException)
+    async def not_found_handler(
+        request: Request, exc: NotFoundException
+    ) -> JSONResponse:
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={
+                "error": exc.message,
+                "message": _format_not_found_message(exc.message),
+            },
+        )
+
+    @app.exception_handler(RequestValidationError)
+    async def validation_exception_handler(
+        request: Request, exc: RequestValidationError
+    ) -> JSONResponse:
+        errors = [f"{err['loc'][-1]}: {err['msg']}" for err in exc.errors()]
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={
+                "errors": errors,
+                "message": "入力データが正しくありません",
+            },
+        )
+
+    @app.exception_handler(ApplicationException)
+    async def application_exception_handler(
+        request: Request, exc: ApplicationException
+    ) -> JSONResponse:
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={
+                "error": exc.message,
+                "message": exc.message,
+            },
+        )

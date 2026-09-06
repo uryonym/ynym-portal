@@ -2,9 +2,7 @@
 
 from uuid import UUID
 
-from fastapi import APIRouter, Body, Depends, Query, status
-from fastapi.responses import JSONResponse, Response
-from pydantic import ValidationError
+from fastapi import APIRouter, Depends, Query, Response, status
 
 from app.core.db import SessionDep
 from app.repositories.task_repository import TaskRepository
@@ -12,7 +10,6 @@ from app.schemas.base import SuccessResponse
 from app.schemas.task import TaskCreate, TaskResponse, TaskUpdate
 from app.security.deps import CurrentUser
 from app.services.task_service import TaskService
-from app.utils.exceptions import NotFoundException
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 
@@ -46,27 +43,11 @@ def list_tasks(
 )
 def create_task(
     current_user: CurrentUser,
-    body: dict = Body(default={}),
+    payload: TaskCreate,
     service: TaskService = Depends(_get_task_service),
-) -> dict | JSONResponse:
+) -> dict:
     """新規タスクを作成."""
-    try:
-        task_create = TaskCreate(**body)
-    except ValidationError as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={
-                "errors": [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()],
-                "message": "入力データが正しくありません",
-            },
-        )
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"errors": [str(e)], "message": "リクエストボディが不正です"},
-        )
-
-    created_task = service.create_task(task_create, current_user.id)
+    created_task = service.create_task(payload, current_user.id)
     return {
         "data": TaskResponse.model_validate(created_task),
         "message": "タスクが作成されました",
@@ -78,15 +59,9 @@ def get_task(
     current_user: CurrentUser,
     task_id: UUID,
     service: TaskService = Depends(_get_task_service),
-) -> dict | JSONResponse:
+) -> dict:
     """タスクを取得."""
-    try:
-        task = service.get_task(task_id, current_user.id)
-    except NotFoundException as e:
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={"error": str(e), "message": "タスクが見つかりません"},
-        )
+    task = service.get_task(task_id, current_user.id)
     return {
         "data": TaskResponse.model_validate(task),
         "message": "タスクが取得されました",
@@ -97,51 +72,23 @@ def get_task(
 def update_task(
     current_user: CurrentUser,
     task_id: UUID,
-    body: dict = Body(default={}),
+    payload: TaskUpdate,
     service: TaskService = Depends(_get_task_service),
-) -> dict | JSONResponse:
+) -> dict:
     """タスクを更新."""
-    try:
-        task_update = TaskUpdate(**body)
-    except ValidationError as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={
-                "errors": [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()],
-                "message": "入力データが正しくありません",
-            },
-        )
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"errors": [str(e)], "message": "リクエストボディが不正です"},
-        )
-
-    try:
-        updated_task = service.update_task(task_id, task_update, current_user.id)
-    except NotFoundException as e:
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={"error": str(e), "message": "タスクが見つかりません"},
-        )
+    updated_task = service.update_task(task_id, payload, current_user.id)
     return {
         "data": TaskResponse.model_validate(updated_task),
         "message": "タスクが更新されました",
     }
 
 
-@router.delete("/{task_id}", response_model=None)
+@router.delete("/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_task(
     current_user: CurrentUser,
     task_id: UUID,
     service: TaskService = Depends(_get_task_service),
-) -> Response | JSONResponse:
+) -> Response:
     """タスクを削除."""
-    try:
-        service.delete_task(task_id, current_user.id)
-    except NotFoundException as e:
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={"error": str(e), "message": "タスクが見つかりません"},
-        )
+    service.delete_task(task_id, current_user.id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

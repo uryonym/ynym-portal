@@ -2,9 +2,7 @@
 
 from uuid import UUID
 
-from fastapi import APIRouter, Body, Depends, Query, status
-from fastapi.responses import JSONResponse
-from pydantic import ValidationError
+from fastapi import APIRouter, Depends, Query, Response, status
 
 from app.core.db import SessionDep
 from app.repositories.vehicle_repository import VehicleRepository
@@ -12,7 +10,6 @@ from app.schemas.base import SuccessResponse
 from app.schemas.vehicle import VehicleCreate, VehicleResponse, VehicleUpdate
 from app.security.deps import CurrentUser
 from app.services.vehicle_service import VehicleService
-from app.utils.exceptions import NotFoundException
 
 router = APIRouter(prefix="/vehicles", tags=["vehicles"])
 
@@ -43,27 +40,11 @@ def list_vehicles(
 )
 def create_vehicle(
     current_user: CurrentUser,
-    body: dict = Body(default={}),
+    payload: VehicleCreate,
     service: VehicleService = Depends(_get_vehicle_service),
-) -> dict | JSONResponse:
+) -> dict:
     """新規車両を作成."""
-    try:
-        vehicle_create = VehicleCreate(**body)
-    except ValidationError as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={
-                "errors": [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()],
-                "message": "入力データが正しくありません",
-            },
-        )
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"errors": [str(e)], "message": "リクエストボディが不正です"},
-        )
-
-    created = service.create_vehicle(vehicle_create, current_user.id)
+    created = service.create_vehicle(payload, current_user.id)
     return {
         "data": VehicleResponse.model_validate(created),
         "message": "車が作成されました",
@@ -75,15 +56,9 @@ def get_vehicle(
     current_user: CurrentUser,
     vehicle_id: UUID,
     service: VehicleService = Depends(_get_vehicle_service),
-) -> dict | JSONResponse:
+) -> dict:
     """車両を取得."""
-    try:
-        vehicle = service.get_vehicle(vehicle_id, current_user.id)
-    except NotFoundException as e:
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={"error": str(e), "message": "車が見つかりません"},
-        )
+    vehicle = service.get_vehicle(vehicle_id, current_user.id)
     return {
         "data": VehicleResponse.model_validate(vehicle),
         "message": "車が取得されました",
@@ -94,33 +69,11 @@ def get_vehicle(
 def update_vehicle(
     current_user: CurrentUser,
     vehicle_id: UUID,
-    body: dict = Body(default={}),
+    payload: VehicleUpdate,
     service: VehicleService = Depends(_get_vehicle_service),
-) -> dict | JSONResponse:
+) -> dict:
     """車両を更新."""
-    try:
-        vehicle_update = VehicleUpdate(**body)
-    except ValidationError as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={
-                "errors": [f"{err['loc'][0]}: {err['msg']}" for err in e.errors()],
-                "message": "入力データが正しくありません",
-            },
-        )
-    except Exception as e:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"errors": [str(e)], "message": "リクエストボディが不正です"},
-        )
-
-    try:
-        updated = service.update_vehicle(vehicle_id, vehicle_update, current_user.id)
-    except NotFoundException as e:
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={"error": str(e), "message": "車が見つかりません"},
-        )
+    updated = service.update_vehicle(vehicle_id, payload, current_user.id)
     return {
         "data": VehicleResponse.model_validate(updated),
         "message": "車が更新されました",
@@ -132,9 +85,7 @@ def delete_vehicle(
     current_user: CurrentUser,
     vehicle_id: UUID,
     service: VehicleService = Depends(_get_vehicle_service),
-) -> None:
+) -> Response:
     """車両を削除."""
-    try:
-        service.delete_vehicle(vehicle_id, current_user.id)
-    except NotFoundException:
-        raise
+    service.delete_vehicle(vehicle_id, current_user.id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
