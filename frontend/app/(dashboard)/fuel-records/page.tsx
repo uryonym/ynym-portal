@@ -85,9 +85,7 @@ export default function FuelRecordsPage() {
               <p className="text-gray-500 mb-4">
                 燃費記録を開始するには、先に車両を登録してください。
               </p>
-              <Button asChild>
-                <Link href="/vehicles">車両管理へ</Link>
-              </Button>
+              <Button render={<Link href="/vehicles" />}>車両管理へ</Button>
             </div>
           ) : (
             <>

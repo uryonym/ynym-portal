@@ -134,22 +134,24 @@ export function TodoForm({
             <FormItem className="flex flex-col">
               <FormLabel>期日</FormLabel>
               <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start text-left font-normal h-10"
-                      disabled={isLoading}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {field.value
-                        ? formatDisplayDate(
-                            parseDateString(field.value, 'yyyy-MM-dd'),
-                          )
-                        : '期日を選択'}
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
+                <FormControl>
+                  <PopoverTrigger
+                    render={
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start text-left font-normal h-10"
+                        disabled={isLoading}
+                      />
+                    }
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {field.value
+                      ? formatDisplayDate(
+                          parseDateString(field.value, 'yyyy-MM-dd'),
+                        )
+                      : '期日を選択'}
+                  </PopoverTrigger>
+                </FormControl>
                 <PopoverContent className="w-auto p-0" align="start">
                   <div className="flex flex-col">
                     <Calendar

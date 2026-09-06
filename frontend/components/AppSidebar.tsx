@@ -52,14 +52,12 @@ export function AppSidebar() {
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
-                    asChild
+                    render={<Link href={item.url} />}
                     size="lg"
                     className="h-12 text-base"
                   >
-                    <Link href={item.url}>
-                      <item.icon className="h-6 w-6" />
-                      <span>{item.title}</span>
-                    </Link>
+                    <item.icon className="h-6 w-6" />
+                    <span>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

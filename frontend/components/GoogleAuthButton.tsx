@@ -33,18 +33,14 @@ const GoogleIcon = () => (
 export function GoogleAuthButton() {
   return (
     <Button
-      asChild
+      render={<a href={GOOGLE_AUTH_LOGIN_URL} rel="noopener noreferrer" />}
       variant="outline"
       className="w-full border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-colors"
       size="lg"
       aria-label="Googleでログイン"
     >
-      <a href={GOOGLE_AUTH_LOGIN_URL} rel="noopener noreferrer">
-        <GoogleIcon />
-        <span className="ml-3 font-medium text-slate-900">
-          Googleでログイン
-        </span>
-      </a>
+      <GoogleIcon />
+      <span className="ml-3 font-medium text-slate-900">Googleでログイン</span>
     </Button>
   )
 }
