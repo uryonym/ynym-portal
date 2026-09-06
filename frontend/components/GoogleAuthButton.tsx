@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { GOOGLE_AUTH_LOGIN_URL } from '@/lib/constants'
+import { cn } from '@/lib/utils'
 
 const GoogleIcon = () => (
   <svg
@@ -30,18 +31,25 @@ const GoogleIcon = () => (
   </svg>
 )
 
-export function GoogleAuthButton() {
+interface GoogleAuthButtonProps {
+  className?: string
+}
+
+export function GoogleAuthButton({ className }: GoogleAuthButtonProps) {
   return (
     <Button
       render={<a href={GOOGLE_AUTH_LOGIN_URL} rel="noopener noreferrer" />}
       nativeButton={false}
       variant="outline"
-      className="w-full border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-colors"
+      className={cn(
+        'w-full h-12 bg-white hover:bg-slate-50 text-slate-800 font-semibold border-slate-300/80 hover:border-slate-400 shadow-sm hover:shadow transition-all duration-200 active:scale-[0.99] gap-3 text-base justify-center cursor-pointer',
+        className,
+      )}
       size="lg"
-      aria-label="Googleでログイン"
+      aria-label="Googleアカウントでログイン"
     >
       <GoogleIcon />
-      <span className="ml-3 font-medium text-slate-900">Googleでログイン</span>
+      <span className="text-slate-800 tracking-tight">Googleでログイン</span>
     </Button>
   )
 }
