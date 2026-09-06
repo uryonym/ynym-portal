@@ -34,6 +34,7 @@ export function GoogleAuthButton() {
   return (
     <Button
       render={<a href={GOOGLE_AUTH_LOGIN_URL} rel="noopener noreferrer" />}
+      nativeButton={false}
       variant="outline"
       className="w-full border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-colors"
       size="lg"
