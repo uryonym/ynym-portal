@@ -9,6 +9,7 @@ from pydantic import ValidationError
 from app.core.db import SessionDep
 from app.repositories.note_category_repository import NoteCategoryRepository
 from app.repositories.note_repository import NoteRepository
+from app.schemas.base import SuccessResponse
 from app.schemas.note_category import (
     NoteCategoryCreate,
     NoteCategoryResponse,
@@ -25,7 +26,7 @@ def _get_note_category_service(db: SessionDep) -> NoteCategoryService:
     return NoteCategoryService(NoteCategoryRepository(db), NoteRepository(db))
 
 
-@router.get("", response_model=dict)
+@router.get("", response_model=SuccessResponse[list[NoteCategoryResponse]])
 def list_categories(
     current_user: CurrentUser,
     skip: int = Query(0, ge=0),
@@ -42,7 +43,11 @@ def list_categories(
     }
 
 
-@router.post("", response_model=None, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=SuccessResponse[NoteCategoryResponse],
+    status_code=status.HTTP_201_CREATED,
+)
 def create_category(
     current_user: CurrentUser,
     body: dict = Body(default={}),
@@ -72,7 +77,7 @@ def create_category(
     }
 
 
-@router.get("/{category_id}", response_model=None)
+@router.get("/{category_id}", response_model=SuccessResponse[NoteCategoryResponse])
 def get_category(
     current_user: CurrentUser,
     category_id: UUID,
@@ -92,7 +97,7 @@ def get_category(
     }
 
 
-@router.put("/{category_id}", response_model=None)
+@router.put("/{category_id}", response_model=SuccessResponse[NoteCategoryResponse])
 def update_category(
     current_user: CurrentUser,
     category_id: UUID,

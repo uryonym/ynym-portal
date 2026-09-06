@@ -8,6 +8,7 @@ from pydantic import ValidationError
 
 from app.core.db import SessionDep
 from app.repositories.task_repository import TaskRepository
+from app.schemas.base import SuccessResponse
 from app.schemas.task import TaskCreate, TaskResponse, TaskUpdate
 from app.security.deps import CurrentUser
 from app.services.task_service import TaskService
@@ -20,7 +21,7 @@ def _get_task_service(db: SessionDep) -> TaskService:
     return TaskService(TaskRepository(db))
 
 
-@router.get("", response_model=dict)
+@router.get("", response_model=SuccessResponse[list[TaskResponse]])
 def list_tasks(
     current_user: CurrentUser,
     skip: int = Query(0, ge=0),
@@ -38,7 +39,11 @@ def list_tasks(
     }
 
 
-@router.post("", response_model=None, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=SuccessResponse[TaskResponse],
+    status_code=status.HTTP_201_CREATED,
+)
 def create_task(
     current_user: CurrentUser,
     body: dict = Body(default={}),
@@ -68,7 +73,7 @@ def create_task(
     }
 
 
-@router.get("/{task_id}", response_model=None)
+@router.get("/{task_id}", response_model=SuccessResponse[TaskResponse])
 def get_task(
     current_user: CurrentUser,
     task_id: UUID,
@@ -88,7 +93,7 @@ def get_task(
     }
 
 
-@router.put("/{task_id}", response_model=None)
+@router.put("/{task_id}", response_model=SuccessResponse[TaskResponse])
 def update_task(
     current_user: CurrentUser,
     task_id: UUID,

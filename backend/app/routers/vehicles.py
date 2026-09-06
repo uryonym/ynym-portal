@@ -8,6 +8,7 @@ from pydantic import ValidationError
 
 from app.core.db import SessionDep
 from app.repositories.vehicle_repository import VehicleRepository
+from app.schemas.base import SuccessResponse
 from app.schemas.vehicle import VehicleCreate, VehicleResponse, VehicleUpdate
 from app.security.deps import CurrentUser
 from app.services.vehicle_service import VehicleService
@@ -20,7 +21,7 @@ def _get_vehicle_service(db: SessionDep) -> VehicleService:
     return VehicleService(VehicleRepository(db))
 
 
-@router.get("", response_model=dict)
+@router.get("", response_model=SuccessResponse[list[VehicleResponse]])
 def list_vehicles(
     current_user: CurrentUser,
     skip: int = Query(0, ge=0),
@@ -35,7 +36,11 @@ def list_vehicles(
     }
 
 
-@router.post("", response_model=None, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=SuccessResponse[VehicleResponse],
+    status_code=status.HTTP_201_CREATED,
+)
 def create_vehicle(
     current_user: CurrentUser,
     body: dict = Body(default={}),
@@ -65,7 +70,7 @@ def create_vehicle(
     }
 
 
-@router.get("/{vehicle_id}", response_model=None)
+@router.get("/{vehicle_id}", response_model=SuccessResponse[VehicleResponse])
 def get_vehicle(
     current_user: CurrentUser,
     vehicle_id: UUID,
@@ -85,7 +90,7 @@ def get_vehicle(
     }
 
 
-@router.put("/{vehicle_id}", response_model=None)
+@router.put("/{vehicle_id}", response_model=SuccessResponse[VehicleResponse])
 def update_vehicle(
     current_user: CurrentUser,
     vehicle_id: UUID,

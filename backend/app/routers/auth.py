@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from app.core.config import settings
 from app.core.db import SessionDep
 from app.repositories.user_repository import UserRepository
+from app.schemas.base import MessageResponse
 from app.services.auth_service import auth_service
 from app.services.user_service import UserService
 
@@ -94,7 +95,7 @@ def google_callback(
     return response
 
 
-@router.post("/logout")
+@router.post("/logout", response_model=MessageResponse)
 def logout():
     """ログアウト（セッションクッキーを削除）."""
     response = JSONResponse(content={"message": "Successfully logged out"})

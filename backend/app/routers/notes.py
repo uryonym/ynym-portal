@@ -9,6 +9,7 @@ from pydantic import ValidationError
 from app.core.db import SessionDep
 from app.repositories.note_category_repository import NoteCategoryRepository
 from app.repositories.note_repository import NoteRepository
+from app.schemas.base import SuccessResponse
 from app.schemas.note import NoteCreate, NoteResponse, NoteUpdate
 from app.security.deps import CurrentUser
 from app.services.note_service import NoteService
@@ -29,7 +30,7 @@ def _not_found_message(error: NotFoundException) -> str:
     )
 
 
-@router.get("", response_model=dict)
+@router.get("", response_model=SuccessResponse[list[NoteResponse]])
 def list_notes(
     current_user: CurrentUser,
     skip: int = Query(0, ge=0),
@@ -44,7 +45,11 @@ def list_notes(
     }
 
 
-@router.post("", response_model=None, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=SuccessResponse[NoteResponse],
+    status_code=status.HTTP_201_CREATED,
+)
 def create_note(
     current_user: CurrentUser,
     body: dict = Body(default={}),
@@ -80,7 +85,7 @@ def create_note(
     }
 
 
-@router.get("/{note_id}", response_model=None)
+@router.get("/{note_id}", response_model=SuccessResponse[NoteResponse])
 def get_note(
     current_user: CurrentUser,
     note_id: UUID,
@@ -100,7 +105,7 @@ def get_note(
     }
 
 
-@router.put("/{note_id}", response_model=None)
+@router.put("/{note_id}", response_model=SuccessResponse[NoteResponse])
 def update_note(
     current_user: CurrentUser,
     note_id: UUID,

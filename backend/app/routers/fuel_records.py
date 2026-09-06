@@ -8,6 +8,7 @@ from pydantic import ValidationError
 
 from app.core.db import SessionDep
 from app.repositories.fuel_record_repository import FuelRecordRepository
+from app.schemas.base import SuccessResponse
 from app.schemas.fuel_record import (
     FuelRecordCreate,
     FuelRecordResponse,
@@ -23,7 +24,7 @@ def _get_fuel_record_service(db: SessionDep) -> FuelRecordService:
     return FuelRecordService(FuelRecordRepository(db))
 
 
-@router.get("", response_model=dict)
+@router.get("", response_model=SuccessResponse[list[FuelRecordResponse]])
 def list_fuel_records(
     current_user: CurrentUser,
     vehicle_id: UUID = Query(...),
@@ -58,7 +59,11 @@ def list_fuel_records(
     return {"data": responses, "message": "燃費記録一覧を取得しました"}
 
 
-@router.post("", response_model=None, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=SuccessResponse[FuelRecordResponse],
+    status_code=status.HTTP_201_CREATED,
+)
 def create_fuel_record(
     current_user: CurrentUser,
     body: dict = Body(default={}),
@@ -102,7 +107,7 @@ def create_fuel_record(
     return {"data": response, "message": "燃費記録が作成されました"}
 
 
-@router.get("/{fuel_record_id}", response_model=None)
+@router.get("/{fuel_record_id}", response_model=SuccessResponse[FuelRecordResponse])
 def get_fuel_record(
     current_user: CurrentUser,
     fuel_record_id: UUID,
@@ -135,7 +140,7 @@ def get_fuel_record(
     return {"data": response, "message": "燃費記録を取得しました"}
 
 
-@router.put("/{fuel_record_id}", response_model=None)
+@router.put("/{fuel_record_id}", response_model=SuccessResponse[FuelRecordResponse])
 def update_fuel_record(
     current_user: CurrentUser,
     fuel_record_id: UUID,
