@@ -39,8 +39,10 @@ class TestNoteCategoryServiceListCategories:
 
     def test_returns_categories(self, mock_category_repo, mock_note_repo) -> None:
         """複数カテゴリを返す."""
-        c1 = MagicMock(spec=NoteCategory); c1.name = "仕事"
-        c2 = MagicMock(spec=NoteCategory); c2.name = "趣味"
+        c1 = MagicMock(spec=NoteCategory)
+        c1.name = "仕事"
+        c2 = MagicMock(spec=NoteCategory)
+        c2.name = "趣味"
         mock_category_repo.list_by_user.return_value = [c1, c2]
         service = NoteCategoryService(mock_category_repo, mock_note_repo)
         result = service.list_categories(TEST_USER_ID)
@@ -53,7 +55,8 @@ class TestNoteCategoryServiceGetCategory:
 
     def test_get_category_success(self, mock_category_repo, mock_note_repo) -> None:
         """カテゴリ取得成功."""
-        category = MagicMock(spec=NoteCategory); category.id = CATEGORY_ID
+        category = MagicMock(spec=NoteCategory)
+        category.id = CATEGORY_ID
         mock_category_repo.get_by_id_and_user.return_value = category
         service = NoteCategoryService(mock_category_repo, mock_note_repo)
         result = service.get_category(CATEGORY_ID, TEST_USER_ID)
@@ -87,7 +90,9 @@ class TestNoteCategoryServiceUpdateCategory:
         category = NoteCategory(user_id=TEST_USER_ID, name="旧カテゴリ")
         mock_category_repo.get_by_id_and_user.return_value = category
         service = NoteCategoryService(mock_category_repo, mock_note_repo)
-        result = service.update_category(CATEGORY_ID, NoteCategoryUpdate(name="新カテゴリ"), TEST_USER_ID)
+        result = service.update_category(
+            CATEGORY_ID, NoteCategoryUpdate(name="新カテゴリ"), TEST_USER_ID
+        )
         assert result.name == "新カテゴリ"
 
     def test_update_not_found_raises(self, mock_category_repo, mock_note_repo) -> None:
@@ -95,19 +100,26 @@ class TestNoteCategoryServiceUpdateCategory:
         mock_category_repo.get_by_id_and_user.return_value = None
         service = NoteCategoryService(mock_category_repo, mock_note_repo)
         with pytest.raises(NotFoundException):
-            service.update_category(CATEGORY_ID, NoteCategoryUpdate(name="X"), TEST_USER_ID)
+            service.update_category(
+                CATEGORY_ID, NoteCategoryUpdate(name="X"), TEST_USER_ID
+            )
 
 
 class TestNoteCategoryServiceDeleteCategory:
     """delete_category テスト."""
 
-    def test_delete_nullifies_notes_and_deletes(self, mock_category_repo, mock_note_repo) -> None:
+    def test_delete_nullifies_notes_and_deletes(
+        self, mock_category_repo, mock_note_repo
+    ) -> None:
         """削除前に関連ノートのカテゴリを NULL にする."""
-        category = MagicMock(spec=NoteCategory); category.id = CATEGORY_ID
+        category = MagicMock(spec=NoteCategory)
+        category.id = CATEGORY_ID
         mock_category_repo.get_by_id_and_user.return_value = category
         service = NoteCategoryService(mock_category_repo, mock_note_repo)
         service.delete_category(CATEGORY_ID, TEST_USER_ID)
-        mock_note_repo.nullify_category.assert_called_once_with(TEST_USER_ID, CATEGORY_ID)
+        mock_note_repo.nullify_category.assert_called_once_with(
+            TEST_USER_ID, CATEGORY_ID
+        )
         mock_category_repo.delete.assert_called_once_with(category)
 
     def test_delete_not_found_raises(self, mock_category_repo, mock_note_repo) -> None:

@@ -46,6 +46,7 @@ from sqlmodel import SQLModel, Field
 # 日本時間（JST）
 JST = timezone(timedelta(hours=9))
 
+
 class User(SQLModel, table=True):
     """ユーザーモデル."""
 
@@ -194,9 +195,7 @@ class TaskLabel(SQLModel, table=True):
     created_at: datetime = Field(default_factory=lambda: datetime.now(JST))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(JST))
 
-    __table_args__ = (
-        UniqueConstraint("user_id", "name", name="uq_user_label_name"),
-    )
+    __table_args__ = (UniqueConstraint("user_id", "name", name="uq_user_label_name"),)
 ```
 
 **フィールド:**
@@ -220,16 +219,8 @@ class TaskLabel(SQLModel, table=True):
 class TaskLabelAssociation(SQLModel, table=True):
     """タスクとラベルの多対多関連付け."""
 
-    task_id: UUID = Field(
-        foreign_key="task.id",
-        primary_key=True,
-        index=True
-    )
-    label_id: UUID = Field(
-        foreign_key="tasklabel.id",
-        primary_key=True,
-        index=True
-    )
+    task_id: UUID = Field(foreign_key="task.id", primary_key=True, index=True)
+    label_id: UUID = Field(foreign_key="tasklabel.id", primary_key=True, index=True)
 ```
 
 **フィールド:**
@@ -251,6 +242,7 @@ class TaskLabelAssociation(SQLModel, table=True):
 from pydantic import BaseModel
 from typing import Optional
 from uuid import UUID
+
 
 class TaskCreate(BaseModel):
     """タスク作成スキーマ."""

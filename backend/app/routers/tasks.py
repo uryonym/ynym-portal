@@ -1,6 +1,5 @@
 """タスク関連エンドポイント."""
 
-from typing import Optional, Union
 from uuid import UUID
 
 from fastapi import APIRouter, Body, Depends, Query, status
@@ -26,7 +25,7 @@ def list_tasks(
     current_user: CurrentUser,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
-    is_completed: Optional[bool] = Query(None),
+    is_completed: bool | None = Query(None),
     service: TaskService = Depends(_get_task_service),
 ) -> dict:
     """タスク一覧を取得."""
@@ -44,7 +43,7 @@ def create_task(
     current_user: CurrentUser,
     body: dict = Body(default={}),
     service: TaskService = Depends(_get_task_service),
-) -> Union[dict, JSONResponse]:
+) -> dict | JSONResponse:
     """新規タスクを作成."""
     try:
         task_create = TaskCreate(**body)
@@ -74,7 +73,7 @@ def get_task(
     current_user: CurrentUser,
     task_id: UUID,
     service: TaskService = Depends(_get_task_service),
-) -> Union[dict, JSONResponse]:
+) -> dict | JSONResponse:
     """タスクを取得."""
     try:
         task = service.get_task(task_id, current_user.id)
@@ -95,7 +94,7 @@ def update_task(
     task_id: UUID,
     body: dict = Body(default={}),
     service: TaskService = Depends(_get_task_service),
-) -> Union[dict, JSONResponse]:
+) -> dict | JSONResponse:
     """タスクを更新."""
     try:
         task_update = TaskUpdate(**body)
@@ -131,7 +130,7 @@ def delete_task(
     current_user: CurrentUser,
     task_id: UUID,
     service: TaskService = Depends(_get_task_service),
-) -> Union[Response, JSONResponse]:
+) -> Response | JSONResponse:
     """タスクを削除."""
     try:
         service.delete_task(task_id, current_user.id)

@@ -1,7 +1,6 @@
 """タスク管理サービス層."""
 
 from datetime import datetime
-from typing import List, Optional
 from uuid import UUID
 
 from app.models.base import JST
@@ -22,8 +21,8 @@ class TaskService:
         user_id: UUID,
         skip: int = 0,
         limit: int = 100,
-        is_completed: Optional[bool] = None,
-    ) -> List[Task]:
+        is_completed: bool | None = None,
+    ) -> list[Task]:
         """タスク一覧を取得（期日昇順、期日なしは末尾）."""
         return self.task_repo.list_by_user(user_id, skip, limit, is_completed)
 

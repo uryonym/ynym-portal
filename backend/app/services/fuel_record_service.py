@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Optional
 from uuid import UUID
 
 from app.models.base import JST
@@ -16,9 +15,9 @@ class FuelRecordWithCalculation:
     """燃費計算結果付き燃費記録."""
 
     record: FuelRecord
-    distance_traveled: Optional[int]
-    fuel_amount: Optional[float]
-    fuel_efficiency: Optional[float]
+    distance_traveled: int | None
+    fuel_amount: float | None
+    fuel_efficiency: float | None
 
 
 class FuelRecordService:
@@ -30,17 +29,19 @@ class FuelRecordService:
     def list_fuel_records(
         self,
         user_id: UUID,
-        vehicle_id: Optional[UUID] = None,
+        vehicle_id: UUID | None = None,
         limit: int = 100,
         offset: int = 0,
-    ) -> List[FuelRecordWithCalculation]:
+    ) -> list[FuelRecordWithCalculation]:
         """燃費記録一覧取得（燃費計算付き）."""
         records = self.fuel_record_repo.list_by_user_and_vehicle(
             user_id, vehicle_id, limit, offset
         )
 
         if vehicle_id and records:
-            all_records = self.fuel_record_repo.list_all_by_vehicle_asc(user_id, vehicle_id)
+            all_records = self.fuel_record_repo.list_all_by_vehicle_asc(
+                user_id, vehicle_id
+            )
             return self._calculate_fuel_efficiency(records, all_records)
 
         return [
@@ -55,11 +56,11 @@ class FuelRecordService:
 
     def _calculate_fuel_efficiency(
         self,
-        records: List[FuelRecord],
-        all_records: List[FuelRecord],
-    ) -> List[FuelRecordWithCalculation]:
+        records: list[FuelRecord],
+        all_records: list[FuelRecord],
+    ) -> list[FuelRecordWithCalculation]:
         """燃費を計算して FuelRecordWithCalculation リストを返す."""
-        prev_record_map: dict[UUID, Optional[FuelRecord]] = {}
+        prev_record_map: dict[UUID, FuelRecord | None] = {}
         for i, rec in enumerate(all_records):
             prev_record_map[rec.id] = all_records[i - 1] if i > 0 else None
 
@@ -73,11 +74,11 @@ class FuelRecordService:
                 else record.total_mileage
             )
 
-            fuel_amount: Optional[float] = None
+            fuel_amount: float | None = None
             if record.unit_price > 0:
                 fuel_amount = round(record.total_cost / record.unit_price, 2)
 
-            fuel_efficiency: Optional[float] = None
+            fuel_efficiency: float | None = None
             if fuel_amount and fuel_amount > 0:
                 fuel_efficiency = round(distance_traveled / fuel_amount, 2)
 
@@ -92,7 +93,7 @@ class FuelRecordService:
 
         return results
 
-    def get_fuel_record(self, fuel_record_id: UUID, user_id: UUID) -> Optional[FuelRecord]:
+    def get_fuel_record(self, fuel_record_id: UUID, user_id: UUID) -> FuelRecord | None:
         """燃費記録を取得（見つからない場合は None）."""
         return self.fuel_record_repo.get_by_id_and_user(fuel_record_id, user_id)
 
@@ -118,7 +119,7 @@ class FuelRecordService:
         fuel_record_id: UUID,
         fuel_record_update: FuelRecordUpdate,
         user_id: UUID,
-    ) -> Optional[FuelRecord]:
+    ) -> FuelRecord | None:
         """燃費記録を部分更新."""
         fuel_record = self.get_fuel_record(fuel_record_id, user_id)
         if not fuel_record:

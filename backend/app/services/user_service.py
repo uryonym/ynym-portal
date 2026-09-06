@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Optional
-
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import UserCreate
@@ -15,7 +13,7 @@ class UserService:
     def __init__(self, user_repo: UserRepository) -> None:
         self.user_repo = user_repo
 
-    def get_by_email(self, email: str) -> Optional[User]:
+    def get_by_email(self, email: str) -> User | None:
         """メールアドレスでユーザーを取得."""
         return self.user_repo.get_by_email(email)
 

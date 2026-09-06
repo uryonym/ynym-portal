@@ -1,7 +1,8 @@
 """共通レスポンス構造のベーススキーマ."""
 
+from typing import Any
+
 from pydantic import BaseModel
-from typing import Any, Optional
 
 
 class SuccessResponse(BaseModel):
@@ -16,4 +17,4 @@ class ErrorResponse(BaseModel):
 
     detail: str
     status_code: int
-    error_type: Optional[str] = None
+    error_type: str | None = None

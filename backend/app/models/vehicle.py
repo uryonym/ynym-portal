@@ -1,7 +1,6 @@
 """車両モデル."""
 
 from datetime import datetime
-from typing import Optional
 from uuid import UUID
 
 from sqlalchemy import DateTime, Float, Integer, String
@@ -20,9 +19,9 @@ class Vehicle(UUIDPKMixin, TimestampMixin, Base):
     seq: Mapped[int] = mapped_column(Integer)
     maker: Mapped[str] = mapped_column(String(100))
     model: Mapped[str] = mapped_column(String(100))
-    year: Mapped[Optional[int]] = mapped_column(Integer)
-    number: Mapped[Optional[str]] = mapped_column(String(50))
-    tank_capacity: Mapped[Optional[float]] = mapped_column(Float)
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(
+    year: Mapped[int | None] = mapped_column(Integer)
+    number: Mapped[str | None] = mapped_column(String(50))
+    tank_capacity: Mapped[float | None] = mapped_column(Float)
+    deleted_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), index=True
     )

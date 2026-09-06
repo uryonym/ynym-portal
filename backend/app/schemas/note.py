@@ -1,7 +1,6 @@
 """ノート関連の Pydantic スキーマ."""
 
 from datetime import datetime
-from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -14,7 +13,7 @@ class NoteCreate(BaseModel):
         ..., min_length=1, max_length=255, description="タイトル（必須、1-255 文字）"
     )
     body: str = Field(..., description="本文（必須）")
-    category_id: Optional[UUID] = Field(default=None, description="カテゴリ ID（任意）")
+    category_id: UUID | None = Field(default=None, description="カテゴリ ID（任意）")
 
     @field_validator("title")
     @classmethod
@@ -38,15 +37,15 @@ class NoteCreate(BaseModel):
 class NoteUpdate(BaseModel):
     """ノート更新スキーマ."""
 
-    title: Optional[str] = Field(
+    title: str | None = Field(
         default=None, min_length=1, max_length=255, description="タイトル（オプション）"
     )
-    body: Optional[str] = Field(default=None, description="本文（オプション）")
-    category_id: Optional[UUID] = Field(default=None, description="カテゴリ ID（任意）")
+    body: str | None = Field(default=None, description="本文（オプション）")
+    category_id: UUID | None = Field(default=None, description="カテゴリ ID（任意）")
 
     @field_validator("title")
     @classmethod
-    def validate_title(cls, v: Optional[str]) -> Optional[str]:
+    def validate_title(cls, v: str | None) -> str | None:
         """タイトルのバリデーション."""
         if v is not None:
             if not v.strip():
@@ -58,7 +57,7 @@ class NoteUpdate(BaseModel):
 
     @field_validator("body")
     @classmethod
-    def validate_body(cls, v: Optional[str]) -> Optional[str]:
+    def validate_body(cls, v: str | None) -> str | None:
         """本文のバリデーション."""
         if v is not None:
             if not v.strip():
@@ -74,7 +73,7 @@ class NoteResponse(BaseModel):
 
     id: UUID = Field(description="ノート ID（UUID）")
     user_id: UUID = Field(description="所有者ユーザー ID（UUID）")
-    category_id: Optional[UUID] = Field(description="カテゴリ ID（任意）")
+    category_id: UUID | None = Field(description="カテゴリ ID（任意）")
     title: str = Field(description="タイトル")
     body: str = Field(description="本文")
     created_at: datetime = Field(description="作成日時（JST）")

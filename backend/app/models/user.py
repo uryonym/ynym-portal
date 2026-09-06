@@ -1,7 +1,5 @@
 """ユーザーモデル."""
 
-from typing import Optional
-
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -15,4 +13,4 @@ class User(UUIDPKMixin, TimestampMixin, Base):
 
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
     name: Mapped[str] = mapped_column(String(255))
-    avatar_url: Mapped[Optional[str]] = mapped_column(String(500))
+    avatar_url: Mapped[str | None] = mapped_column(String(500))

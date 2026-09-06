@@ -1,13 +1,13 @@
-from pydantic import BaseModel, ConfigDict, EmailStr
-from typing import Optional
-from datetime import datetime
 import uuid
+from datetime import datetime
+
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 
 class UserBase(BaseModel):
     email: EmailStr
     name: str
-    avatar_url: Optional[str] = None
+    avatar_url: str | None = None
 
 
 class UserCreate(UserBase):
@@ -15,8 +15,8 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(BaseModel):
-    name: Optional[str] = None
-    avatar_url: Optional[str] = None
+    name: str | None = None
+    avatar_url: str | None = None
 
 
 class UserInDB(UserBase):
@@ -28,5 +28,3 @@ class UserInDB(UserBase):
 
 class UserResponse(UserInDB):
     """Schema for returning a user from the API"""
-
-    pass

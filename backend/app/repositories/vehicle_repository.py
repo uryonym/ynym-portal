@@ -1,6 +1,5 @@
 """車両リポジトリ."""
 
-from typing import List, Optional
 from uuid import UUID
 
 from sqlalchemy import asc, desc, select
@@ -20,7 +19,7 @@ class VehicleRepository(BaseRepository[Vehicle]):
         user_id: UUID,
         skip: int = 0,
         limit: int = 100,
-    ) -> List[Vehicle]:
+    ) -> list[Vehicle]:
         """ユーザーの車両一覧を seq 昇順で取得."""
         stmt = (
             select(Vehicle)
@@ -32,7 +31,7 @@ class VehicleRepository(BaseRepository[Vehicle]):
         )
         return list(self.session.execute(stmt).scalars().all())
 
-    def get_by_id_and_user(self, vehicle_id: UUID, user_id: UUID) -> Optional[Vehicle]:
+    def get_by_id_and_user(self, vehicle_id: UUID, user_id: UUID) -> Vehicle | None:
         """vehicle_id と user_id で車両を取得（所有権確認）."""
         stmt = (
             select(Vehicle)

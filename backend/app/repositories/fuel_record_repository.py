@@ -1,6 +1,5 @@
 """燃費記録リポジトリ."""
 
-from typing import List, Optional
 from uuid import UUID
 
 from sqlalchemy import asc, desc, select
@@ -18,10 +17,10 @@ class FuelRecordRepository(BaseRepository[FuelRecord]):
     def list_by_user_and_vehicle(
         self,
         user_id: UUID,
-        vehicle_id: Optional[UUID] = None,
+        vehicle_id: UUID | None = None,
         limit: int = 100,
         offset: int = 0,
-    ) -> List[FuelRecord]:
+    ) -> list[FuelRecord]:
         """ユーザー（＋車両）の燃費記録を給油日時の降順で取得."""
         stmt = select(FuelRecord).where(
             FuelRecord.user_id == user_id,
@@ -36,7 +35,7 @@ class FuelRecordRepository(BaseRepository[FuelRecord]):
 
     def list_all_by_vehicle_asc(
         self, user_id: UUID, vehicle_id: UUID
-    ) -> List[FuelRecord]:
+    ) -> list[FuelRecord]:
         """燃費計算用: 指定車両の全レコードを給油日時昇順で取得."""
         stmt = (
             select(FuelRecord)
@@ -49,9 +48,7 @@ class FuelRecordRepository(BaseRepository[FuelRecord]):
         )
         return list(self.session.execute(stmt).scalars().all())
 
-    def get_by_id_and_user(
-        self, record_id: UUID, user_id: UUID
-    ) -> Optional[FuelRecord]:
+    def get_by_id_and_user(self, record_id: UUID, user_id: UUID) -> FuelRecord | None:
         """record_id と user_id で燃費記録を取得（所有権確認）."""
         stmt = select(FuelRecord).where(
             FuelRecord.id == record_id,

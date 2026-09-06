@@ -1,7 +1,6 @@
 """ノートカテゴリ関連の Pydantic スキーマ."""
 
 from datetime import datetime
-from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -28,7 +27,7 @@ class NoteCategoryCreate(BaseModel):
 class NoteCategoryUpdate(BaseModel):
     """カテゴリ更新スキーマ."""
 
-    name: Optional[str] = Field(
+    name: str | None = Field(
         default=None,
         min_length=1,
         max_length=255,
@@ -37,7 +36,7 @@ class NoteCategoryUpdate(BaseModel):
 
     @field_validator("name")
     @classmethod
-    def validate_name(cls, v: Optional[str]) -> Optional[str]:
+    def validate_name(cls, v: str | None) -> str | None:
         """カテゴリ名のバリデーション."""
         if v is not None:
             if not v.strip():

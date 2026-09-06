@@ -1,6 +1,5 @@
 """ノートカテゴリ管理サービス."""
 
-from typing import List
 from uuid import UUID
 
 from app.models.note_category import NoteCategory
@@ -23,7 +22,7 @@ class NoteCategoryService:
 
     def list_categories(
         self, user_id: UUID, skip: int = 0, limit: int = 100
-    ) -> List[NoteCategory]:
+    ) -> list[NoteCategory]:
         """カテゴリ一覧を取得."""
         return self.category_repo.list_by_user(user_id, skip, limit)
 

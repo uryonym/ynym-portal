@@ -13,8 +13,6 @@ JST = timezone(timedelta(hours=9))
 class Base(DeclarativeBase):
     """SQLAlchemy 宣言ベースクラス."""
 
-    pass
-
 
 class TimestampMixin:
     """作成日時・更新日時フィールドを持つ Mixin.

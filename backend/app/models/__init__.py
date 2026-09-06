@@ -10,12 +10,12 @@ from app.models.vehicle import Vehicle
 
 __all__ = [
     "Base",
-    "TimestampMixin",
-    "UUIDPKMixin",
     "FuelRecord",
     "Note",
     "NoteCategory",
     "Task",
+    "TimestampMixin",
+    "UUIDPKMixin",
     "User",
     "Vehicle",
 ]

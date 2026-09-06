@@ -1,6 +1,5 @@
 """ノート関連エンドポイント."""
 
-from typing import Union
 from uuid import UUID
 
 from fastapi import APIRouter, Body, Depends, Query, status
@@ -50,7 +49,7 @@ def create_note(
     current_user: CurrentUser,
     body: dict = Body(default={}),
     service: NoteService = Depends(_get_note_service),
-) -> Union[dict, JSONResponse]:
+) -> dict | JSONResponse:
     """新規ノートを作成."""
     try:
         note_create = NoteCreate(**body)
@@ -86,7 +85,7 @@ def get_note(
     current_user: CurrentUser,
     note_id: UUID,
     service: NoteService = Depends(_get_note_service),
-) -> Union[dict, JSONResponse]:
+) -> dict | JSONResponse:
     """ノートを取得."""
     try:
         note = service.get_note(note_id, current_user.id)
@@ -107,7 +106,7 @@ def update_note(
     note_id: UUID,
     body: dict = Body(default={}),
     service: NoteService = Depends(_get_note_service),
-) -> Union[dict, JSONResponse]:
+) -> dict | JSONResponse:
     """ノートを更新."""
     try:
         note_update = NoteUpdate(**body)

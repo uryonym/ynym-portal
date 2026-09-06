@@ -1,6 +1,5 @@
 """車両関連エンドポイント."""
 
-from typing import Union
 from uuid import UUID
 
 from fastapi import APIRouter, Body, Depends, Query, status
@@ -41,7 +40,7 @@ def create_vehicle(
     current_user: CurrentUser,
     body: dict = Body(default={}),
     service: VehicleService = Depends(_get_vehicle_service),
-) -> Union[dict, JSONResponse]:
+) -> dict | JSONResponse:
     """新規車両を作成."""
     try:
         vehicle_create = VehicleCreate(**body)
@@ -71,7 +70,7 @@ def get_vehicle(
     current_user: CurrentUser,
     vehicle_id: UUID,
     service: VehicleService = Depends(_get_vehicle_service),
-) -> Union[dict, JSONResponse]:
+) -> dict | JSONResponse:
     """車両を取得."""
     try:
         vehicle = service.get_vehicle(vehicle_id, current_user.id)
@@ -92,7 +91,7 @@ def update_vehicle(
     vehicle_id: UUID,
     body: dict = Body(default={}),
     service: VehicleService = Depends(_get_vehicle_service),
-) -> Union[dict, JSONResponse]:
+) -> dict | JSONResponse:
     """車両を更新."""
     try:
         vehicle_update = VehicleUpdate(**body)

@@ -1,21 +1,18 @@
 """リポジトリ基底クラス."""
 
-from typing import Generic, Optional, TypeVar
 from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-T = TypeVar("T")
 
-
-class BaseRepository(Generic[T]):
+class BaseRepository[T]:
     """汎用リポジトリ基底クラス."""
 
     def __init__(self, session: Session, model: type[T]) -> None:
         self.session = session
         self.model = model
 
-    def get_by_id(self, id: UUID) -> Optional[T]:
+    def get_by_id(self, id: UUID) -> T | None:
         """ID でエンティティを取得."""
         return self.session.get(self.model, id)
 

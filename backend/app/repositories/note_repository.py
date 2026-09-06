@@ -1,6 +1,5 @@
 """ノートリポジトリ."""
 
-from typing import List, Optional
 from uuid import UUID
 
 from sqlalchemy import asc, select, update
@@ -22,7 +21,7 @@ class NoteRepository(BaseRepository[Note]):
         user_id: UUID,
         skip: int = 0,
         limit: int = 100,
-    ) -> List[Note]:
+    ) -> list[Note]:
         """ユーザーのノート一覧をカテゴリ名・タイトル昇順で取得."""
         stmt = (
             select(Note)
@@ -37,7 +36,7 @@ class NoteRepository(BaseRepository[Note]):
         )
         return list(self.session.execute(stmt).scalars().all())
 
-    def get_by_id_and_user(self, note_id: UUID, user_id: UUID) -> Optional[Note]:
+    def get_by_id_and_user(self, note_id: UUID, user_id: UUID) -> Note | None:
         """note_id と user_id でノートを取得（所有権確認）."""
         stmt = select(Note).where(Note.id == note_id).where(Note.user_id == user_id)
         return self.session.execute(stmt).scalars().one_or_none()

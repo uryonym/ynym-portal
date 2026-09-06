@@ -1,6 +1,5 @@
 """ノートカテゴリリポジトリ."""
 
-from typing import List, Optional
 from uuid import UUID
 
 from sqlalchemy import asc, select
@@ -20,7 +19,7 @@ class NoteCategoryRepository(BaseRepository[NoteCategory]):
         user_id: UUID,
         skip: int = 0,
         limit: int = 100,
-    ) -> List[NoteCategory]:
+    ) -> list[NoteCategory]:
         """ユーザーのカテゴリ一覧を名前昇順で取得."""
         stmt = (
             select(NoteCategory)
@@ -33,7 +32,7 @@ class NoteCategoryRepository(BaseRepository[NoteCategory]):
 
     def get_by_id_and_user(
         self, category_id: UUID, user_id: UUID
-    ) -> Optional[NoteCategory]:
+    ) -> NoteCategory | None:
         """category_id と user_id でカテゴリを取得（所有権確認）."""
         stmt = (
             select(NoteCategory)

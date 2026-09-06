@@ -73,7 +73,9 @@ def google_callback(
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Authentication failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Authentication failed: {e!s}"
+        ) from e
 
     response = RedirectResponse(url=f"{settings.FRONTEND_URL}")
     cookie_params = {

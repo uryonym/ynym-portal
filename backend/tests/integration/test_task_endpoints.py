@@ -1,7 +1,8 @@
 """タスク API エンドポイント統合テスト."""
 
-from fastapi.testclient import TestClient
 from zoneinfo import ZoneInfo
+
+from fastapi.testclient import TestClient
 
 # 日本標準時 (JST)
 JST = ZoneInfo("Asia/Tokyo")
@@ -27,22 +28,18 @@ class TestTaskListEndpoint:
         # "another operation is in progress" エラーが発生します。
         # 本格的なDB操作検証は、別途 async テストフレームワークで
         # 実装する必要があります (T020+ で実装予定)
-        pass
 
     def test_get_tasks_sorting_correct(self) -> None:
         """タスク一覧がソートされることを検証."""
         # NOTE: ソート検証も同様に async テストが必要です
-        pass
 
     def test_get_tasks_pagination_skip(self, client: TestClient) -> None:
         """skip クエリパラメータで最初の N 個をスキップ."""
         # TODO: ページネーション検証
-        pass
 
     def test_get_tasks_pagination_limit(self, client: TestClient) -> None:
         """limit クエリパラメータで取得数を制限."""
         # TODO: ページネーション検証
-        pass
 
 
 class TestTaskCreateEndpoint:
@@ -168,17 +165,20 @@ class TestTaskCreateEndpoint:
             updated_at_jst = updated_at.replace(tzinfo=jst)
 
         # created_at がテスト実行時刻の範囲内であることを確認 (時刻が現在の JST で設定されていることの証明)
-        assert before_time <= created_at_jst <= after_time, \
+        assert before_time <= created_at_jst <= after_time, (
             f"created_at {created_at_jst} is not within test time range ({before_time} - {after_time})"
+        )
 
         # updated_at も同様の範囲内であることを確認
-        assert before_time <= updated_at_jst <= after_time, \
+        assert before_time <= updated_at_jst <= after_time, (
             f"updated_at {updated_at_jst} is not within test time range ({before_time} - {after_time})"
+        )
 
         # created_at と updated_at がほぼ同じ時刻であることを確認 (作成直後なので)
         time_diff = abs((created_at_jst - updated_at_jst).total_seconds())
-        assert time_diff < 1, \
+        assert time_diff < 1, (
             f"Time difference between created_at and updated_at should be < 1 second, got {time_diff}s"
+        )
 
 
 class TestTaskGetByIdEndpoint:

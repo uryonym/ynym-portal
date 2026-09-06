@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.db import SessionDep, get_session
 from app.main import app
-from app.models.base import Base, JST
+from app.models.base import JST, Base
 from app.models.user import User
 from app.security.deps import get_current_user
 
@@ -21,12 +21,14 @@ engine = create_engine(
     connect_args={"check_same_thread": False},
 )
 
+
 # SQLite の外部キー制約を有効化
 @event.listens_for(engine, "connect")
 def set_sqlite_pragma(dbapi_conn, _):
     cursor = dbapi_conn.cursor()
     cursor.execute("PRAGMA foreign_keys=ON")
     cursor.close()
+
 
 TestSessionLocal = sessionmaker(bind=engine)
 

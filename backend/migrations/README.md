@@ -55,8 +55,11 @@ psql "$DATABASE_URL" -f migrations/001_create_task_table.sql
 import asyncio
 from sqlalchemy.ext.asyncio import create_async_engine
 
+
 async def run_migration():
-    engine = create_async_engine("postgresql+asyncpg://postgres@localhost/ynym_portal_dev")
+    engine = create_async_engine(
+        "postgresql+asyncpg://postgres@localhost/ynym_portal_dev"
+    )
 
     async with engine.begin() as conn:
         # SQL ファイルを読み込み
@@ -65,6 +68,7 @@ async def run_migration():
 
         # 実行
         await conn.run_sync(conn.connection.exec_driver_sql, sql)
+
 
 asyncio.run(run_migration())
 ```
@@ -99,17 +103,19 @@ import asyncio
 from sqlalchemy import text, inspect
 from app.database import engine
 
+
 async def verify_migration():
     async with engine.begin() as conn:
         inspector = inspect(engine.sync_engine)
         tables = inspector.get_table_names()
         print(f"Tables: {tables}")
 
-        if 'task' in tables:
-            columns = inspector.get_columns('task')
+        if "task" in tables:
+            columns = inspector.get_columns("task")
             print("Task table columns:")
             for col in columns:
                 print(f"  - {col['name']}: {col['type']}")
+
 
 asyncio.run(verify_migration())
 ```

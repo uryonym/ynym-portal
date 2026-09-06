@@ -1,9 +1,10 @@
 """FuelRecordService unit tests (FuelRecordRepository mocked)."""
 
-import pytest
 from datetime import datetime, timedelta, timezone
 from unittest.mock import MagicMock
 from uuid import UUID
+
+import pytest
 
 from app.models.fuel_record import FuelRecord
 from app.repositories.fuel_record_repository import FuelRecordRepository
@@ -11,19 +12,19 @@ from app.schemas.fuel_record import FuelRecordCreate, FuelRecordUpdate
 from app.services.fuel_record_service import FuelRecordService
 
 JST = timezone(timedelta(hours=9))
-USER_ID = UUID('550e8400-e29b-41d4-a716-446655440000')
-VEHICLE_ID = UUID('550e8400-e29b-41d4-a716-446655440001')
-RECORD_ID = UUID('550e8400-e29b-41d4-a716-446655440101')
+USER_ID = UUID("550e8400-e29b-41d4-a716-446655440000")
+VEHICLE_ID = UUID("550e8400-e29b-41d4-a716-446655440001")
+RECORD_ID = UUID("550e8400-e29b-41d4-a716-446655440101")
 
 
 def _make_record(record_id, total_mileage, total_cost, unit_price, **kwargs):
-    now = kwargs.pop('dt', datetime.now(JST))
+    now = kwargs.pop("dt", datetime.now(JST))
     r = FuelRecord(
         vehicle_id=VEHICLE_ID,
         user_id=USER_ID,
         refuel_datetime=now,
         total_mileage=total_mileage,
-        fuel_type='halogen',
+        fuel_type="halogen",
         unit_price=unit_price,
         total_cost=total_cost,
         **kwargs,
@@ -52,7 +53,9 @@ class TestFuelRecordServiceListFuelRecords:
 
     def test_single_record_uses_total_mileage(self, mock_repo):
         """First record uses total_mileage as distance."""
-        record = _make_record(RECORD_ID, total_mileage=500, total_cost=8500, unit_price=170)
+        record = _make_record(
+            RECORD_ID, total_mileage=500, total_cost=8500, unit_price=170
+        )
         mock_repo.list_by_user_and_vehicle.return_value = [record]
         mock_repo.list_all_by_vehicle_asc.return_value = [record]
         service = FuelRecordService(mock_repo)
@@ -67,12 +70,18 @@ class TestFuelRecordServiceListFuelRecords:
         now = datetime.now(JST)
         yesterday = now - timedelta(days=1)
         old = _make_record(
-            UUID('aaaaaaaa-0000-0000-0000-000000000001'),
-            total_mileage=500, total_cost=8250, unit_price=165, dt=yesterday,
+            UUID("aaaaaaaa-0000-0000-0000-000000000001"),
+            total_mileage=500,
+            total_cost=8250,
+            unit_price=165,
+            dt=yesterday,
         )
         new = _make_record(
-            UUID('aaaaaaaa-0000-0000-0000-000000000002'),
-            total_mileage=1000, total_cost=8500, unit_price=170, dt=now,
+            UUID("aaaaaaaa-0000-0000-0000-000000000002"),
+            total_mileage=1000,
+            total_cost=8500,
+            unit_price=170,
+            dt=now,
         )
         mock_repo.list_by_user_and_vehicle.return_value = [new]
         mock_repo.list_all_by_vehicle_asc.return_value = [old, new]
@@ -84,7 +93,9 @@ class TestFuelRecordServiceListFuelRecords:
 
     def test_fuel_efficiency_rounded(self, mock_repo):
         """Fuel efficiency rounded to 2 decimal places."""
-        record = _make_record(RECORD_ID, total_mileage=450, total_cost=8330, unit_price=170)
+        record = _make_record(
+            RECORD_ID, total_mileage=450, total_cost=8330, unit_price=170
+        )
         mock_repo.list_by_user_and_vehicle.return_value = [record]
         mock_repo.list_all_by_vehicle_asc.return_value = [record]
         service = FuelRecordService(mock_repo)
@@ -94,7 +105,9 @@ class TestFuelRecordServiceListFuelRecords:
 
     def test_no_vehicle_id_skips_calculation(self, mock_repo):
         """Without vehicle_id, calculation fields are None."""
-        record = _make_record(RECORD_ID, total_mileage=500, total_cost=8500, unit_price=170)
+        record = _make_record(
+            RECORD_ID, total_mileage=500, total_cost=8500, unit_price=170
+        )
         mock_repo.list_by_user_and_vehicle.return_value = [record]
         service = FuelRecordService(mock_repo)
         results = service.list_fuel_records(user_id=USER_ID)
@@ -109,9 +122,14 @@ class TestFuelRecordServiceCreateFuelRecord:
         """Creates a fuel record."""
         now = datetime.now(JST)
         data = FuelRecordCreate(
-            vehicle_id=VEHICLE_ID, refuel_datetime=now, total_mileage=100,
-            fuel_type='regular', unit_price=165, total_cost=6600,
-            is_full_tank=True, gas_station_name='ENEOS',
+            vehicle_id=VEHICLE_ID,
+            refuel_datetime=now,
+            total_mileage=100,
+            fuel_type="regular",
+            unit_price=165,
+            total_cost=6600,
+            is_full_tank=True,
+            gas_station_name="ENEOS",
         )
         service = FuelRecordService(mock_repo)
         result = service.create_fuel_record(data, USER_ID)
@@ -123,8 +141,12 @@ class TestFuelRecordServiceCreateFuelRecord:
         """Minimal fields: is_full_tank defaults to False."""
         now = datetime.now(JST)
         data = FuelRecordCreate(
-            vehicle_id=VEHICLE_ID, refuel_datetime=now, total_mileage=100,
-            fuel_type='regular', unit_price=165, total_cost=6600,
+            vehicle_id=VEHICLE_ID,
+            refuel_datetime=now,
+            total_mileage=100,
+            fuel_type="regular",
+            unit_price=165,
+            total_cost=6600,
         )
         service = FuelRecordService(mock_repo)
         result = service.create_fuel_record(data, USER_ID)
@@ -139,13 +161,20 @@ class TestFuelRecordServiceUpdateFuelRecord:
         """Updates a fuel record."""
         now = datetime.now(JST)
         rec = FuelRecord(
-            vehicle_id=VEHICLE_ID, user_id=USER_ID, refuel_datetime=now,
-            total_mileage=100, fuel_type='halogen', unit_price=165, total_cost=6600,
+            vehicle_id=VEHICLE_ID,
+            user_id=USER_ID,
+            refuel_datetime=now,
+            total_mileage=100,
+            fuel_type="halogen",
+            unit_price=165,
+            total_cost=6600,
         )
         rec.id = RECORD_ID
         mock_repo.get_by_id_and_user.return_value = rec
         service = FuelRecordService(mock_repo)
-        result = service.update_fuel_record(RECORD_ID, FuelRecordUpdate(total_mileage=200), USER_ID)
+        result = service.update_fuel_record(
+            RECORD_ID, FuelRecordUpdate(total_mileage=200), USER_ID
+        )
         assert result is not None
         assert result.total_mileage == 200
 
@@ -153,7 +182,9 @@ class TestFuelRecordServiceUpdateFuelRecord:
         """Returns None when record not found."""
         mock_repo.get_by_id_and_user.return_value = None
         service = FuelRecordService(mock_repo)
-        result = service.update_fuel_record(RECORD_ID, FuelRecordUpdate(total_mileage=200), USER_ID)
+        result = service.update_fuel_record(
+            RECORD_ID, FuelRecordUpdate(total_mileage=200), USER_ID
+        )
         assert result is None
 
 
@@ -164,8 +195,13 @@ class TestFuelRecordServiceDeleteFuelRecord:
         """Logical delete sets deleted_at."""
         now = datetime.now(JST)
         rec = FuelRecord(
-            vehicle_id=VEHICLE_ID, user_id=USER_ID, refuel_datetime=now,
-            total_mileage=100, fuel_type='halogen', unit_price=165, total_cost=6600,
+            vehicle_id=VEHICLE_ID,
+            user_id=USER_ID,
+            refuel_datetime=now,
+            total_mileage=100,
+            fuel_type="halogen",
+            unit_price=165,
+            total_cost=6600,
         )
         rec.id = RECORD_ID
         rec.deleted_at = None

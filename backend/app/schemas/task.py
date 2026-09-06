@@ -1,7 +1,6 @@
 """タスク関連の Pydantic スキーマ."""
 
 from datetime import date, datetime
-from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -20,16 +19,16 @@ class TaskCreate(BaseModel):
         max_length=255,
         description="タスクタイトル（必須、1-255 文字）",
     )
-    description: Optional[str] = Field(
+    description: str | None = Field(
         default=None,
         max_length=2000,
         description="タスク詳細（オプション、0-2000 文字）",
     )
-    due_date: Optional[date] = Field(
+    due_date: date | None = Field(
         default=None,
         description="期日（オプション、YYYY-MM-DD 形式）",
     )
-    is_completed: Optional[bool] = Field(
+    is_completed: bool | None = Field(
         default=False,
         description="完了状態（デフォルト: False）",
     )
@@ -46,7 +45,7 @@ class TaskCreate(BaseModel):
 
     @field_validator("description")
     @classmethod
-    def validate_description(cls, v: Optional[str]) -> Optional[str]:
+    def validate_description(cls, v: str | None) -> str | None:
         """詳細のバリデーション."""
         if v is not None:
             if len(v) > 2000:
@@ -63,29 +62,29 @@ class TaskUpdate(BaseModel):
     すべてのフィールドがオプション（部分更新対応）。
     """
 
-    title: Optional[str] = Field(
+    title: str | None = Field(
         default=None,
         min_length=1,
         max_length=255,
         description="タスクタイトル（オプション、1-255 文字）",
     )
-    description: Optional[str] = Field(
+    description: str | None = Field(
         default=None,
         max_length=2000,
         description="タスク詳細（オプション、0-2000 文字）",
     )
-    is_completed: Optional[bool] = Field(
+    is_completed: bool | None = Field(
         default=None,
         description="完了状態（オプション）",
     )
-    due_date: Optional[date] = Field(
+    due_date: date | None = Field(
         default=None,
         description="期日（オプション、YYYY-MM-DD 形式）",
     )
 
     @field_validator("title")
     @classmethod
-    def validate_title(cls, v: Optional[str]) -> Optional[str]:
+    def validate_title(cls, v: str | None) -> str | None:
         """タイトルのバリデーション."""
         if v is not None:
             if not v or not v.strip():
@@ -97,7 +96,7 @@ class TaskUpdate(BaseModel):
 
     @field_validator("description")
     @classmethod
-    def validate_description(cls, v: Optional[str]) -> Optional[str]:
+    def validate_description(cls, v: str | None) -> str | None:
         """詳細のバリデーション."""
         if v is not None:
             if len(v) > 2000:
@@ -118,12 +117,10 @@ class TaskResponse(BaseModel):
     id: UUID = Field(description="タスク ID（UUID）")
     user_id: UUID = Field(description="所有者ユーザー ID（UUID）")
     title: str = Field(description="タスクタイトル")
-    description: Optional[str] = Field(description="タスク詳細")
+    description: str | None = Field(description="タスク詳細")
     is_completed: bool = Field(description="完了状態（True=完了、False=未完了）")
-    completed_at: Optional[datetime] = Field(
-        description="完了日時（ISO 8601 形式、JST）"
-    )
-    due_date: Optional[date] = Field(description="期日（YYYY-MM-DD 形式）")
+    completed_at: datetime | None = Field(description="完了日時（ISO 8601 形式、JST）")
+    due_date: date | None = Field(description="期日（YYYY-MM-DD 形式）")
     order: int = Field(description="表示順序")
     created_at: datetime = Field(description="作成日時（ISO 8601 形式、JST）")
     updated_at: datetime = Field(description="更新日時（ISO 8601 形式、JST）")

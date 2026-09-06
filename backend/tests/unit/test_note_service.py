@@ -40,8 +40,10 @@ class TestNoteServiceListNotes:
 
     def test_returns_notes(self, mock_note_repo, mock_category_repo) -> None:
         """複数ノートを返す."""
-        n1 = MagicMock(spec=Note); n1.title = "ノート1"
-        n2 = MagicMock(spec=Note); n2.title = "ノート2"
+        n1 = MagicMock(spec=Note)
+        n1.title = "ノート1"
+        n2 = MagicMock(spec=Note)
+        n2.title = "ノート2"
         mock_note_repo.list_by_user.return_value = [n1, n2]
         service = NoteService(mock_note_repo, mock_category_repo)
         result = service.list_notes(TEST_USER_ID)
@@ -54,7 +56,8 @@ class TestNoteServiceGetNote:
 
     def test_get_note_success(self, mock_note_repo, mock_category_repo) -> None:
         """ノート取得成功."""
-        note = MagicMock(spec=Note); note.id = NOTE_ID
+        note = MagicMock(spec=Note)
+        note.id = NOTE_ID
         mock_note_repo.get_by_id_and_user.return_value = note
         service = NoteService(mock_note_repo, mock_category_repo)
         result = service.get_note(NOTE_ID, TEST_USER_ID)
@@ -81,16 +84,23 @@ class TestNoteServiceCreateNote:
         mock_category_repo.get_by_id_and_user.assert_not_called()
         mock_note_repo.save.assert_called_once()
 
-    def test_create_with_valid_category(self, mock_note_repo, mock_category_repo) -> None:
+    def test_create_with_valid_category(
+        self, mock_note_repo, mock_category_repo
+    ) -> None:
         """存在するカテゴリ ID でノート作成."""
         from app.models.note_category import NoteCategory
-        mock_category_repo.get_by_id_and_user.return_value = MagicMock(spec=NoteCategory)
+
+        mock_category_repo.get_by_id_and_user.return_value = MagicMock(
+            spec=NoteCategory
+        )
         note_create = NoteCreate(title="タイトル", body="本文", category_id=CATEGORY_ID)
         service = NoteService(mock_note_repo, mock_category_repo)
         result = service.create_note(note_create, TEST_USER_ID)
         assert result.category_id == CATEGORY_ID
 
-    def test_create_with_invalid_category_raises(self, mock_note_repo, mock_category_repo) -> None:
+    def test_create_with_invalid_category_raises(
+        self, mock_note_repo, mock_category_repo
+    ) -> None:
         """存在しないカテゴリ ID で NotFoundException."""
         mock_category_repo.get_by_id_and_user.return_value = None
         note_create = NoteCreate(title="タイトル", body="本文", category_id=CATEGORY_ID)
@@ -107,7 +117,9 @@ class TestNoteServiceUpdateNote:
         note = Note(user_id=TEST_USER_ID, title="旧タイトル", body="本文")
         mock_note_repo.get_by_id_and_user.return_value = note
         service = NoteService(mock_note_repo, mock_category_repo)
-        result = service.update_note(NOTE_ID, NoteUpdate(title="新タイトル"), TEST_USER_ID)
+        result = service.update_note(
+            NOTE_ID, NoteUpdate(title="新タイトル"), TEST_USER_ID
+        )
         assert result.title == "新タイトル"
 
     def test_update_not_found_raises(self, mock_note_repo, mock_category_repo) -> None:

@@ -1,6 +1,5 @@
 """タスクリポジトリ."""
 
-from typing import List, Optional
 from uuid import UUID
 
 from sqlalchemy import asc, select
@@ -21,13 +20,11 @@ class TaskRepository(BaseRepository[Task]):
         user_id: UUID,
         skip: int = 0,
         limit: int = 100,
-        is_completed: Optional[bool] = None,
-    ) -> List[Task]:
+        is_completed: bool | None = None,
+    ) -> list[Task]:
         """ユーザーのタスク一覧を取得（期日昇順、期日なしは末尾）."""
         stmt = (
-            select(Task)
-            .where(Task.user_id == user_id)
-            .where(Task.deleted_at.is_(None))
+            select(Task).where(Task.user_id == user_id).where(Task.deleted_at.is_(None))
         )
         if is_completed is not None:
             stmt = stmt.where(Task.is_completed == is_completed)
@@ -41,7 +38,7 @@ class TaskRepository(BaseRepository[Task]):
         )
         return list(self.session.execute(stmt).scalars().all())
 
-    def get_by_id_and_user(self, task_id: UUID, user_id: UUID) -> Optional[Task]:
+    def get_by_id_and_user(self, task_id: UUID, user_id: UUID) -> Task | None:
         """task_id と user_id でタスクを取得（所有権確認）."""
         stmt = (
             select(Task)

@@ -57,8 +57,7 @@ async def test_create_user():
 async def test_create_user_endpoint(async_client):
     """Test user creation endpoint."""
     response = await async_client.post(
-        "/api/users",
-        json={"name": "John", "email": "john@example.com"}
+        "/api/users", json={"name": "John", "email": "john@example.com"}
     )
     assert response.status_code == 201
     assert response.json()["name"] == "John"

@@ -1,6 +1,5 @@
 """ノートモデル."""
 
-from typing import Optional
 from uuid import UUID
 
 from sqlalchemy import String, Text
@@ -15,6 +14,6 @@ class Note(UUIDPKMixin, TimestampMixin, Base):
     __tablename__ = "notes"
 
     user_id: Mapped[UUID] = mapped_column(index=True)
-    category_id: Mapped[Optional[UUID]] = mapped_column(index=True)
+    category_id: Mapped[UUID | None] = mapped_column(index=True)
     title: Mapped[str] = mapped_column(String(255))
     body: Mapped[str] = mapped_column(Text)

@@ -1,6 +1,5 @@
 """ノート管理サービス."""
 
-from typing import List
 from uuid import UUID
 
 from app.models.note import Note
@@ -13,11 +12,13 @@ from app.utils.exceptions import NotFoundException
 class NoteService:
     """ノート管理ビジネスロジック層."""
 
-    def __init__(self, note_repo: NoteRepository, category_repo: NoteCategoryRepository) -> None:
+    def __init__(
+        self, note_repo: NoteRepository, category_repo: NoteCategoryRepository
+    ) -> None:
         self.note_repo = note_repo
         self.category_repo = category_repo
 
-    def list_notes(self, user_id: UUID, skip: int = 0, limit: int = 100) -> List[Note]:
+    def list_notes(self, user_id: UUID, skip: int = 0, limit: int = 100) -> list[Note]:
         """ノート一覧を取得（カテゴリ名・タイトル昇順、カテゴリなしは末尾）."""
         return self.note_repo.list_by_user(user_id, skip, limit)
 
@@ -50,7 +51,9 @@ class NoteService:
         )
         return self.note_repo.save(note)
 
-    def update_note(self, note_id: UUID, note_update: NoteUpdate, user_id: UUID) -> Note:
+    def update_note(
+        self, note_id: UUID, note_update: NoteUpdate, user_id: UUID
+    ) -> Note:
         """ノートを部分更新."""
         note = self.get_note(note_id, user_id)
         update_data = note_update.model_dump(exclude_unset=True)

@@ -1,7 +1,6 @@
 """Vehicle（車）管理サービス."""
 
 from datetime import datetime
-from typing import List
 from uuid import UUID
 
 from app.models.base import JST
@@ -17,7 +16,9 @@ class VehicleService:
     def __init__(self, vehicle_repo: VehicleRepository) -> None:
         self.vehicle_repo = vehicle_repo
 
-    def list_vehicles(self, user_id: UUID, skip: int = 0, limit: int = 100) -> List[Vehicle]:
+    def list_vehicles(
+        self, user_id: UUID, skip: int = 0, limit: int = 100
+    ) -> list[Vehicle]:
         """ユーザーの車両一覧を取得."""
         return self.vehicle_repo.list_by_user(user_id, skip, limit)
 

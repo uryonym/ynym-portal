@@ -1,7 +1,5 @@
 """ユーザーリポジトリ."""
 
-from typing import Optional
-
 from sqlalchemy import select
 
 from app.models.user import User
@@ -14,7 +12,7 @@ class UserRepository(BaseRepository[User]):
     def __init__(self, session) -> None:
         super().__init__(session, User)
 
-    def get_by_email(self, email: str) -> Optional[User]:
+    def get_by_email(self, email: str) -> User | None:
         """メールアドレスでユーザーを取得."""
         stmt = select(User).where(User.email == email)
         return self.session.execute(stmt).scalars().one_or_none()

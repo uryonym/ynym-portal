@@ -1,6 +1,5 @@
 """ノートカテゴリ関連エンドポイント."""
 
-from typing import Union
 from uuid import UUID
 
 from fastapi import APIRouter, Body, Depends, Query, status
@@ -48,7 +47,7 @@ def create_category(
     current_user: CurrentUser,
     body: dict = Body(default={}),
     service: NoteCategoryService = Depends(_get_note_category_service),
-) -> Union[dict, JSONResponse]:
+) -> dict | JSONResponse:
     """新規カテゴリを作成."""
     try:
         category_create = NoteCategoryCreate(**body)
@@ -78,7 +77,7 @@ def get_category(
     current_user: CurrentUser,
     category_id: UUID,
     service: NoteCategoryService = Depends(_get_note_category_service),
-) -> Union[dict, JSONResponse]:
+) -> dict | JSONResponse:
     """カテゴリを取得."""
     try:
         category = service.get_category(category_id, current_user.id)
@@ -99,7 +98,7 @@ def update_category(
     category_id: UUID,
     body: dict = Body(default={}),
     service: NoteCategoryService = Depends(_get_note_category_service),
-) -> Union[dict, JSONResponse]:
+) -> dict | JSONResponse:
     """カテゴリを更新."""
     try:
         category_update = NoteCategoryUpdate(**body)

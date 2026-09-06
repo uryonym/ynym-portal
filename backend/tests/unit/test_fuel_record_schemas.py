@@ -1,9 +1,10 @@
 """FuelRecord（燃費記録）スキーマバリデーションテスト."""
 
-import pytest
 from datetime import datetime, timedelta, timezone
-from pydantic import ValidationError
 from uuid import UUID
+
+import pytest
+from pydantic import ValidationError
 
 from app.schemas.fuel_record import FuelRecordCreate, FuelRecordUpdate
 

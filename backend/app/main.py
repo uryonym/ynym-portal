@@ -5,7 +5,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.middleware.logging import LoggingMiddleware
-from app.utils.logging import setup_logging
 from app.routers import (
     auth_router,
     fuel_records_router,
@@ -15,6 +14,7 @@ from app.routers import (
     users_router,
     vehicles_router,
 )
+from app.utils.logging import setup_logging
 
 # ロギング設定
 setup_logging()
@@ -50,4 +50,3 @@ api_router.include_router(note_categories_router)
 api_router.include_router(notes_router)
 
 app.include_router(api_router)
-

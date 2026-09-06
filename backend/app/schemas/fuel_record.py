@@ -1,7 +1,6 @@
 """FuelRecord（燃費記録）Pydantic スキーマ."""
 
 from datetime import datetime
-from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -44,7 +43,7 @@ class FuelRecordCreate(BaseModel):
         default=False,
         description="満タンかどうか",
     )
-    gas_station_name: Optional[str] = Field(
+    gas_station_name: str | None = Field(
         default=None,
         max_length=255,
         description="ガソリンスタンド名",
@@ -61,7 +60,7 @@ class FuelRecordCreate(BaseModel):
 
     @field_validator("gas_station_name")
     @classmethod
-    def validate_gas_station_name(cls, v: Optional[str]) -> Optional[str]:
+    def validate_gas_station_name(cls, v: str | None) -> str | None:
         """ガソリンスタンド名を検証."""
         if v is not None:
             v = v.strip()
@@ -83,36 +82,36 @@ class FuelRecordUpdate(BaseModel):
         gas_station_name: ガソリンスタンド名（オプション）
     """
 
-    refuel_datetime: Optional[datetime] = Field(
+    refuel_datetime: datetime | None = Field(
         default=None,
         description="給油日時",
     )
-    total_mileage: Optional[int] = Field(
+    total_mileage: int | None = Field(
         default=None,
         gt=0,
         description="総走行距離（km、正の数）",
     )
-    fuel_type: Optional[str] = Field(
+    fuel_type: str | None = Field(
         default=None,
         min_length=1,
         max_length=50,
         description="燃料タイプ",
     )
-    unit_price: Optional[int] = Field(
+    unit_price: int | None = Field(
         default=None,
         gt=0,
         description="単価（円/L、正の数）",
     )
-    total_cost: Optional[int] = Field(
+    total_cost: int | None = Field(
         default=None,
         ge=0,
         description="総費用（円、0以上の数）",
     )
-    is_full_tank: Optional[bool] = Field(
+    is_full_tank: bool | None = Field(
         default=None,
         description="満タンかどうか",
     )
-    gas_station_name: Optional[str] = Field(
+    gas_station_name: str | None = Field(
         default=None,
         max_length=255,
         description="ガソリンスタンド名",
@@ -120,7 +119,7 @@ class FuelRecordUpdate(BaseModel):
 
     @field_validator("fuel_type")
     @classmethod
-    def validate_fuel_type(cls, v: Optional[str]) -> Optional[str]:
+    def validate_fuel_type(cls, v: str | None) -> str | None:
         """燃料タイプを検証."""
         if v is not None:
             v = v.strip()
@@ -130,7 +129,7 @@ class FuelRecordUpdate(BaseModel):
 
     @field_validator("gas_station_name")
     @classmethod
-    def validate_gas_station_name(cls, v: Optional[str]) -> Optional[str]:
+    def validate_gas_station_name(cls, v: str | None) -> str | None:
         """ガソリンスタンド名を検証."""
         if v is not None:
             v = v.strip()
@@ -154,16 +153,16 @@ class FuelRecordResponse(BaseModel):
     unit_price: int = Field(description="単価（円/L）")
     total_cost: int = Field(description="総費用（円）")
     is_full_tank: bool = Field(description="満タンかどうか")
-    gas_station_name: Optional[str] = Field(description="ガソリンスタンド名")
-    distance_traveled: Optional[int] = Field(
+    gas_station_name: str | None = Field(description="ガソリンスタンド名")
+    distance_traveled: int | None = Field(
         default=None,
         description="走行距離（km）: 今回の総走行距離 - 前回の総走行距離",
     )
-    fuel_amount: Optional[float] = Field(
+    fuel_amount: float | None = Field(
         default=None,
         description="給油量（L）: 総費用 / 単価",
     )
-    fuel_efficiency: Optional[float] = Field(
+    fuel_efficiency: float | None = Field(
         default=None,
         description="燃費（km/L）: 走行距離 / 給油量（小数点2桁）",
     )

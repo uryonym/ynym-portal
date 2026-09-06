@@ -32,8 +32,8 @@ def get_current_user(
         email: str | None = payload.get("sub")
         if email is None:
             raise credentials_exception
-    except (JWTError, Exception):
-        raise credentials_exception
+    except (JWTError, Exception) as e:
+        raise credentials_exception from e
 
     user_service = UserService(UserRepository(db))
     user = user_service.get_by_email(email=email)
