@@ -109,6 +109,8 @@ docker compose build
 docker compose up -d
 ```
 
+> **注意**: `NEXT_PUBLIC_*` 環境変数は Next.js の仕様上 Docker イメージのビルド時に JS に埋め込まれます。URL 等の環境変数を変更した場合は `docker compose build --no-cache ynym-portal-frontend` を実行して再ビルドしてください。
+
 ## コミットメッセージ規約
 
 コミットメッセージは [`.github/copilot-instructions.md`](.github/copilot-instructions.md) に従って記述してください。
