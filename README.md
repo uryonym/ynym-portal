@@ -99,7 +99,12 @@ make dev-frontend  # Next.js のみ起動 (port 3000)
 
 ## Docker での起動
 
+Docker Compose 用の環境変数ファイル（`.env`）を準備してから起動します。
+
 ```bash
+cp .env.example .env
+# 必要に応じて .env の値を編集
+
 docker compose build
 docker compose up -d
 ```

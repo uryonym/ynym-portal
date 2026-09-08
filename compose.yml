@@ -7,6 +7,31 @@ services:
     container_name: ynym-portal-backend
     hostname: ynym-portal-backend
     restart: always
+    environment:
+      # データベース接続設定
+      - DB_HOST=${DB_HOST:-localhost}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME:-ynym_portal}
+      - DB_USER=${DB_USER:-admin}
+      - DB_PASSWORD=${DB_PASSWORD}
+      # JWT 認証設定
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
+      - JWT_EXPIRE_MINUTES=${JWT_EXPIRE_MINUTES:-10080}
+      # Google OAuth 設定
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      # URL / CORS 設定
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+      - BACKEND_URL=${BACKEND_URL:-http://localhost:8000}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3000}
+      # アプリケーション設定
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      # nginx-proxy 連携設定 (必要に応じて設定)
+      # - VIRTUAL_HOST=${BACKEND_VIRTUAL_HOST:-}
+      # - VIRTUAL_PORT=8000
+      # - LETSENCRYPT_HOST=${BACKEND_LETSENCRYPT_HOST:-}
     networks:
       - ynym-portal-network
       - nginx-proxy-network
@@ -19,6 +44,16 @@ services:
     container_name: ynym-portal-frontend
     hostname: ynym-portal-frontend
     restart: always
+    environment:
+      # フロントエンド環境変数 / API 接続先
+      - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=${PORT:-3000}
+      # nginx-proxy 連携設定 (必要に応じて設定)
+      # - VIRTUAL_HOST=${FRONTEND_VIRTUAL_HOST:-}
+      # - VIRTUAL_PORT=3000
+      # - LETSENCRYPT_HOST=${FRONTEND_LETSENCRYPT_HOST:-}
     networks:
       - ynym-portal-network
       - nginx-proxy-network
