@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.core.db import get_session
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import UserResponse
-from app.security.jwt import decode_access_token
+from app.security.jwt import TokenValidationError, decode_access_token
 from app.services.user_service import UserService
 
 router = APIRouter(prefix="/users", tags=["users"])
@@ -30,20 +30,19 @@ def get_current_user_me(
 
     try:
         payload = decode_access_token(token)
-        user_email = payload.get("sub")
-        if not user_email:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload"
-            )
-        user = service.get_by_email(email=user_email)
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
-            )
-        return user
-    except HTTPException:
-        raise
-    except Exception as e:
+    except TokenValidationError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token"
         ) from e
+
+    user_email = payload.get("sub")
+    if not user_email:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload"
+        )
+    user = service.get_by_email(email=user_email)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+    return user
