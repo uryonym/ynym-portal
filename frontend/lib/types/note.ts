@@ -9,13 +9,11 @@ export type NoteResponse =
 export type NotesResponse =
   components['schemas']['SuccessResponse_list_NoteResponse__']
 
-// NoteCategory
-export type NoteCategory = components['schemas']['NoteCategoryResponse']
-export type CreateNoteCategoryInput =
-  components['schemas']['NoteCategoryCreate']
-export type UpdateNoteCategoryInput =
-  components['schemas']['NoteCategoryUpdate']
-export type NoteCategoryResponse =
-  components['schemas']['SuccessResponse_NoteCategoryResponse_']
-export type NoteCategoriesResponse =
-  components['schemas']['SuccessResponse_list_NoteCategoryResponse__']
+// Re-export NoteCategory types
+export type {
+  NoteCategory,
+  CreateNoteCategoryInput,
+  UpdateNoteCategoryInput,
+  NoteCategoryResponse,
+  NoteCategoriesResponse,
+} from './note-category'
