@@ -46,7 +46,13 @@ def db_session():
     """テスト用 DB セッション（各テスト後にロールバック）."""
     connection = engine.connect()
     transaction = connection.begin()
-    session = Session(bind=connection)
+    session = Session(bind=connection, join_transaction_mode="create_savepoint")
+
+    @event.listens_for(session, "after_transaction_end")
+    def restart_savepoint(sess, trans):
+        if trans.nested and not trans._parent.nested:
+            sess.begin_nested()
+
     try:
         yield session
     finally:
@@ -71,7 +77,12 @@ def client(db_session: SessionDep) -> TestClient:
     """FastAPI テストクライアント（SQLite in-memory DB + 認証モック）."""
 
     def _override_get_session():
-        yield db_session
+        try:
+            yield db_session
+            db_session.commit()
+        except Exception:
+            db_session.rollback()
+            raise
 
     app.dependency_overrides[get_session] = _override_get_session
     app.dependency_overrides[get_current_user] = _override_current_user
