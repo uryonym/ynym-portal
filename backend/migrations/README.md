@@ -16,6 +16,14 @@
 - インデックス作成（3 個）
 - 制約定義（4 個）
 
+### 007_add_soft_delete_to_notes_and_categories.sql
+
+**目的**: note_categories および notes テーブルへの論理削除（deleted_at）追加
+**内容**:
+
+- note_categories テーブルへの deleted_at カラム・インデックス追加
+- notes テーブルへの deleted_at カラム・インデックス追加
+
 ## 前提条件
 
 ### 必要なもの
