@@ -8,15 +8,22 @@ class UserBase(BaseModel):
     email: EmailStr
     name: str
     avatar_url: str | None = None
+    google_uid: str
+    is_admin: bool = False
 
 
-class UserCreate(UserBase):
-    pass
+class UserCreate(BaseModel):
+    google_uid: str
+    email: EmailStr
+    name: str
+    is_admin: bool = False
 
 
 class UserUpdate(BaseModel):
     name: str | None = None
-    avatar_url: str | None = None
+    email: EmailStr | None = None
+    google_uid: str | None = None
+    is_admin: bool | None = None
 
 
 class UserInDB(UserBase):
@@ -24,6 +31,8 @@ class UserInDB(UserBase):
 
     id: uuid.UUID
     created_at: datetime
+    updated_at: datetime
+    deleted_at: datetime | None = None
 
 
 class UserResponse(UserInDB):

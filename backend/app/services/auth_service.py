@@ -4,7 +4,6 @@ import httpx
 from fastapi import HTTPException, status
 
 from app.core.config import settings
-from app.schemas.user import UserCreate
 from app.security.jwt import create_access_token
 from app.services.user_service import UserService
 
@@ -41,12 +40,34 @@ class AuthService:
                 detail="Google account email is not verified.",
             )
 
-        user_in = UserCreate(
+        google_uid = user_info.get("sub")
+        if not google_uid:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Google did not return a user identifier (sub).",
+            )
+
+        # 事前登録されているか確認
+        user = user_service.get_by_google_uid(google_uid, include_deleted=True)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="このアカウントは事前登録されていません。管理者に問い合わせてください。",
+            )
+
+        if user.deleted_at is not None:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="このアカウントは利用が停止（退会）されています。",
+            )
+
+        # Googleの最新情報を反映
+        user = user_service.sync_google_user(
+            user=user,
+            name=name or user.name,
             email=email,
-            name=name or email.split("@")[0],
             avatar_url=picture,
         )
-        user = user_service.get_or_create(user_in=user_in)
         return create_access_token(data={"sub": user.email})
 
     def _exchange_code_for_token(self, code: str) -> dict:

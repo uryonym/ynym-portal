@@ -71,7 +71,11 @@ def google_callback(
         jwt_token = auth_service.authenticate_google_user(
             code=code, user_service=user_service
         )
-    except HTTPException:
+    except HTTPException as e:
+        if e.status_code == 403:
+            return RedirectResponse(
+                url=f"{settings.FRONTEND_URL}/auth?error=unauthorized"
+            )
         raise
     except Exception as e:
         raise HTTPException(
