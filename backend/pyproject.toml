@@ -35,6 +35,9 @@ markers = [
     "unit: Mark test as unit test",
     "integration: Mark test as integration test",
 ]
+filterwarnings = [
+    "ignore::starlette.exceptions.StarletteDeprecationWarning",
+]
 
 [tool.ruff]
 target-version = "py312"

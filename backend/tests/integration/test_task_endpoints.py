@@ -21,25 +21,51 @@ class TestTaskListEndpoint:
         assert "message" in data
         assert data["message"] == "タスク一覧を取得しました"
 
-    def test_get_tasks_list_with_tasks(self) -> None:
+    def test_get_tasks_list_with_tasks(self, client: TestClient) -> None:
         """タスク一覧取得で複数タスクが返されるケース."""
-        # NOTE: asyncpg と TestClient の接続管理の制限により、
-        # 同期テストクライアント内で複数の async DB 呼び出しは
-        # "another operation is in progress" エラーが発生します。
-        # 本格的なDB操作検証は、別途 async テストフレームワークで
-        # 実装する必要があります (T020+ で実装予定)
+        client.post("/api/tasks", json={"title": "タスク1", "description": "詳細1"})
+        client.post("/api/tasks", json={"title": "タスク2", "description": "詳細2"})
 
-    def test_get_tasks_sorting_correct(self) -> None:
-        """タスク一覧がソートされることを検証."""
-        # NOTE: ソート検証も同様に async テストが必要です
+        response = client.get("/api/tasks")
+        assert response.status_code == 200
+        data = response.json()
+        assert len(data["data"]) == 2
+        titles = [t["title"] for t in data["data"]]
+        assert "タスク1" in titles
+        assert "タスク2" in titles
+
+    def test_get_tasks_sorting_correct(self, client: TestClient) -> None:
+        """タスク一覧が期日昇順（期日なしは末尾）でソートされることを検証."""
+        client.post("/api/tasks", json={"title": "期日遅い", "due_date": "2025-12-31"})
+        client.post("/api/tasks", json={"title": "期日早い", "due_date": "2025-01-01"})
+        client.post("/api/tasks", json={"title": "期日なし"})
+
+        response = client.get("/api/tasks")
+        assert response.status_code == 200
+        titles = [t["title"] for t in response.json()["data"]]
+        assert titles == ["期日早い", "期日遅い", "期日なし"]
 
     def test_get_tasks_pagination_skip(self, client: TestClient) -> None:
         """skip クエリパラメータで最初の N 個をスキップ."""
-        # TODO: ページネーション検証
+        client.post("/api/tasks", json={"title": "タスクA", "due_date": "2025-01-01"})
+        client.post("/api/tasks", json={"title": "タスクB", "due_date": "2025-02-01"})
+        client.post("/api/tasks", json={"title": "タスクC", "due_date": "2025-03-01"})
+
+        response = client.get("/api/tasks?skip=1")
+        assert response.status_code == 200
+        titles = [t["title"] for t in response.json()["data"]]
+        assert titles == ["タスクB", "タスクC"]
 
     def test_get_tasks_pagination_limit(self, client: TestClient) -> None:
         """limit クエリパラメータで取得数を制限."""
-        # TODO: ページネーション検証
+        client.post("/api/tasks", json={"title": "タスクA", "due_date": "2025-01-01"})
+        client.post("/api/tasks", json={"title": "タスクB", "due_date": "2025-02-01"})
+        client.post("/api/tasks", json={"title": "タスクC", "due_date": "2025-03-01"})
+
+        response = client.get("/api/tasks?limit=2")
+        assert response.status_code == 200
+        titles = [t["title"] for t in response.json()["data"]]
+        assert titles == ["タスクA", "タスクB"]
 
 
 class TestTaskCreateEndpoint:

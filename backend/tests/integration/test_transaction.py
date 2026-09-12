@@ -67,7 +67,9 @@ class TestTransactionalSessionContextManager:
         task_id = None
         with transactional_session() as session:
             repo = TaskRepository(session)
-            task = Task(user_id=TEST_USER_ID, title="コンテキストマネージャ正常コミット")
+            task = Task(
+                user_id=TEST_USER_ID, title="コンテキストマネージャ正常コミット"
+            )
             repo.save(task)
             task_id = task.id
 
@@ -116,7 +118,9 @@ class TestFastAPIRequestTransactionBoundary:
         def endpoint_with_failure(db: SessionDep) -> dict:
             # 1. カテゴリを作成
             cat_repo = NoteCategoryRepository(db)
-            category = NoteCategory(user_id=TEST_USER_ID, name="ロールバック対象カテゴリ")
+            category = NoteCategory(
+                user_id=TEST_USER_ID, name="ロールバック対象カテゴリ"
+            )
             cat_repo.save(category)
 
             # 2. ノートを作成
