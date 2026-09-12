@@ -98,6 +98,12 @@ def client(db_session: SessionDep) -> TestClient:
 
 
 @pytest.fixture(autouse=True)
+def override_session_local(monkeypatch):
+    """DB セッション生成を SQLite in-memory に差し替え."""
+    monkeypatch.setattr("app.core.db.session_local", TestSessionLocal)
+
+
+@pytest.fixture(autouse=True)
 def override_current_user_dependency():
     """認証依存をテスト用ユーザーで上書き（client fixture 未使用のテスト向け）."""
     app.dependency_overrides[get_current_user] = _override_current_user
