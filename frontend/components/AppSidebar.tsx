@@ -12,7 +12,15 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { Home, CheckSquare, Car, Fuel, Folder, User } from 'lucide-react'
+import {
+  Home,
+  CheckSquare,
+  StickyNote,
+  Folder,
+  Car,
+  Fuel,
+  User,
+} from 'lucide-react'
 import { useAuth } from '@/providers/AuthProvider'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
@@ -28,6 +36,11 @@ const menuItems = [
     title: 'タスク',
     url: '/tasks',
     icon: CheckSquare,
+  },
+  {
+    title: 'ノート',
+    url: '/notes',
+    icon: StickyNote,
   },
   {
     title: 'ノートカテゴリ',
