@@ -6,6 +6,23 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  DB_HOST: localhost
+  DB_PORT: 5432
+  DB_NAME: test_db
+  DB_USER: test_user
+  DB_PASSWORD: test_password
+  JWT_SECRET_KEY: test-secret-key-for-ci-testing-purposes
+  JWT_ALGORITHM: HS256
+  JWT_EXPIRE_MINUTES: 60
+  GOOGLE_CLIENT_ID: dummy-client-id.apps.googleusercontent.com
+  GOOGLE_CLIENT_SECRET: dummy-client-secret
+  FRONTEND_URL: http://localhost:3000
+  BACKEND_URL: http://localhost:8000
+  ALLOWED_ORIGINS: http://localhost:3000
+  ENVIRONMENT: test
+  LOG_LEVEL: INFO
+
 jobs:
   filter:
     name: Detect Changes
@@ -103,8 +120,8 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - name: Install dependencies
         run: |
-          cd backend && uv sync --all-groups
-          cd frontend && npm ci
+          (cd backend && uv sync --all-groups)
+          (cd frontend && npm ci)
       - name: Verify Codegen Sync
         run: make check-codegen
 
