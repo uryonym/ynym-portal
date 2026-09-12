@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useForm, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash2 } from 'lucide-react'
@@ -47,6 +47,16 @@ export function NoteForm({
   isLoading = false,
 }: NoteFormProps) {
   const titleInputRef = useRef<HTMLInputElement>(null)
+
+  const categoryItems = useMemo(() => {
+    const items: Record<string, string> = {
+      [NONE_CATEGORY_VALUE]: '未分類（なし）',
+    }
+    categories.forEach((c) => {
+      items[c.id] = c.name
+    })
+    return items
+  }, [categories])
 
   const form = useForm<NoteFormValues>({
     resolver: zodResolver(noteFormSchema) as Resolver<NoteFormValues>,
@@ -123,6 +133,7 @@ export function NoteForm({
             <FormItem>
               <FormLabel>カテゴリ</FormLabel>
               <Select
+                items={categoryItems}
                 onValueChange={(val) =>
                   field.onChange(val === NONE_CATEGORY_VALUE ? '' : val)
                 }
