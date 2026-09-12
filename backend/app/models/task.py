@@ -12,7 +12,7 @@ from app.models.base import Base, SoftDeleteMixin, TimestampMixin, UUIDPKMixin
 class Task(UUIDPKMixin, TimestampMixin, SoftDeleteMixin, Base):
     """タスクモデル."""
 
-    __tablename__ = "task"
+    __tablename__ = "tasks"
 
     user_id: Mapped[UUID] = mapped_column(index=True)
     title: Mapped[str] = mapped_column(String(255))
