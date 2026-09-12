@@ -17,13 +17,13 @@ class BaseRepository[T]:
         return self.session.get(self.model, id)
 
     def save(self, entity: T) -> T:
-        """エンティティを保存（insert or update）してリフレッシュ."""
+        """エンティティを永続化（add & flush）してリフレッシュ."""
         self.session.add(entity)
-        self.session.commit()
+        self.session.flush()
         self.session.refresh(entity)
         return entity
 
     def delete(self, entity: T) -> None:
-        """エンティティを物理削除."""
+        """エンティティを物理削除（flush）."""
         self.session.delete(entity)
-        self.session.commit()
+        self.session.flush()
