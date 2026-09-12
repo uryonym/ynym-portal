@@ -20,6 +20,7 @@ import {
   Folder,
   Car,
   Fuel,
+  Trash2,
   User,
   Users,
 } from 'lucide-react'
@@ -58,6 +59,11 @@ const menuItems = [
     title: '燃費管理',
     url: '/fuel-records',
     icon: Fuel,
+  },
+  {
+    title: 'ゴミ箱',
+    url: '/trash',
+    icon: Trash2,
   },
 ]
 
