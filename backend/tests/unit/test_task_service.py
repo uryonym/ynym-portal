@@ -257,12 +257,13 @@ class TestTaskServiceDeleteTask:
         return MagicMock(spec=TaskRepository)
 
     def test_delete_existing_task(self, mock_repo: MagicMock) -> None:
-        """タスクを正常に削除できる."""
+        """タスクを論理削除し、deleted_at が設定される."""
         task = _make_task()
         mock_repo.get_by_id_and_user.return_value = task
         service = TaskService(mock_repo)
         service.delete_task(task.id, TEST_USER_ID)
-        mock_repo.delete.assert_called_once_with(task)
+        assert task.deleted_at is not None
+        mock_repo.save.assert_called_once_with(task)
 
     def test_delete_not_found_raises(self, mock_repo: MagicMock) -> None:
         """タスクが見つからない場合 NotFoundException を発生させる."""

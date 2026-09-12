@@ -70,6 +70,7 @@ class TaskService:
         return self.task_repo.save(task)
 
     def delete_task(self, task_id: UUID, user_id: UUID) -> None:
-        """タスクを物理削除."""
+        """タスクを論理削除."""
         task = self.get_task(task_id, user_id)
-        self.task_repo.delete(task)
+        task.deleted_at = datetime.now(JST)
+        self.task_repo.save(task)

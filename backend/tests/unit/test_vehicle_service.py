@@ -7,10 +7,11 @@ from uuid import UUID
 import pytest
 
 from app.models.vehicle import Vehicle
+from app.repositories.fuel_record_repository import FuelRecordRepository
 from app.repositories.vehicle_repository import VehicleRepository
 from app.schemas.vehicle import VehicleCreate, VehicleUpdate
 from app.services.vehicle_service import VehicleService
-from app.utils.exceptions import NotFoundException
+from app.utils.exceptions import ConflictException, NotFoundException
 
 JST = timezone(timedelta(hours=9))
 TEST_USER_ID = UUID("550e8400-e29b-41d4-a716-446655440000")
@@ -172,17 +173,44 @@ class TestVehicleServiceUpdateVehicle:
 class TestVehicleServiceDeleteVehicle:
     """delete_vehicle テスト."""
 
-    def test_delete_vehicle_sets_deleted_at(self, mock_repo: MagicMock) -> None:
-        """論理削除で deleted_at が設定される."""
+    @pytest.fixture
+    def mock_fuel_repo(self) -> MagicMock:
+        repo = MagicMock(spec=FuelRecordRepository)
+        repo.count_by_vehicle.return_value = 0
+        return repo
+
+    def test_delete_vehicle_sets_deleted_at(
+        self, mock_repo: MagicMock, mock_fuel_repo: MagicMock
+    ) -> None:
+        """論理削除で deleted_at が設定される（給油記録なしの場合）."""
         vehicle = Vehicle(
             user_id=TEST_USER_ID, name="マイカー", seq=1, maker="Toyota", model="Prius"
         )
         vehicle.deleted_at = None
         mock_repo.get_by_id_and_user.return_value = vehicle
-        service = VehicleService(mock_repo)
+        service = VehicleService(mock_repo, mock_fuel_repo)
         service.delete_vehicle(TEST_VEHICLE_ID, TEST_USER_ID)
         assert vehicle.deleted_at is not None
+        mock_fuel_repo.count_by_vehicle.assert_called_once_with(
+            TEST_USER_ID, TEST_VEHICLE_ID
+        )
         mock_repo.save.assert_called_once()
+
+    def test_delete_vehicle_with_fuel_records_raises_conflict(
+        self, mock_repo: MagicMock, mock_fuel_repo: MagicMock
+    ) -> None:
+        """有効な給油記録が存在する場合は ConflictException を送出する."""
+        vehicle = Vehicle(
+            user_id=TEST_USER_ID, name="マイカー", seq=1, maker="Toyota", model="Prius"
+        )
+        mock_repo.get_by_id_and_user.return_value = vehicle
+        mock_fuel_repo.count_by_vehicle.return_value = 2
+        service = VehicleService(mock_repo, mock_fuel_repo)
+        with pytest.raises(
+            ConflictException, match="給油記録が存在するため車両を削除できません"
+        ):
+            service.delete_vehicle(TEST_VEHICLE_ID, TEST_USER_ID)
+        mock_repo.save.assert_not_called()
 
     def test_delete_vehicle_not_found(self, mock_repo: MagicMock) -> None:
         """車が見つからない場合は例外."""

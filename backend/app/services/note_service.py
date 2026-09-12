@@ -1,7 +1,9 @@
 """ノート管理サービス."""
 
+from datetime import datetime
 from uuid import UUID
 
+from app.models.base import JST
 from app.models.note import Note
 from app.repositories.note_category_repository import NoteCategoryRepository
 from app.repositories.note_repository import NoteRepository
@@ -64,6 +66,7 @@ class NoteService:
         return self.note_repo.save(note)
 
     def delete_note(self, note_id: UUID, user_id: UUID) -> None:
-        """ノートを物理削除."""
+        """ノートを論理削除."""
         note = self.get_note(note_id, user_id)
-        self.note_repo.delete(note)
+        note.deleted_at = datetime.now(JST)
+        self.note_repo.save(note)

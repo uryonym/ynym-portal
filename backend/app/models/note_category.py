@@ -5,10 +5,10 @@ from uuid import UUID
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.models.base import Base, TimestampMixin, UUIDPKMixin
+from app.models.base import Base, SoftDeleteMixin, TimestampMixin, UUIDPKMixin
 
 
-class NoteCategory(UUIDPKMixin, TimestampMixin, Base):
+class NoteCategory(UUIDPKMixin, TimestampMixin, SoftDeleteMixin, Base):
     """ノートカテゴリモデル."""
 
     __tablename__ = "note_categories"

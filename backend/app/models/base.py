@@ -45,6 +45,16 @@ class UUIDPKMixin:
     )
 
 
+class SoftDeleteMixin:
+    """論理削除フィールドを持つ Mixin."""
+
+    deleted_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        index=True,
+        default=None,
+    )
+
+
 # 後方互換エイリアス（既存コードからの移行期）
 TimestampModel = TimestampMixin
 UUIDModel = UUIDPKMixin

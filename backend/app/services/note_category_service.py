@@ -1,12 +1,14 @@
 """ノートカテゴリ管理サービス."""
 
+from datetime import datetime
 from uuid import UUID
 
+from app.models.base import JST
 from app.models.note_category import NoteCategory
 from app.repositories.note_category_repository import NoteCategoryRepository
 from app.repositories.note_repository import NoteRepository
 from app.schemas.note_category import NoteCategoryCreate, NoteCategoryUpdate
-from app.utils.exceptions import NotFoundException
+from app.utils.exceptions import ConflictException, NotFoundException
 
 
 class NoteCategoryService:
@@ -57,7 +59,14 @@ class NoteCategoryService:
         return self.category_repo.save(category)
 
     def delete_category(self, category_id: UUID, user_id: UUID) -> None:
-        """カテゴリを削除し、関連ノートを未分類にする."""
+        """カテゴリを論理削除.
+
+        Raises:
+            NotFoundException: カテゴリが存在しない場合
+            ConflictException: 有効なノートが存在する場合
+        """
         category = self.get_category(category_id, user_id)
-        self.note_repo.nullify_category(user_id, category_id)
-        self.category_repo.delete(category)
+        if self.note_repo.count_by_category(user_id, category_id) > 0:
+            raise ConflictException("ノートが存在するためカテゴリを削除できません")
+        category.deleted_at = datetime.now(JST)
+        self.category_repo.save(category)

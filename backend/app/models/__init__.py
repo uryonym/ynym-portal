@@ -1,6 +1,6 @@
 """データベースモデルパッケージ."""
 
-from app.models.base import Base, TimestampMixin, UUIDPKMixin
+from app.models.base import Base, SoftDeleteMixin, TimestampMixin, UUIDPKMixin
 from app.models.fuel_record import FuelRecord
 from app.models.note import Note
 from app.models.note_category import NoteCategory
@@ -13,6 +13,7 @@ __all__ = [
     "FuelRecord",
     "Note",
     "NoteCategory",
+    "SoftDeleteMixin",
     "Task",
     "TimestampMixin",
     "UUIDPKMixin",
