@@ -9,7 +9,8 @@
     "upgrade": "next upgrade",
     "lint": "eslint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "codegen": "openapi-typescript ../backend/openapi.json -o lib/types/generated/schema.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.1.0",
@@ -42,6 +43,7 @@
     "eslint": "v9",
     "eslint-config-next": "16.3.2",
     "eslint-config-prettier": "^10.1.8",
+    "openapi-typescript": "^7.13.0",
     "prettier": "^3.6.2",
     "shadcn": "^4.20.0",
     "tailwindcss": "^4",
