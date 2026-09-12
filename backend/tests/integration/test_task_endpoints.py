@@ -297,7 +297,7 @@ class TestTaskDeleteEndpoint:
     """DELETE /api/tasks/{task_id} エンドポイント統合テスト."""
 
     def test_delete_task_success(self, client: TestClient) -> None:
-        """タスク削除で 204 No Content を返す."""
+        """タスク削除で 204 No Content を返し、論理削除されて取得できなくなる."""
         # タスクを作成
         create_payload = {
             "title": "削除対象タスク",
@@ -313,6 +313,16 @@ class TestTaskDeleteEndpoint:
         assert delete_response.status_code == 204
         # 204 No Content なのでレスポンスボディは空
         assert delete_response.text == "" or delete_response.text is None
+
+        # 削除後に単体取得すると 404 が返ることを確認
+        get_response = client.get(f"/api/tasks/{task_id}")
+        assert get_response.status_code == 404
+
+        # 削除後に一覧取得しても含まれないことを確認
+        list_response = client.get("/api/tasks")
+        assert list_response.status_code == 200
+        task_ids = [t["id"] for t in list_response.json()["data"]]
+        assert task_id not in task_ids
 
     def test_delete_task_not_found_fails(self, client: TestClient) -> None:
         """存在しないタスク ID での削除で 404 を返す."""
