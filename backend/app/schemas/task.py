@@ -124,3 +124,6 @@ class TaskResponse(BaseModel):
     order: int = Field(description="表示順序")
     created_at: datetime = Field(description="作成日時（ISO 8601 形式、JST）")
     updated_at: datetime = Field(description="更新日時（ISO 8601 形式、JST）")
+    deleted_at: datetime | None = Field(
+        default=None, description="削除日時（ISO 8601 形式、JST）"
+    )
