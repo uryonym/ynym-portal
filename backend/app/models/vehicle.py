@@ -1,15 +1,14 @@
 """車両モデル."""
 
-from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import DateTime, Float, Integer, String
+from sqlalchemy import Float, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.models.base import Base, TimestampMixin, UUIDPKMixin
+from app.models.base import Base, SoftDeleteMixin, TimestampMixin, UUIDPKMixin
 
 
-class Vehicle(UUIDPKMixin, TimestampMixin, Base):
+class Vehicle(UUIDPKMixin, TimestampMixin, SoftDeleteMixin, Base):
     """車両モデル."""
 
     __tablename__ = "vehicle"
@@ -22,6 +21,3 @@ class Vehicle(UUIDPKMixin, TimestampMixin, Base):
     year: Mapped[int | None] = mapped_column(Integer)
     number: Mapped[str | None] = mapped_column(String(50))
     tank_capacity: Mapped[float | None] = mapped_column(Float)
-    deleted_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), index=True
-    )
