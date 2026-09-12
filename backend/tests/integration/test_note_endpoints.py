@@ -29,6 +29,29 @@ class TestNoteEndpoints:
         assert data["data"]["body"] == "本文"
         assert data["message"] == "ノートが作成されました"
 
+    def test_delete_note_success(self, client: TestClient) -> None:
+        """ノート削除で 204 を返し、論理削除されて取得できなくなる."""
+        # ノート作成
+        create_res = client.post(
+            "/api/notes", json={"title": "削除用ノート", "body": "削除予定"}
+        )
+        assert create_res.status_code == 201
+        note_id = create_res.json()["data"]["id"]
+
+        # ノート削除
+        del_res = client.delete(f"/api/notes/{note_id}")
+        assert del_res.status_code == 204
+
+        # 削除後に単体取得すると 404
+        get_res = client.get(f"/api/notes/{note_id}")
+        assert get_res.status_code == 404
+
+        # 削除後に一覧取得しても含まれない
+        list_res = client.get("/api/notes")
+        assert list_res.status_code == 200
+        ids = [n["id"] for n in list_res.json()["data"]]
+        assert note_id not in ids
+
 
 class TestNoteCategoryEndpoints:
     """/api/note-categories エンドポイントのテスト."""

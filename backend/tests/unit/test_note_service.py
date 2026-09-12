@@ -134,12 +134,13 @@ class TestNoteServiceDeleteNote:
     """delete_note テスト."""
 
     def test_delete_existing(self, mock_note_repo, mock_category_repo) -> None:
-        """ノートを削除できる."""
+        """ノートを論理削除し、deleted_at が設定される."""
         note = MagicMock(spec=Note)
         mock_note_repo.get_by_id_and_user.return_value = note
         service = NoteService(mock_note_repo, mock_category_repo)
         service.delete_note(NOTE_ID, TEST_USER_ID)
-        mock_note_repo.delete.assert_called_once_with(note)
+        assert note.deleted_at is not None
+        mock_note_repo.save.assert_called_once_with(note)
 
     def test_delete_not_found_raises(self, mock_note_repo, mock_category_repo) -> None:
         """ノートが存在しない場合 NotFoundException."""

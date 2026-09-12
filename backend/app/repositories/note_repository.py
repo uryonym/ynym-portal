@@ -26,7 +26,10 @@ class NoteRepository(BaseRepository[Note]):
         stmt = (
             select(Note)
             .outerjoin(NoteCategory, Note.category_id == NoteCategory.id)
-            .where(Note.user_id == user_id)
+            .where(
+                Note.user_id == user_id,
+                Note.deleted_at.is_(None),
+            )
             .order_by(
                 nulls_last(asc(NoteCategory.name)),
                 asc(Note.title),
@@ -38,7 +41,14 @@ class NoteRepository(BaseRepository[Note]):
 
     def get_by_id_and_user(self, note_id: UUID, user_id: UUID) -> Note | None:
         """note_id と user_id でノートを取得（所有権確認）."""
-        stmt = select(Note).where(Note.id == note_id).where(Note.user_id == user_id)
+        stmt = (
+            select(Note)
+            .where(
+                Note.id == note_id,
+                Note.user_id == user_id,
+                Note.deleted_at.is_(None),
+            )
+        )
         return self.session.execute(stmt).scalars().one_or_none()
 
     def nullify_category(self, user_id: UUID, category_id: UUID) -> None:
