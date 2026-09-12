@@ -10,7 +10,7 @@ from app.repositories.note_category_repository import NoteCategoryRepository
 from app.repositories.note_repository import NoteRepository
 from app.schemas.note_category import NoteCategoryCreate, NoteCategoryUpdate
 from app.services.note_category_service import NoteCategoryService
-from app.utils.exceptions import NotFoundException
+from app.utils.exceptions import ConflictException, NotFoundException
 
 TEST_USER_ID = UUID("550e8400-e29b-41d4-a716-446655440000")
 CATEGORY_ID = UUID("cccccccc-cccc-cccc-cccc-cccccccccccc")
@@ -108,19 +108,35 @@ class TestNoteCategoryServiceUpdateCategory:
 class TestNoteCategoryServiceDeleteCategory:
     """delete_category テスト."""
 
-    def test_delete_nullifies_notes_and_deletes(
+    def test_delete_success_sets_deleted_at(
         self, mock_category_repo, mock_note_repo
     ) -> None:
-        """削除前に関連ノートのカテゴリを NULL にする."""
+        """ノートが存在しない場合、論理削除で deleted_at が設定される."""
+        category = MagicMock(spec=NoteCategory)
+        category.id = CATEGORY_ID
+        category.deleted_at = None
+        mock_category_repo.get_by_id_and_user.return_value = category
+        mock_note_repo.count_by_category.return_value = 0
+        service = NoteCategoryService(mock_category_repo, mock_note_repo)
+        service.delete_category(CATEGORY_ID, TEST_USER_ID)
+        assert category.deleted_at is not None
+        mock_note_repo.count_by_category.assert_called_once_with(
+            TEST_USER_ID, CATEGORY_ID
+        )
+        mock_category_repo.save.assert_called_once_with(category)
+
+    def test_delete_with_notes_raises_conflict(
+        self, mock_category_repo, mock_note_repo
+    ) -> None:
+        """有効なノートが存在する場合は ConflictException を送出する."""
         category = MagicMock(spec=NoteCategory)
         category.id = CATEGORY_ID
         mock_category_repo.get_by_id_and_user.return_value = category
+        mock_note_repo.count_by_category.return_value = 3
         service = NoteCategoryService(mock_category_repo, mock_note_repo)
-        service.delete_category(CATEGORY_ID, TEST_USER_ID)
-        mock_note_repo.nullify_category.assert_called_once_with(
-            TEST_USER_ID, CATEGORY_ID
-        )
-        mock_category_repo.delete.assert_called_once_with(category)
+        with pytest.raises(ConflictException, match="ノートが存在するためカテゴリを削除できません"):
+            service.delete_category(CATEGORY_ID, TEST_USER_ID)
+        mock_category_repo.save.assert_not_called()
 
     def test_delete_not_found_raises(self, mock_category_repo, mock_note_repo) -> None:
         """カテゴリが見つからない場合 NotFoundException."""

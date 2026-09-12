@@ -23,7 +23,10 @@ class NoteCategoryRepository(BaseRepository[NoteCategory]):
         """ユーザーのカテゴリ一覧を名前昇順で取得."""
         stmt = (
             select(NoteCategory)
-            .where(NoteCategory.user_id == user_id)
+            .where(
+                NoteCategory.user_id == user_id,
+                NoteCategory.deleted_at.is_(None),
+            )
             .order_by(asc(NoteCategory.name))
             .offset(skip)
             .limit(limit)
@@ -36,7 +39,10 @@ class NoteCategoryRepository(BaseRepository[NoteCategory]):
         """category_id と user_id でカテゴリを取得（所有権確認）."""
         stmt = (
             select(NoteCategory)
-            .where(NoteCategory.id == category_id)
-            .where(NoteCategory.user_id == user_id)
+            .where(
+                NoteCategory.id == category_id,
+                NoteCategory.user_id == user_id,
+                NoteCategory.deleted_at.is_(None),
+            )
         )
         return self.session.execute(stmt).scalars().one_or_none()

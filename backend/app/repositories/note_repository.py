@@ -2,7 +2,7 @@
 
 from uuid import UUID
 
-from sqlalchemy import asc, select, update
+from sqlalchemy import asc, func, select, update
 from sqlalchemy.sql import nulls_last
 
 from app.models.note import Note
@@ -60,3 +60,16 @@ class NoteRepository(BaseRepository[Note]):
             .values(category_id=None)
         )
         self.session.execute(stmt)
+
+    def count_by_category(self, user_id: UUID, category_id: UUID) -> int:
+        """指定カテゴリに属する有効なノート件数を取得."""
+        stmt = (
+            select(func.count())
+            .select_from(Note)
+            .where(
+                Note.user_id == user_id,
+                Note.category_id == category_id,
+                Note.deleted_at.is_(None),
+            )
+        )
+        return self.session.execute(stmt).scalar() or 0

@@ -76,3 +76,47 @@ class TestNoteCategoryEndpoints:
         assert "data" in data
         assert data["data"]["name"] == "仕事"
         assert data["message"] == "カテゴリが作成されました"
+
+    def test_delete_note_category_success(self, client: TestClient) -> None:
+        """ノートのないカテゴリを削除でき、論理削除されて取得できなくなる."""
+        # カテゴリ作成
+        create_res = client.post("/api/note-categories", json={"name": "削除用カテゴリ"})
+        assert create_res.status_code == 201
+        cat_id = create_res.json()["data"]["id"]
+
+        # 削除
+        del_res = client.delete(f"/api/note-categories/{cat_id}")
+        assert del_res.status_code == 204
+
+        # 単体取得で 404
+        get_res = client.get(f"/api/note-categories/{cat_id}")
+        assert get_res.status_code == 404
+
+        # 一覧から除外
+        list_res = client.get("/api/note-categories")
+        assert list_res.status_code == 200
+        ids = [c["id"] for c in list_res.json()["data"]]
+        assert cat_id not in ids
+
+    def test_delete_note_category_with_notes_conflict(
+        self, client: TestClient
+    ) -> None:
+        """ノートが存在するカテゴリを削除しようとすると 409 Conflict が返る."""
+        # カテゴリ作成
+        cat_res = client.post("/api/note-categories", json={"name": "ノートありカテゴリ"})
+        assert cat_res.status_code == 201
+        cat_id = cat_res.json()["data"]["id"]
+
+        # そのカテゴリに属するノート作成
+        note_res = client.post(
+            "/api/notes",
+            json={"title": "カテゴリ付きノート", "body": "本文", "category_id": cat_id},
+        )
+        assert note_res.status_code == 201
+
+        # カテゴリ削除試行 -> 409 Conflict
+        del_res = client.delete(f"/api/note-categories/{cat_id}")
+        assert del_res.status_code == 409
+        data = del_res.json()
+        assert "message" in data
+        assert "ノートが存在するため" in data["message"]
