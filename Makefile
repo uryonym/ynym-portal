@@ -1,4 +1,4 @@
-.PHONY: help dev dev-backend dev-frontend test test-backend test-frontend lint lint-backend lint-frontend format format-backend format-frontend install codegen codegen-backend codegen-frontend check-codegen
+.PHONY: help dev dev-backend dev-frontend test test-backend test-frontend lint lint-backend lint-frontend format format-backend format-frontend format-check format-check-backend format-check-frontend install codegen codegen-backend codegen-frontend check-codegen
 
 .DEFAULT_GOAL := help
 
@@ -42,6 +42,14 @@ format-backend: ## バックエンドのコード整形 (ruff format)
 
 format-frontend: ## フロントエンドのコード整形 (prettier)
 	cd frontend && npm run format
+
+format-check: format-check-backend format-check-frontend ## コード整形のチェックを実行 (CI用)
+
+format-check-backend: ## バックエンドのコード整形チェック (ruff format --check)
+	cd backend && uv run ruff format --check
+
+format-check-frontend: ## フロントエンドのコード整形チェック (prettier --check)
+	cd frontend && npm run format:check
 
 codegen: codegen-backend codegen-frontend ## スキーマ出力から TypeScript 型生成まで一括実行
 

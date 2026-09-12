@@ -1,0 +1,135 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  filter:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.changes.outputs.backend }}
+      frontend: ${{ steps.changes.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+              - 'Makefile'
+              - '.tool-versions'
+              - '.github/workflows/ci.yml'
+            frontend:
+              - 'frontend/**'
+              - 'Makefile'
+              - '.tool-versions'
+              - '.github/workflows/ci.yml'
+
+  backend:
+    name: Backend (Format, Lint & Test)
+    needs: filter
+    if: ${{ needs.filter.outputs.backend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "backend/uv.lock"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: cd backend && uv sync --all-groups
+      - name: Format check backend
+        run: make format-check-backend
+      - name: Lint backend
+        run: make lint-backend
+      - name: Test backend
+        run: make test-backend
+
+  frontend:
+    name: Frontend (Format, Lint & Build)
+    needs: filter
+    if: ${{ needs.filter.outputs.frontend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install dependencies
+        run: cd frontend && npm ci
+      - name: Format check frontend
+        run: make format-check-frontend
+      - name: Lint frontend
+        run: make lint-frontend
+      - name: Build and type-check frontend
+        run: make test-frontend
+
+  codegen:
+    name: Codegen Sync Check
+    needs: filter
+    if: ${{ needs.filter.outputs.backend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "backend/uv.lock"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install dependencies
+        run: |
+          cd backend && uv sync --all-groups
+          cd frontend && npm ci
+      - name: Verify Codegen Sync
+        run: make check-codegen
+
+  ci-gate:
+    name: CI Status Gate
+    needs: [filter, backend, frontend, codegen]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check results
+        run: |
+          filter="${{ needs.filter.result }}"
+          backend="${{ needs.backend.result }}"
+          frontend="${{ needs.frontend.result }}"
+          codegen="${{ needs.codegen.result }}"
+
+          echo "Filter status: $filter"
+          echo "Backend status: $backend"
+          echo "Frontend status: $frontend"
+          echo "Codegen status: $codegen"
+
+          for res in "$filter" "$backend" "$frontend" "$codegen"; do
+            if [ "$res" = "failure" ] || [ "$res" = "cancelled" ]; then
+              echo "A required job failed or was cancelled."
+              exit 1
+            fi
+          done
+          echo "All checks passed or were appropriately skipped."
