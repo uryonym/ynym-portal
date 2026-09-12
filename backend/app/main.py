@@ -11,6 +11,7 @@ from app.routers import (
     note_categories_router,
     notes_router,
     tasks_router,
+    trash_router,
     users_router,
     vehicles_router,
 )
@@ -52,5 +53,6 @@ api_router.include_router(vehicles_router)
 api_router.include_router(fuel_records_router)
 api_router.include_router(note_categories_router)
 api_router.include_router(notes_router)
+api_router.include_router(trash_router)
 
 app.include_router(api_router)
