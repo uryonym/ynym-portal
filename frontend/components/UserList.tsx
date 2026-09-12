@@ -180,9 +180,13 @@ export function UserList({
                         </div>
                       </td>
                       <td className="px-5 py-3.5">
-                        <code className="text-xs font-mono bg-slate-100 px-2 py-1 rounded-md text-slate-700">
-                          {user.google_uid}
-                        </code>
+                        {user.google_uid ? (
+                          <code className="text-xs font-mono bg-slate-100 px-2 py-1 rounded-md text-slate-700">
+                            {user.google_uid}
+                          </code>
+                        ) : (
+                          <span className="text-xs text-slate-400">未設定</span>
+                        )}
                       </td>
                       <td className="px-5 py-3.5">
                         {user.is_admin ? (

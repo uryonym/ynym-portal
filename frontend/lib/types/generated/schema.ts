@@ -1041,7 +1041,7 @@ export interface components {
             /** Avatar Url */
             avatar_url?: string | null;
             /** Google Uid */
-            google_uid: string;
+            google_uid?: string | null;
             /**
              * Is Admin
              * @default false

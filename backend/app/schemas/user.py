@@ -8,7 +8,7 @@ class UserBase(BaseModel):
     email: EmailStr
     name: str
     avatar_url: str | None = None
-    google_uid: str
+    google_uid: str | None = None
     is_admin: bool = False
 
 

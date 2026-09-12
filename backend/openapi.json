@@ -2630,7 +2630,14 @@
             "title": "Avatar Url"
           },
           "google_uid": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Google Uid"
           },
           "is_admin": {
@@ -2670,7 +2677,6 @@
         "required": [
           "email",
           "name",
-          "google_uid",
           "id",
           "created_at",
           "updated_at"
