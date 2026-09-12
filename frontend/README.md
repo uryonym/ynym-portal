@@ -48,14 +48,14 @@ npm run dev
 
 ## スクリプト一覧
 
-| コマンド | 説明 |
-| :--- | :--- |
-| `npm run dev` | 開発サーバーを起動 (Turbopack) |
-| `npm run build` | プロダクション用ビルドおよび型チェックを実行 |
-| `npm run start` | ビルド成果物をプロダクションモードで起動 |
-| `npm run lint` | ESLint によるコード静的解析 |
-| `npm run format` | Prettier によるコード自動整形 |
-| `npm run format:check` | Prettier による整形チェック |
+| コマンド               | 説明                                         |
+| :--------------------- | :------------------------------------------- |
+| `npm run dev`          | 開発サーバーを起動 (Turbopack)               |
+| `npm run build`        | プロダクション用ビルドおよび型チェックを実行 |
+| `npm run start`        | ビルド成果物をプロダクションモードで起動     |
+| `npm run lint`         | ESLint によるコード静的解析                  |
+| `npm run format`       | Prettier によるコード自動整形                |
+| `npm run format:check` | Prettier による整形チェック                  |
 
 ## プロジェクト構成
 
