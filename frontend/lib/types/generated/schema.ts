@@ -84,6 +84,78 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Users
+         * @description ユーザー一覧を取得（管理者専用）.
+         */
+        get: operations["list_users_api_users_get"];
+        put?: never;
+        /**
+         * Create User
+         * @description 新規ユーザーを事前登録（管理者専用）.
+         */
+        post: operations["create_user_api_users_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/users/{user_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get User
+         * @description ユーザー詳細を取得（管理者専用）.
+         */
+        get: operations["get_user_api_users__user_id__get"];
+        /**
+         * Update User
+         * @description ユーザー情報を更新（管理者専用）.
+         */
+        put: operations["update_user_api_users__user_id__put"];
+        post?: never;
+        /**
+         * Delete User
+         * @description ユーザーを論理削除（管理者専用・退会扱い）.
+         */
+        delete: operations["delete_user_api_users__user_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/users/{user_id}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Restore User
+         * @description 論理削除されたユーザーを復元（管理者専用）.
+         */
+        post: operations["restore_user_api_users__user_id__restore_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/tasks": {
         parameters: {
             query?: never;
@@ -739,6 +811,15 @@ export interface components {
              */
             message: string;
         };
+        /** SuccessResponse[UserResponse] */
+        SuccessResponse_UserResponse_: {
+            data: components["schemas"]["UserResponse"];
+            /**
+             * Message
+             * @default 成功
+             */
+            message: string;
+        };
         /** SuccessResponse[VehicleResponse] */
         SuccessResponse_VehicleResponse_: {
             data: components["schemas"]["VehicleResponse"];
@@ -782,6 +863,16 @@ export interface components {
         SuccessResponse_list_TaskResponse__: {
             /** Data */
             data: components["schemas"]["TaskResponse"][];
+            /**
+             * Message
+             * @default 成功
+             */
+            message: string;
+        };
+        /** SuccessResponse[list[UserResponse]] */
+        SuccessResponse_list_UserResponse__: {
+            /** Data */
+            data: components["schemas"]["UserResponse"][];
             /**
              * Message
              * @default 成功
@@ -918,6 +1009,23 @@ export interface components {
              */
             due_date?: string | null;
         };
+        /** UserCreate */
+        UserCreate: {
+            /** Google Uid */
+            google_uid: string;
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Name */
+            name: string;
+            /**
+             * Is Admin
+             * @default false
+             */
+            is_admin: boolean;
+        };
         /**
          * UserResponse
          * @description Schema for returning a user from the API
@@ -932,6 +1040,13 @@ export interface components {
             name: string;
             /** Avatar Url */
             avatar_url?: string | null;
+            /** Google Uid */
+            google_uid?: string | null;
+            /**
+             * Is Admin
+             * @default false
+             */
+            is_admin: boolean;
             /**
              * Id
              * Format: uuid
@@ -942,6 +1057,24 @@ export interface components {
              * Format: date-time
              */
             created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Deleted At */
+            deleted_at?: string | null;
+        };
+        /** UserUpdate */
+        UserUpdate: {
+            /** Name */
+            name?: string | null;
+            /** Email */
+            email?: string | null;
+            /** Google Uid */
+            google_uid?: string | null;
+            /** Is Admin */
+            is_admin?: boolean | null;
         };
         /** ValidationError */
         ValidationError: {
@@ -1161,6 +1294,199 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UserResponse"];
+                };
+            };
+        };
+    };
+    list_users_api_users_get: {
+        parameters: {
+            query?: {
+                skip?: number;
+                limit?: number;
+                include_deleted?: boolean;
+                search?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_list_UserResponse__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_user_api_users_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_UserResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_user_api_users__user_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_UserResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_user_api_users__user_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_UserResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_user_api_users__user_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    restore_user_api_users__user_id__restore_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_UserResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

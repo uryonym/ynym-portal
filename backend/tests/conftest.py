@@ -66,9 +66,12 @@ def db_session():
 def _override_current_user() -> User:
     return User(
         id=UUID("550e8400-e29b-41d4-a716-446655440000"),
+        google_uid="google_test_uid_123",
         email="test@example.com",
         name="テストユーザー",
         avatar_url=None,
+        is_admin=True,
+        deleted_at=None,
         created_at=datetime.now(JST),
         updated_at=datetime.now(JST),
     )

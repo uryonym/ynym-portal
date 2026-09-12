@@ -36,11 +36,26 @@ def get_current_user(
         raise credentials_exception
 
     user_service = UserService(UserRepository(db))
-    user = user_service.get_by_email(email=email)
-    if user is None:
+    user = user_service.get_by_email(email=email, include_deleted=False)
+    if user is None or user.deleted_at is not None:
         raise credentials_exception
 
     return user
 
 
 CurrentUser = Annotated[User, Depends(get_current_user)]
+
+
+def get_current_admin_user(
+    current_user: CurrentUser,
+) -> User:
+    """管理者権限を持つユーザーのみアクセスを許可."""
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="管理者権限が必要です。",
+        )
+    return current_user
+
+
+CurrentAdminUser = Annotated[User, Depends(get_current_admin_user)]

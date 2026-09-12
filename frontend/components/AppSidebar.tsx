@@ -6,6 +6,7 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -20,6 +21,7 @@ import {
   Car,
   Fuel,
   User,
+  Users,
 } from 'lucide-react'
 import { useAuth } from '@/providers/AuthProvider'
 import { usePathname } from 'next/navigation'
@@ -56,6 +58,14 @@ const menuItems = [
     title: '燃費管理',
     url: '/fuel-records',
     icon: Fuel,
+  },
+]
+
+const adminMenuItems = [
+  {
+    title: 'ユーザー管理',
+    url: '/users',
+    icon: Users,
   },
 ]
 
@@ -108,6 +118,34 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {!isLoading && user?.is_admin && (
+          <SidebarGroup className="mt-2 pt-2 border-t border-slate-100">
+            <SidebarGroupLabel className="px-3 text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+              管理者メニュー
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="space-y-1">
+                {adminMenuItems.map((item) => {
+                  const isActive = pathname.startsWith(item.url)
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        render={<Link href={item.url} />}
+                        isActive={isActive}
+                        onClick={() => setOpenMobile(false)}
+                        className="h-10 px-3 text-sm font-medium rounded-lg transition-colors"
+                      >
+                        <item.icon className="h-4 w-4 shrink-0" />
+                        <span>{item.title}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
 
       {!isLoading && user && (
