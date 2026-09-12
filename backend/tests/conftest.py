@@ -46,12 +46,14 @@ def db_session():
     """テスト用 DB セッション（各テスト後にロールバック）."""
     connection = engine.connect()
     transaction = connection.begin()
-    session = Session(bind=connection, join_transaction_mode="create_savepoint")
+    session = Session(bind=connection)
+    nested = connection.begin_nested()
 
     @event.listens_for(session, "after_transaction_end")
     def restart_savepoint(sess, trans):
-        if trans.nested and not trans._parent.nested:
-            sess.begin_nested()
+        nonlocal nested
+        if not nested.is_active:
+            nested = connection.begin_nested()
 
     try:
         yield session
