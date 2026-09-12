@@ -1,42 +1,42 @@
 'use client'
 
 import { useState } from 'react'
-import { TodoList } from '@/components/TodoList'
-import { TodoDialog } from '@/components/TodoDialog'
-import { useTodos } from '@/hooks/useTodos'
-import { Todo, CreateTodoInput, UpdateTodoInput } from '@/lib/types/todo'
+import { TaskList } from '@/components/TaskList'
+import { TaskDialog } from '@/components/TaskDialog'
+import { useTasks } from '@/hooks/useTasks'
+import { Task, CreateTaskInput, UpdateTaskInput } from '@/lib/types/task'
 
 export default function TasksPage() {
   const {
-    todos,
+    tasks,
     isLoading,
-    editingTodo,
-    setEditingTodo,
-    addTodo,
-    updateTodo,
-    deleteTodo,
+    editingTask,
+    setEditingTask,
+    addTask,
+    updateTask,
+    deleteTask,
     toggleComplete,
     filter,
     setFilter,
-  } = useTodos()
+  } = useTasks()
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleOpenDialog = () => {
-    setEditingTodo(null)
+    setEditingTask(null)
     setIsDialogOpen(true)
   }
 
-  const handleEditTodo = (todoToEdit: Todo) => {
-    setEditingTodo(todoToEdit)
+  const handleEditTask = (taskToEdit: Task) => {
+    setEditingTask(taskToEdit)
     setIsDialogOpen(true)
   }
 
-  const handleSubmitForm = (data: CreateTodoInput | UpdateTodoInput) => {
-    if (editingTodo) {
-      updateTodo(editingTodo.id, data as UpdateTodoInput)
+  const handleSubmitForm = (data: CreateTaskInput | UpdateTaskInput) => {
+    if (editingTask) {
+      updateTask(editingTask.id, data as UpdateTaskInput)
     } else {
-      addTodo(data as CreateTodoInput)
+      addTask(data as CreateTaskInput)
     }
     setIsDialogOpen(false)
   }
@@ -44,10 +44,10 @@ export default function TasksPage() {
   return (
     <>
       <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto w-full">
-        <TodoList
-          todos={todos}
+        <TaskList
+          tasks={tasks}
           onToggleComplete={toggleComplete}
-          onEdit={handleEditTodo}
+          onEdit={handleEditTask}
           onAddNew={handleOpenDialog}
           filter={filter}
           onFilterChange={setFilter}
@@ -55,12 +55,12 @@ export default function TasksPage() {
         />
       </main>
 
-      <TodoDialog
+      <TaskDialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
-        initialData={editingTodo}
+        initialData={editingTask}
         onSubmit={handleSubmitForm}
-        onDelete={deleteTodo}
+        onDelete={deleteTask}
         isLoading={isLoading}
       />
     </>

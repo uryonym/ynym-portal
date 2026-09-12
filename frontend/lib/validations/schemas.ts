@@ -11,7 +11,7 @@ const nonNegativeIntegerSchema = (emptyMessage: string) =>
       return !isNaN(num) && Number.isInteger(num) && num >= 0
     }, '0以上の整数を入力してください')
 
-export const todoFormSchema = z.object({
+export const taskFormSchema = z.object({
   title: z
     .string()
     .trim()
@@ -21,7 +21,12 @@ export const todoFormSchema = z.object({
   due_date: z.string().default(''),
 })
 
-export type TodoFormValues = z.infer<typeof todoFormSchema>
+export type TaskFormValues = z.infer<typeof taskFormSchema>
+
+/** @deprecated Use `taskFormSchema` instead. */
+export const todoFormSchema = taskFormSchema
+/** @deprecated Use `TaskFormValues` instead. */
+export type TodoFormValues = TaskFormValues
 
 export const vehicleFormSchema = z.object({
   name: z.string().trim().min(1, '車の名前を入力してください'),
