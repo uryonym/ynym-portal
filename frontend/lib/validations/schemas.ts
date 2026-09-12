@@ -79,3 +79,5 @@ export {
   noteCategoryFormSchema,
   type NoteCategoryFormValues,
 } from './note-category'
+
+export { noteFormSchema, type NoteFormValues } from './note'
