@@ -2,7 +2,7 @@
 
 from uuid import UUID
 
-from sqlalchemy import asc, desc, select
+from sqlalchemy import asc, desc, func, select
 
 from app.models.fuel_record import FuelRecord
 from app.repositories.base import BaseRepository
@@ -56,3 +56,16 @@ class FuelRecordRepository(BaseRepository[FuelRecord]):
             FuelRecord.deleted_at.is_(None),
         )
         return self.session.execute(stmt).scalars().one_or_none()
+
+    def count_by_vehicle(self, user_id: UUID, vehicle_id: UUID) -> int:
+        """指定車両の有効な燃費記録件数を取得."""
+        stmt = (
+            select(func.count())
+            .select_from(FuelRecord)
+            .where(
+                FuelRecord.user_id == user_id,
+                FuelRecord.vehicle_id == vehicle_id,
+                FuelRecord.deleted_at.is_(None),
+            )
+        )
+        return self.session.execute(stmt).scalar() or 0

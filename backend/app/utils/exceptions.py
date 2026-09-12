@@ -32,6 +32,14 @@ class NotFoundException(ApplicationException):
         super().__init__(message, status_code=404)
 
 
+class ConflictException(ApplicationException):
+    """リソースの競合または関連データの制約により処理できない場合に発生."""
+
+    def __init__(self, message: str = "リソースが競合しています"):
+        """競合例外を初期化."""
+        super().__init__(message, status_code=409)
+
+
 class AuthenticationException(ApplicationException):
     """認証に失敗した場合に発生."""
 

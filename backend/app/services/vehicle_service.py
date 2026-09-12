@@ -5,16 +5,22 @@ from uuid import UUID
 
 from app.models.base import JST
 from app.models.vehicle import Vehicle
+from app.repositories.fuel_record_repository import FuelRecordRepository
 from app.repositories.vehicle_repository import VehicleRepository
 from app.schemas.vehicle import VehicleCreate, VehicleUpdate
-from app.utils.exceptions import NotFoundException
+from app.utils.exceptions import ConflictException, NotFoundException
 
 
 class VehicleService:
     """車両管理ビジネスロジック層."""
 
-    def __init__(self, vehicle_repo: VehicleRepository) -> None:
+    def __init__(
+        self,
+        vehicle_repo: VehicleRepository,
+        fuel_record_repo: FuelRecordRepository | None = None,
+    ) -> None:
         self.vehicle_repo = vehicle_repo
+        self.fuel_record_repo = fuel_record_repo
 
     def list_vehicles(
         self, user_id: UUID, skip: int = 0, limit: int = 100
@@ -61,7 +67,17 @@ class VehicleService:
         return self.vehicle_repo.save(vehicle)
 
     def delete_vehicle(self, vehicle_id: UUID, user_id: UUID) -> None:
-        """車両を論理削除."""
+        """車両を論理削除.
+
+        Raises:
+            NotFoundException: 車両が存在しない場合
+            ConflictException: 有効な給油記録が存在する場合
+        """
         vehicle = self.get_vehicle(vehicle_id, user_id)
+        if (
+            self.fuel_record_repo
+            and self.fuel_record_repo.count_by_vehicle(user_id, vehicle_id) > 0
+        ):
+            raise ConflictException("給油記録が存在するため車両を削除できません")
         vehicle.deleted_at = datetime.now(JST)
         self.vehicle_repo.save(vehicle)

@@ -5,6 +5,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Query, Response, status
 
 from app.core.db import SessionDep
+from app.repositories.fuel_record_repository import FuelRecordRepository
 from app.repositories.vehicle_repository import VehicleRepository
 from app.schemas.base import SuccessResponse
 from app.schemas.vehicle import VehicleCreate, VehicleResponse, VehicleUpdate
@@ -15,7 +16,7 @@ router = APIRouter(prefix="/vehicles", tags=["vehicles"])
 
 
 def _get_vehicle_service(db: SessionDep) -> VehicleService:
-    return VehicleService(VehicleRepository(db))
+    return VehicleService(VehicleRepository(db), FuelRecordRepository(db))
 
 
 @router.get("", response_model=SuccessResponse[list[VehicleResponse]])
