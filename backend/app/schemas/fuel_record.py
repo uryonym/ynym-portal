@@ -168,5 +168,6 @@ class FuelRecordResponse(BaseModel):
     )
     created_at: datetime = Field(description="作成日時（JST）")
     updated_at: datetime = Field(description="更新日時（JST）")
+    deleted_at: datetime | None = Field(default=None, description="削除日時（JST）")
 
     model_config = ConfigDict(from_attributes=True)

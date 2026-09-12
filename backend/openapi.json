@@ -1583,6 +1583,262 @@
           }
         }
       }
+    },
+    "/api/trash/summary": {
+      "get": {
+        "tags": [
+          "trash"
+        ],
+        "summary": "Get Trash Summary",
+        "description": "ゴミ箱内の各リソース件数サマリーを取得.",
+        "operationId": "get_trash_summary_api_trash_summary_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse_TrashSummary_"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trash/{resource_type}": {
+      "get": {
+        "tags": [
+          "trash"
+        ],
+        "summary": "List Trash Items",
+        "description": "指定リソースのゴミ箱一覧を取得.",
+        "operationId": "list_trash_items_api_trash__resource_type__get",
+        "parameters": [
+          {
+            "name": "resource_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "tasks",
+                "notes",
+                "note_categories",
+                "vehicles",
+                "fuel_records"
+              ],
+              "type": "string",
+              "title": "Resource Type"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse_list_Any__"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "trash"
+        ],
+        "summary": "Empty Trash Resource",
+        "description": "指定リソースのゴミ箱を空にする（一括完全削除）.",
+        "operationId": "empty_trash_resource_api_trash__resource_type__delete",
+        "parameters": [
+          {
+            "name": "resource_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "tasks",
+                "notes",
+                "note_categories",
+                "vehicles",
+                "fuel_records"
+              ],
+              "type": "string",
+              "title": "Resource Type"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse_dict_str__int__"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trash/{resource_type}/{item_id}/restore": {
+      "post": {
+        "tags": [
+          "trash"
+        ],
+        "summary": "Restore Trash Item",
+        "description": "論理削除されたデータを復元.",
+        "operationId": "restore_trash_item_api_trash__resource_type___item_id__restore_post",
+        "parameters": [
+          {
+            "name": "resource_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "tasks",
+                "notes",
+                "note_categories",
+                "vehicles",
+                "fuel_records"
+              ],
+              "type": "string",
+              "title": "Resource Type"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Item Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse_Any_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trash/{resource_type}/{item_id}": {
+      "delete": {
+        "tags": [
+          "trash"
+        ],
+        "summary": "Purge Trash Item",
+        "description": "論理削除されたデータを物理削除（完全削除）.",
+        "operationId": "purge_trash_item_api_trash__resource_type___item_id__delete",
+        "parameters": [
+          {
+            "name": "resource_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "tasks",
+                "notes",
+                "note_categories",
+                "vehicles",
+                "fuel_records"
+              ],
+              "type": "string",
+              "title": "Resource Type"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Item Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1768,6 +2024,19 @@
             "format": "date-time",
             "title": "Updated At",
             "description": "更新日時（JST）"
+          },
+          "deleted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deleted At",
+            "description": "削除日時（JST）"
           }
         },
         "type": "object",
@@ -1960,6 +2229,19 @@
             "format": "date-time",
             "title": "Updated At",
             "description": "更新日時（JST）"
+          },
+          "deleted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deleted At",
+            "description": "削除日時（JST）"
           }
         },
         "type": "object",
@@ -2078,6 +2360,19 @@
             "format": "date-time",
             "title": "Updated At",
             "description": "更新日時（JST）"
+          },
+          "deleted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deleted At",
+            "description": "削除日時（JST）"
           }
         },
         "type": "object",
@@ -2138,6 +2433,23 @@
         "type": "object",
         "title": "NoteUpdate",
         "description": "ノート更新スキーマ."
+      },
+      "SuccessResponse_Any_": {
+        "properties": {
+          "data": {
+            "title": "Data"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "default": "成功"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "SuccessResponse[Any]"
       },
       "SuccessResponse_FuelRecordResponse_": {
         "properties": {
@@ -2207,6 +2519,23 @@
         ],
         "title": "SuccessResponse[TaskResponse]"
       },
+      "SuccessResponse_TrashSummary_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/TrashSummary"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "default": "成功"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "SuccessResponse[TrashSummary]"
+      },
       "SuccessResponse_UserResponse_": {
         "properties": {
           "data": {
@@ -2240,6 +2569,46 @@
           "data"
         ],
         "title": "SuccessResponse[VehicleResponse]"
+      },
+      "SuccessResponse_dict_str__int__": {
+        "properties": {
+          "data": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Data"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "default": "成功"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "SuccessResponse[dict[str, int]]"
+      },
+      "SuccessResponse_list_Any__": {
+        "properties": {
+          "data": {
+            "items": {},
+            "type": "array",
+            "title": "Data"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "default": "成功"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "SuccessResponse[list[Any]]"
       },
       "SuccessResponse_list_FuelRecordResponse__": {
         "properties": {
@@ -2501,6 +2870,19 @@
             "format": "date-time",
             "title": "Updated At",
             "description": "更新日時（ISO 8601 形式、JST）"
+          },
+          "deleted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deleted At",
+            "description": "削除日時（ISO 8601 形式、JST）"
           }
         },
         "type": "object",
@@ -2577,6 +2959,49 @@
         "type": "object",
         "title": "TaskUpdate",
         "description": "タスク更新スキーマ.\n\nPUT /tasks/{task_id} リクエストで使用される。\nすべてのフィールドがオプション（部分更新対応）。"
+      },
+      "TrashSummary": {
+        "properties": {
+          "tasks": {
+            "type": "integer",
+            "title": "Tasks",
+            "description": "タスクのゴミ箱件数",
+            "default": 0
+          },
+          "notes": {
+            "type": "integer",
+            "title": "Notes",
+            "description": "ノートのゴミ箱件数",
+            "default": 0
+          },
+          "note_categories": {
+            "type": "integer",
+            "title": "Note Categories",
+            "description": "ノートカテゴリのゴミ箱件数",
+            "default": 0
+          },
+          "vehicles": {
+            "type": "integer",
+            "title": "Vehicles",
+            "description": "車両のゴミ箱件数",
+            "default": 0
+          },
+          "fuel_records": {
+            "type": "integer",
+            "title": "Fuel Records",
+            "description": "燃費記録のゴミ箱件数",
+            "default": 0
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "description": "合計件数",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "TrashSummary",
+        "description": "ゴミ箱サマリースキーマ."
       },
       "UserCreate": {
         "properties": {
@@ -2902,6 +3327,18 @@
             "type": "string",
             "format": "date-time",
             "title": "Updated At"
+          },
+          "deleted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deleted At"
           }
         },
         "type": "object",

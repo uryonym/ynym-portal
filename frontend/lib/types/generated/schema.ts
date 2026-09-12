@@ -416,6 +416,90 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/trash/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Trash Summary
+         * @description ゴミ箱内の各リソース件数サマリーを取得.
+         */
+        get: operations["get_trash_summary_api_trash_summary_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/trash/{resource_type}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Trash Items
+         * @description 指定リソースのゴミ箱一覧を取得.
+         */
+        get: operations["list_trash_items_api_trash__resource_type__get"];
+        put?: never;
+        post?: never;
+        /**
+         * Empty Trash Resource
+         * @description 指定リソースのゴミ箱を空にする（一括完全削除）.
+         */
+        delete: operations["empty_trash_resource_api_trash__resource_type__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/trash/{resource_type}/{item_id}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Restore Trash Item
+         * @description 論理削除されたデータを復元.
+         */
+        post: operations["restore_trash_item_api_trash__resource_type___item_id__restore_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/trash/{resource_type}/{item_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Purge Trash Item
+         * @description 論理削除されたデータを物理削除（完全削除）.
+         */
+        delete: operations["purge_trash_item_api_trash__resource_type___item_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -567,6 +651,11 @@ export interface components {
              * @description 更新日時（JST）
              */
             updated_at: string;
+            /**
+             * Deleted At
+             * @description 削除日時（JST）
+             */
+            deleted_at?: string | null;
         };
         /**
          * FuelRecordUpdate
@@ -676,6 +765,11 @@ export interface components {
              * @description 更新日時（JST）
              */
             updated_at: string;
+            /**
+             * Deleted At
+             * @description 削除日時（JST）
+             */
+            deleted_at?: string | null;
         };
         /**
          * NoteCategoryUpdate
@@ -753,6 +847,11 @@ export interface components {
              * @description 更新日時（JST）
              */
             updated_at: string;
+            /**
+             * Deleted At
+             * @description 削除日時（JST）
+             */
+            deleted_at?: string | null;
         };
         /**
          * NoteUpdate
@@ -774,6 +873,16 @@ export interface components {
              * @description カテゴリ ID（任意）
              */
             category_id?: string | null;
+        };
+        /** SuccessResponse[Any] */
+        SuccessResponse_Any_: {
+            /** Data */
+            data: unknown;
+            /**
+             * Message
+             * @default 成功
+             */
+            message: string;
         };
         /** SuccessResponse[FuelRecordResponse] */
         SuccessResponse_FuelRecordResponse_: {
@@ -811,6 +920,15 @@ export interface components {
              */
             message: string;
         };
+        /** SuccessResponse[TrashSummary] */
+        SuccessResponse_TrashSummary_: {
+            data: components["schemas"]["TrashSummary"];
+            /**
+             * Message
+             * @default 成功
+             */
+            message: string;
+        };
         /** SuccessResponse[UserResponse] */
         SuccessResponse_UserResponse_: {
             data: components["schemas"]["UserResponse"];
@@ -823,6 +941,28 @@ export interface components {
         /** SuccessResponse[VehicleResponse] */
         SuccessResponse_VehicleResponse_: {
             data: components["schemas"]["VehicleResponse"];
+            /**
+             * Message
+             * @default 成功
+             */
+            message: string;
+        };
+        /** SuccessResponse[dict[str, int]] */
+        SuccessResponse_dict_str__int__: {
+            /** Data */
+            data: {
+                [key: string]: number;
+            };
+            /**
+             * Message
+             * @default 成功
+             */
+            message: string;
+        };
+        /** SuccessResponse[list[Any]] */
+        SuccessResponse_list_Any__: {
+            /** Data */
+            data: unknown[];
             /**
              * Message
              * @default 成功
@@ -979,6 +1119,11 @@ export interface components {
              * @description 更新日時（ISO 8601 形式、JST）
              */
             updated_at: string;
+            /**
+             * Deleted At
+             * @description 削除日時（ISO 8601 形式、JST）
+             */
+            deleted_at?: string | null;
         };
         /**
          * TaskUpdate
@@ -1008,6 +1153,48 @@ export interface components {
              * @description 期日（オプション、YYYY-MM-DD 形式）
              */
             due_date?: string | null;
+        };
+        /**
+         * TrashSummary
+         * @description ゴミ箱サマリースキーマ.
+         */
+        TrashSummary: {
+            /**
+             * Tasks
+             * @description タスクのゴミ箱件数
+             * @default 0
+             */
+            tasks: number;
+            /**
+             * Notes
+             * @description ノートのゴミ箱件数
+             * @default 0
+             */
+            notes: number;
+            /**
+             * Note Categories
+             * @description ノートカテゴリのゴミ箱件数
+             * @default 0
+             */
+            note_categories: number;
+            /**
+             * Vehicles
+             * @description 車両のゴミ箱件数
+             * @default 0
+             */
+            vehicles: number;
+            /**
+             * Fuel Records
+             * @description 燃費記録のゴミ箱件数
+             * @default 0
+             */
+            fuel_records: number;
+            /**
+             * Total
+             * @description 合計件数
+             * @default 0
+             */
+            total: number;
         };
         /** UserCreate */
         UserCreate: {
@@ -1167,6 +1354,8 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+            /** Deleted At */
+            deleted_at?: string | null;
         };
         /**
          * VehicleUpdate
@@ -2270,6 +2459,153 @@ export interface operations {
             header?: never;
             path: {
                 note_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_trash_summary_api_trash_summary_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_TrashSummary_"];
+                };
+            };
+        };
+    };
+    list_trash_items_api_trash__resource_type__get: {
+        parameters: {
+            query?: {
+                skip?: number;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                resource_type: "tasks" | "notes" | "note_categories" | "vehicles" | "fuel_records";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_list_Any__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    empty_trash_resource_api_trash__resource_type__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                resource_type: "tasks" | "notes" | "note_categories" | "vehicles" | "fuel_records";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_dict_str__int__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    restore_trash_item_api_trash__resource_type___item_id__restore_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                resource_type: "tasks" | "notes" | "note_categories" | "vehicles" | "fuel_records";
+                item_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_Any_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    purge_trash_item_api_trash__resource_type___item_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                resource_type: "tasks" | "notes" | "note_categories" | "vehicles" | "fuel_records";
+                item_id: string;
             };
             cookie?: never;
         };
