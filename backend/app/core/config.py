@@ -17,6 +17,21 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASSWORD: str
 
+    # データベース コネクションプール設定 (SQLAlchemy デフォルト準拠)
+    DB_POOL_ENABLED: bool | None = None
+    DB_POOL_SIZE: int = 5
+    DB_MAX_OVERFLOW: int = 10
+    DB_POOL_TIMEOUT: int = 30
+    DB_POOL_RECYCLE: int = -1
+    DB_POOL_PRE_PING: bool = False
+
+    @property
+    def is_db_pool_enabled(self) -> bool:
+        """コネクションプールを有効化するか判定."""
+        if self.DB_POOL_ENABLED is not None:
+            return self.DB_POOL_ENABLED
+        return self.ENVIRONMENT.lower() in ("production", "staging")
+
     @property
     def database_url(self) -> str:
         """個別の要素からデータベース URL を組み立てる."""

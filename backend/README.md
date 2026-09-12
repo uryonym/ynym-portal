@@ -41,6 +41,7 @@ cp .env.sample .env
 主な環境変数:
 
 - `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`: PostgreSQL 接続設定
+- `DB_POOL_ENABLED`, `DB_POOL_SIZE`, `DB_MAX_OVERFLOW`, `DB_POOL_TIMEOUT`, `DB_POOL_RECYCLE`, `DB_POOL_PRE_PING`: コネクションプール設定（`production`/`staging` で自動有効化）
 - `JWT_SECRET_KEY`, `JWT_ALGORITHM`, `JWT_EXPIRE_MINUTES`: JWT 認証トークン設定
 - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`: Google OAuth 認証設定
 - `FRONTEND_URL`, `BACKEND_URL`, `ALLOWED_ORIGINS`: CORS / 接続先 URL 設定
