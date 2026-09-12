@@ -24,6 +24,15 @@
 - note_categories テーブルへの deleted_at カラム・インデックス追加
 - notes テーブルへの deleted_at カラム・インデックス追加
 
+### 008_rename_task_table_to_tasks.sql
+
+**目的**: task テーブル名を複数形 tasks へ変更
+**内容**:
+
+- テーブル名のリネーム（`task` → `tasks`）
+- インデックス名のリネーム（`idx_task_*` → `idx_tasks_*`）
+- 主キー制約および CHECK 制約名のリネーム（`task_pkey` → `tasks_pkey`、`task_order_check` → `tasks_order_check`）
+
 ## 前提条件
 
 ### 必要なもの
