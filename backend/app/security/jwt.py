@@ -1,9 +1,15 @@
+"""JWT認証ユーティリティ."""
+
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from jose import JWTError, jwt
 
 from app.core.config import settings
+
+
+class TokenValidationError(Exception):
+    """JWTトークンの検証に失敗した場合の例外."""
 
 
 def create_access_token(
@@ -31,4 +37,4 @@ def decode_access_token(token: str) -> dict[str, Any]:
         )
         return payload
     except JWTError as e:
-        raise Exception(f"Token validation failed: {e!s}") from e
+        raise TokenValidationError(f"Token validation failed: {e!s}") from e
