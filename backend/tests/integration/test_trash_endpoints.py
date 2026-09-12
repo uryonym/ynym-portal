@@ -6,6 +6,32 @@ from fastapi.testclient import TestClient
 class TestTrashEndpoints:
     """/api/trash 統合テスト."""
 
+    def test_non_admin_forbidden(self, client: TestClient) -> None:
+        """一般ユーザー（管理者権限なし）はゴミ箱 API にアクセスできない（403 Forbidden）."""
+        from uuid import UUID
+
+        from app.main import app
+        from app.models.user import User
+        from app.security.deps import get_current_user
+
+        non_admin = User(
+            id=UUID("550e8400-e29b-41d4-a716-446655440001"),
+            google_uid="non_admin_uid",
+            email="nonadmin@example.com",
+            name="一般ユーザー",
+            avatar_url=None,
+            is_admin=False,
+            deleted_at=None,
+        )
+        app.dependency_overrides[get_current_user] = lambda: non_admin
+
+        try:
+            res = client.get("/api/trash/summary")
+            assert res.status_code == 403
+            assert res.json()["detail"] == "管理者権限が必要です。"
+        finally:
+            app.dependency_overrides.pop(get_current_user, None)
+
     def test_trash_summary_initial(self, client: TestClient) -> None:
         """初期状態でサマリーが全件 0."""
         res = client.get("/api/trash/summary")

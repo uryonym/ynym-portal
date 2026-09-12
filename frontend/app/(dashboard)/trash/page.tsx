@@ -13,9 +13,11 @@ import { ApiError } from '@/lib/api/client'
 import { TrashTable } from '@/components/trash/TrashTable'
 import { PurgeConfirmDialog } from '@/components/trash/PurgeConfirmDialog'
 import { Button } from '@/components/ui/button'
-import { Trash2 } from 'lucide-react'
+import { Trash2, ShieldAlert } from 'lucide-react'
 import { toast } from 'sonner'
 import { BaseTrashItem } from '@/components/trash/TrashTable'
+import { useAuth } from '@/providers/AuthProvider'
+import Link from 'next/link'
 
 const TABS: { id: TrashResourceType; label: string }[] = [
   { id: 'tasks', label: 'タスク' },
@@ -26,6 +28,7 @@ const TABS: { id: TrashResourceType; label: string }[] = [
 ]
 
 export default function TrashPage() {
+  const { user: currentUser, isLoading: isAuthLoading } = useAuth()
   const [selectedTab, setSelectedTab] = useState<TrashResourceType>('tasks')
   const [summary, setSummary] = useState<TrashSummary | null>(null)
   const [items, setItems] = useState<BaseTrashItem[]>([])
@@ -59,6 +62,7 @@ export default function TrashPage() {
   }, [])
 
   useEffect(() => {
+    if (!currentUser?.is_admin) return
     let ignore = false
 
     async function load() {
@@ -92,7 +96,7 @@ export default function TrashPage() {
     return () => {
       ignore = true
     }
-  }, [selectedTab])
+  }, [selectedTab, currentUser?.is_admin])
 
   // 復元ハンドラ
   const handleRestore = async (id: string, name: string) => {
@@ -174,6 +178,41 @@ export default function TrashPage() {
     } finally {
       setIsPurgingAction(false)
     }
+  }
+
+  if (isAuthLoading) {
+    return (
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full flex items-center justify-center min-h-[50vh]">
+        <div className="text-slate-400 text-sm">認証情報を確認中...</div>
+      </main>
+    )
+  }
+
+  // 管理者権限チェック
+  if (!currentUser?.is_admin) {
+    return (
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-md mx-auto w-full flex flex-col items-center justify-center min-h-[50vh] text-center space-y-4">
+        <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shadow-xs">
+          <ShieldAlert className="h-6 w-6" />
+        </div>
+        <div>
+          <h2 className="text-lg font-bold text-slate-900">
+            管理者権限が必要です
+          </h2>
+          <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+            ゴミ箱機能は管理者権限を持つユーザーのみがアクセスできます。
+          </p>
+        </div>
+        <Button
+          render={<Link href="/" />}
+          variant="outline"
+          size="sm"
+          className="cursor-pointer"
+        >
+          ホームへ戻る
+        </Button>
+      </main>
+    )
   }
 
   const getTabCount = (

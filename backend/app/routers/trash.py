@@ -18,7 +18,7 @@ from app.schemas.note_category import NoteCategoryResponse
 from app.schemas.task import TaskResponse
 from app.schemas.trash import TrashResourceType, TrashSummary
 from app.schemas.vehicle import VehicleResponse
-from app.security.deps import CurrentUser
+from app.security.deps import CurrentAdminUser
 from app.services.trash_service import TrashService
 
 router = APIRouter(prefix="/trash", tags=["trash"])
@@ -52,7 +52,7 @@ def _get_trash_service(db: SessionDep) -> TrashService:
 
 @router.get("/summary", response_model=SuccessResponse[TrashSummary])
 def get_trash_summary(
-    current_user: CurrentUser,
+    current_user: CurrentAdminUser,
     service: TrashService = Depends(_get_trash_service),
 ) -> dict[str, Any]:
     """ゴミ箱内の各リソース件数サマリーを取得."""
@@ -65,7 +65,7 @@ def get_trash_summary(
 
 @router.get("/{resource_type}", response_model=SuccessResponse[list[Any]])
 def list_trash_items(
-    current_user: CurrentUser,
+    current_user: CurrentAdminUser,
     resource_type: TrashResourceType,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
@@ -83,7 +83,7 @@ def list_trash_items(
 
 @router.post("/{resource_type}/{item_id}/restore", response_model=SuccessResponse[Any])
 def restore_trash_item(
-    current_user: CurrentUser,
+    current_user: CurrentAdminUser,
     resource_type: TrashResourceType,
     item_id: UUID,
     service: TrashService = Depends(_get_trash_service),
@@ -100,7 +100,7 @@ def restore_trash_item(
 
 @router.delete("/{resource_type}/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
 def purge_trash_item(
-    current_user: CurrentUser,
+    current_user: CurrentAdminUser,
     resource_type: TrashResourceType,
     item_id: UUID,
     service: TrashService = Depends(_get_trash_service),
@@ -112,7 +112,7 @@ def purge_trash_item(
 
 @router.delete("/{resource_type}", response_model=SuccessResponse[dict[str, int]])
 def empty_trash_resource(
-    current_user: CurrentUser,
+    current_user: CurrentAdminUser,
     resource_type: TrashResourceType,
     service: TrashService = Depends(_get_trash_service),
 ) -> dict[str, Any]:
