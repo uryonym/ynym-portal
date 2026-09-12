@@ -1,43 +1,9 @@
-import { ApiResponse } from './api'
+import type { components } from './generated/schema'
 
-export interface FuelRecord {
-  id: string
-  vehicle_id: string
-  user_id: string
-  refuel_datetime: string
-  total_mileage: number
-  fuel_type: string
-  unit_price: number
-  total_cost: number
-  is_full_tank: boolean
-  gas_station_name?: string
-  distance_traveled?: number | null
-  fuel_amount?: number | null
-  fuel_efficiency?: number | null
-  created_at: string
-  updated_at: string
-}
-
-export type FuelRecordsResponse = ApiResponse<FuelRecord[]>
-export type FuelRecordResponse = ApiResponse<FuelRecord>
-
-export interface CreateFuelRecordInput {
-  vehicle_id: string
-  refuel_datetime: string
-  total_mileage: number
-  fuel_type: string
-  unit_price: number
-  total_cost: number
-  is_full_tank?: boolean
-  gas_station_name?: string
-}
-
-export interface UpdateFuelRecordInput {
-  refuel_datetime?: string
-  total_mileage?: number
-  fuel_type?: string
-  unit_price?: number
-  total_cost?: number
-  is_full_tank?: boolean
-  gas_station_name?: string
-}
+export type FuelRecord = components['schemas']['FuelRecordResponse']
+export type CreateFuelRecordInput = components['schemas']['FuelRecordCreate']
+export type UpdateFuelRecordInput = components['schemas']['FuelRecordUpdate']
+export type FuelRecordResponse =
+  components['schemas']['SuccessResponse_FuelRecordResponse_']
+export type FuelRecordsResponse =
+  components['schemas']['SuccessResponse_list_FuelRecordResponse__']

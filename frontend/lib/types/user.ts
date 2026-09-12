@@ -1,12 +1,6 @@
-// types/user.ts
+import type { components } from './generated/schema'
 
-export type User = {
-  id: string
-  email: string
-  name: string
-  avatar_url: string | null
-  created_at: string // ISO 8601 datetime string
-}
+export type User = components['schemas']['UserResponse']
 
 // Auth-related user state
 export type AuthUser = User | null
@@ -18,6 +12,4 @@ export type AuthState = {
   error: string | null
 }
 
-export type LogoutResponse = {
-  message: string
-}
+export type LogoutResponse = components['schemas']['MessageResponse']

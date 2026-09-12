@@ -3,6 +3,7 @@
 プロジェクト全体の共通指示はルートの [AGENTS.md](../AGENTS.md) を参照してください。
 
 ## shadcn/ui コンポーネントに関する注意
+
 - `components/ui/` 配下のコンポーネントは shadcn/ui 管理のため、直接改変・独自拡張せず、公式のコード状態を維持してください。
 - 振る舞いやアクセシビリティの制御は、呼び出し元側の props（`render`, `nativeButton={false}` 等）で行ってください。
 

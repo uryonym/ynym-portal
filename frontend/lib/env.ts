@@ -27,7 +27,9 @@ function parseEnv() {
       '❌ 無効な環境変数が見つかりました:',
       parsed.error.flatten().fieldErrors,
     )
-    throw new Error('環境変数の検証に失敗しました。設定内容を確認してください。')
+    throw new Error(
+      '環境変数の検証に失敗しました。設定内容を確認してください。',
+    )
   }
 
   return parsed.data
