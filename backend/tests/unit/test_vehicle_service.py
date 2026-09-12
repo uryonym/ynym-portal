@@ -206,7 +206,9 @@ class TestVehicleServiceDeleteVehicle:
         mock_repo.get_by_id_and_user.return_value = vehicle
         mock_fuel_repo.count_by_vehicle.return_value = 2
         service = VehicleService(mock_repo, mock_fuel_repo)
-        with pytest.raises(ConflictException, match="給油記録が存在するため車両を削除できません"):
+        with pytest.raises(
+            ConflictException, match="給油記録が存在するため車両を削除できません"
+        ):
             service.delete_vehicle(TEST_VEHICLE_ID, TEST_USER_ID)
         mock_repo.save.assert_not_called()
 

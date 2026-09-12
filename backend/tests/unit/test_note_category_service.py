@@ -134,7 +134,9 @@ class TestNoteCategoryServiceDeleteCategory:
         mock_category_repo.get_by_id_and_user.return_value = category
         mock_note_repo.count_by_category.return_value = 3
         service = NoteCategoryService(mock_category_repo, mock_note_repo)
-        with pytest.raises(ConflictException, match="ノートが存在するためカテゴリを削除できません"):
+        with pytest.raises(
+            ConflictException, match="ノートが存在するためカテゴリを削除できません"
+        ):
             service.delete_category(CATEGORY_ID, TEST_USER_ID)
         mock_category_repo.save.assert_not_called()
 

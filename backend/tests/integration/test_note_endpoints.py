@@ -80,7 +80,9 @@ class TestNoteCategoryEndpoints:
     def test_delete_note_category_success(self, client: TestClient) -> None:
         """ノートのないカテゴリを削除でき、論理削除されて取得できなくなる."""
         # カテゴリ作成
-        create_res = client.post("/api/note-categories", json={"name": "削除用カテゴリ"})
+        create_res = client.post(
+            "/api/note-categories", json={"name": "削除用カテゴリ"}
+        )
         assert create_res.status_code == 201
         cat_id = create_res.json()["data"]["id"]
 
@@ -98,12 +100,12 @@ class TestNoteCategoryEndpoints:
         ids = [c["id"] for c in list_res.json()["data"]]
         assert cat_id not in ids
 
-    def test_delete_note_category_with_notes_conflict(
-        self, client: TestClient
-    ) -> None:
+    def test_delete_note_category_with_notes_conflict(self, client: TestClient) -> None:
         """ノートが存在するカテゴリを削除しようとすると 409 Conflict が返る."""
         # カテゴリ作成
-        cat_res = client.post("/api/note-categories", json={"name": "ノートありカテゴリ"})
+        cat_res = client.post(
+            "/api/note-categories", json={"name": "ノートありカテゴリ"}
+        )
         assert cat_res.status_code == 201
         cat_id = cat_res.json()["data"]["id"]
 
