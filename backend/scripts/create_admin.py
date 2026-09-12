@@ -6,10 +6,16 @@
 
 import argparse
 import sys
+from pathlib import Path
 
-from app.core.db import transactional_session
-from app.models.user import User
-from app.repositories.user_repository import UserRepository
+# backend ルートを sys.path に追加して app をインポート可能にする
+backend_dir = Path(__file__).resolve().parent.parent
+if str(backend_dir) not in sys.path:
+    sys.path.insert(0, str(backend_dir))
+
+from app.core.db import transactional_session  # noqa: E402
+from app.models.user import User  # noqa: E402
+from app.repositories.user_repository import UserRepository  # noqa: E402
 
 
 def create_or_promote_admin(google_uid: str, email: str, name: str) -> None:
