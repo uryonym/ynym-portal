@@ -16,7 +16,7 @@ dev: ## バックエンドとフロントエンドの開発サーバーを同時
 dev-backend: ## バックエンド (FastAPI) 開発サーバー起動
 	cd backend && uv run uvicorn app.main:app --reload
 
-dev-frontend: ## フロントエンド (Next.js) 開発サーバー起動
+dev-frontend: ## フロントエンド (Vite) 開発サーバー起動
 	cd frontend && npm run dev
 
 test: test-backend test-frontend ## すべてのテストを実行
@@ -60,4 +60,4 @@ codegen-frontend: ## openapi-typescript によるフロントエンド型定義�
 	cd frontend && npm run codegen
 
 check-codegen: codegen ## 型定義が最新化されているか検証 (CI用)
-	git diff --exit-code backend/openapi.json frontend/lib/types/generated/
+	git diff --exit-code backend/openapi.json frontend/src/lib/types/generated/

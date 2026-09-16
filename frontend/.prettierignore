@@ -1,4 +1,8 @@
 node_modules
 .next
+dist
+legacy
+src/lib/types/generated
+src/components/ui
 lib/types/generated
 components/ui
