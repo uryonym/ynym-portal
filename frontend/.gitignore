@@ -20,6 +20,7 @@
 # production
 /build
 /dist
+routeTree.gen.ts
 
 # misc
 .DS_Store

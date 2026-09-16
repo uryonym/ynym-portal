@@ -15,6 +15,7 @@ export type AuthState = {
 }
 
 export type LogoutResponse = components['schemas']['MessageResponse']
+export type MessageResponse = components['schemas']['MessageResponse']
 export type UserListResponse =
   components['schemas']['SuccessResponse_list_UserResponse__']
 export type UserSingleResponse =

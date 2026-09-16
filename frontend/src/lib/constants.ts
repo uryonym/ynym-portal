@@ -6,6 +6,7 @@ export const SITE_URL = env.NEXT_PUBLIC_SITE_URL
 // ---  Auth URLs from API contract ---
 export const GOOGLE_AUTH_LOGIN_URL = `${API_BASE_URL}/api/auth/google/login`
 export const GOOGLE_AUTH_CALLBACK_URL = `${API_BASE_URL}/api/auth/google/callback`
+export const AUTH_ME_URL = `${API_BASE_URL}/api/auth/me`
 export const USERS_ME_URL = `${API_BASE_URL}/api/users/me`
 export const LOGOUT_URL = `${API_BASE_URL}/api/auth/logout`
 
