@@ -27,6 +27,18 @@ export function useAuthUserQuery() {
   return useQuery(authQueries.user())
 }
 
+export function useAuth() {
+  const { data: user = null, isLoading } = useAuthUserQuery()
+  const logoutMutation = useLogoutMutation()
+
+  return {
+    user,
+    isLoading,
+    logout: logoutMutation.mutate,
+    isLoggingOut: logoutMutation.isPending,
+  }
+}
+
 export function useLogoutMutation() {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
