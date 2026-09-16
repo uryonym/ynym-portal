@@ -10,6 +10,8 @@ from app.core.config import settings
 from app.core.db import SessionDep
 from app.repositories.user_repository import UserRepository
 from app.schemas.base import MessageResponse
+from app.schemas.user import UserResponse
+from app.security.deps import CurrentUser
 from app.services.auth_service import auth_service
 from app.services.user_service import UserService
 
@@ -24,8 +26,23 @@ def generate_state() -> str:
     return secrets.token_urlsafe(32)
 
 
+def _is_safe_redirect_path(path: str | None) -> bool:
+    """オープンリダイレクト脆弱性を防ぐため、安全な相対パスか検証."""
+    if not path:
+        return False
+    return path.startswith("/") and not path.startswith("//") and "\\" not in path
+
+
+@router.get("/me", response_model=UserResponse)
+def get_current_auth_user(
+    current_user: CurrentUser,
+) -> UserResponse:
+    """現在のセッション（Cookie）からログイン中のユーザー情報を取得."""
+    return UserResponse.model_validate(current_user)
+
+
 @router.get("/google/login")
-def google_login(request: Request):
+def google_login(request: Request, redirect_to: str | None = None):
     """Google OAuth2 認証フローを開始."""
     state = generate_state()
     redirect_uri = f"{settings.BACKEND_URL}/api/auth/google/callback"
@@ -50,6 +67,15 @@ def google_login(request: Request):
         secure=settings.ENVIRONMENT == "production",
         samesite="lax",
     )
+    if redirect_to and _is_safe_redirect_path(redirect_to):
+        response.set_cookie(
+            key="oauth_redirect",
+            value=redirect_to,
+            httponly=True,
+            max_age=600,
+            secure=settings.ENVIRONMENT == "production",
+            samesite="lax",
+        )
     return response
 
 
@@ -82,7 +108,16 @@ def google_callback(
             status_code=500, detail=f"Authentication failed: {e!s}"
         ) from e
 
-    response = RedirectResponse(url=f"{settings.FRONTEND_URL}")
+    redirect_path = request.cookies.get("oauth_redirect")
+    if redirect_path:
+        redirect_path = redirect_path.strip('"')
+    target_url = (
+        f"{settings.FRONTEND_URL}{redirect_path}"
+        if redirect_path and _is_safe_redirect_path(redirect_path)
+        else f"{settings.FRONTEND_URL}"
+    )
+
+    response = RedirectResponse(url=target_url)
     cookie_params = {
         "key": "access_token",
         "value": jwt_token,
@@ -96,6 +131,7 @@ def google_callback(
         cookie_params["domain"] = "localhost"
     response.set_cookie(**cookie_params)
     response.delete_cookie("oauth_state")
+    response.delete_cookie("oauth_redirect")
     return response
 
 

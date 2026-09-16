@@ -4,6 +4,26 @@
  */
 
 export interface paths {
+    "/api/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Current Auth User
+         * @description 現在のセッション（Cookie）からログイン中のユーザー情報を取得.
+         */
+        get: operations["get_current_auth_user_api_auth_me_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/google/login": {
         parameters: {
             query?: never;
@@ -1395,7 +1415,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    google_login_api_auth_google_login_get: {
+    get_current_auth_user_api_auth_me_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -1410,7 +1430,38 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
+                    "application/json": components["schemas"]["UserResponse"];
+                };
+            };
+        };
+    };
+    google_login_api_auth_google_login_get: {
+        parameters: {
+            query?: {
+                redirect_to?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
