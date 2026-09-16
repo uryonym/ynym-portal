@@ -1,0 +1,183 @@
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from '@/components/ui/sidebar'
+import {
+  Home,
+  CheckSquare,
+  StickyNote,
+  Folder,
+  Car,
+  Fuel,
+  Trash2,
+  User,
+  Users,
+} from 'lucide-react'
+import { Link, useLocation } from '@tanstack/react-router'
+import { useAuthUserQuery } from '@/hooks/queries/useAuth'
+
+const menuItems = [
+  {
+    title: 'ホーム',
+    url: '/',
+    icon: Home,
+  },
+  {
+    title: 'タスク',
+    url: '/tasks',
+    icon: CheckSquare,
+  },
+  {
+    title: 'ノート',
+    url: '/notes',
+    icon: StickyNote,
+  },
+  {
+    title: 'ノートカテゴリ',
+    url: '/note-categories',
+    icon: Folder,
+  },
+  {
+    title: '車両管理',
+    url: '/vehicles',
+    icon: Car,
+  },
+  {
+    title: '燃費管理',
+    url: '/fuel-records',
+    icon: Fuel,
+  },
+]
+
+const adminMenuItems = [
+  {
+    title: 'ユーザー管理',
+    url: '/users',
+    icon: Users,
+  },
+  {
+    title: 'ゴミ箱',
+    url: '/trash',
+    icon: Trash2,
+  },
+]
+
+export function AppSidebar() {
+  const { data: user, isLoading } = useAuthUserQuery()
+  const location = useLocation()
+  const pathname = location.pathname
+  const { setOpenMobile } = useSidebar()
+
+  return (
+    <Sidebar className="border-r border-slate-200/80 bg-white">
+      <SidebarHeader className="p-4 border-b border-slate-100">
+        <Link
+          to="/"
+          onClick={() => setOpenMobile(false)}
+          className="flex items-center gap-2.5 px-2 py-1"
+        >
+          <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center shadow-xs">
+            <Home className="h-4 w-4" />
+          </div>
+          <span className="font-semibold text-slate-900 tracking-tight text-base">
+            Ynym Portal
+          </span>
+        </Link>
+      </SidebarHeader>
+
+      <SidebarContent className="p-2">
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1">
+              {menuItems.map((item) => {
+                const isActive =
+                  item.url === '/'
+                    ? pathname === '/'
+                    : pathname.startsWith(item.url)
+
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      render={<Link to={item.url} />}
+                      isActive={isActive}
+                      onClick={() => setOpenMobile(false)}
+                      className="h-10 px-3 text-sm font-medium rounded-lg transition-colors cursor-pointer"
+                    >
+                      <item.icon className="h-4 w-4 shrink-0" />
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {!isLoading && user?.is_admin && (
+          <SidebarGroup className="mt-2 pt-2 border-t border-slate-100">
+            <SidebarGroupLabel className="px-3 text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+              管理者メニュー
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="space-y-1">
+                {adminMenuItems.map((item) => {
+                  const isActive = pathname.startsWith(item.url)
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        render={<Link to={item.url} />}
+                        isActive={isActive}
+                        onClick={() => setOpenMobile(false)}
+                        className="h-10 px-3 text-sm font-medium rounded-lg transition-colors cursor-pointer"
+                      >
+                        <item.icon className="h-4 w-4 shrink-0" />
+                        <span>{item.title}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+      </SidebarContent>
+
+      {!isLoading && user && (
+        <SidebarFooter className="border-t border-slate-100 p-3">
+          <div className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg bg-slate-50/60">
+            {user.avatar_url ? (
+              <img
+                src={user.avatar_url}
+                alt={user.name}
+                width={32}
+                height={32}
+                className="h-8 w-8 rounded-full object-cover ring-1 ring-slate-200"
+              />
+            ) : (
+              <div className="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center">
+                <User className="h-4 w-4 text-slate-600" />
+              </div>
+            )}
+            <div className="flex flex-col min-w-0 flex-1">
+              <span className="text-xs font-semibold text-slate-900 truncate">
+                {user.name}
+              </span>
+              <span className="text-[11px] text-slate-500 truncate">
+                {user.email}
+              </span>
+            </div>
+          </div>
+        </SidebarFooter>
+      )}
+    </Sidebar>
+  )
+}

@@ -8,14 +8,17 @@
 
 ## プロジェクト概要とモノレポ構成
 
-本リポジトリは、FastAPI バックエンドと Next.js フロントエンドを統合したモノレポ構成です。
+本リポジトリは、FastAPI バックエンドと Vite + TanStack SPA フロントエンドを統合したモノレポ構成です。
 
 - **`backend/`**: FastAPI (Python 3.12, uv)
+  - BFF 認証: Google OAuth + HttpOnly Cookie / セッション一元管理
   - パッケージ管理: `uv`
   - ORM: SQLAlchemy 2.0 (`psycopg`)
   - テスト: `pytest`
   - リント・フォーマット: `ruff`
-- **`frontend/`**: Next.js 16 App Router (Node.js 24, React 19, TypeScript, npm)
+- **`frontend/`**: Vite SPA (Node.js 24, React 19, TypeScript, npm)
+  - ルーティング: TanStack Router (`@tanstack/react-router`)
+  - 状態・データ取得: TanStack Query (`@tanstack/react-query`)
   - UI: Tailwind CSS v4, shadcn/ui (Base UI)
   - リント・フォーマット: `eslint`, `prettier`
 - **ランタイム管理**: `asdf`（`.tool-versions`）※ `mise` は使用しません
@@ -45,6 +48,6 @@
 3. **コマンド実行**:
    - 基本的なテスト・リント・開発起動はルートの `make` コマンドを使用してください。
 4. **shadcn/ui 管理コンポーネントの修正禁止**:
-   - `frontend/components/ui/` 配下のコンポーネントは shadcn/ui CLI によって生成・管理されるコンポーネントです。
+   - `frontend/src/components/ui/` 配下のコンポーネントは shadcn/ui CLI によって生成・管理されるコンポーネントです。
    - AI エージェントが勝手に独自改変・拡張を行わないでください（公式 CLI から取得した状態を維持すること）。
    - 振る舞いやアクセシビリティの調整は、コンポーネント自体の改修ではなく、呼び出し元（Page や Feature コンポーネント側）のプロップス指定（例: `render` や `nativeButton={false}` 等）で行ってください。

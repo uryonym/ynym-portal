@@ -1,4 +1,10 @@
 node_modules
 .next
+dist
+legacy
+routeTree.gen.ts
+src/routeTree.gen.ts
+src/lib/types/generated
+src/components/ui
 lib/types/generated
 components/ui

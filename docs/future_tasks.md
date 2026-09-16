@@ -5,11 +5,13 @@
 
 ---
 
-## Task 1: FastAPI OpenAPI スキーマからの TypeScript 型自動生成環境の導入
+## Task 1: FastAPI OpenAPI スキーマからの TypeScript 型自動生成環境の導入 [完了]
+
+> [!NOTE]
+> `openapi-typescript` による `make codegen` および CI での `make check-codegen` として導入完了済み。
 
 ### 背景・課題
-現在、バックエンド（FastAPI / Pydantic）のスキーマ定義（`backend/app/schemas/`）と、フロントエンド（Next.js / TypeScript）の型定義（`frontend/lib/types/`）はそれぞれ手動で管理されています。  
-手動管理では、API のレスポンスフィールド変更や型変更が生じた際にフロントエンド側で同期漏れが発生し、実行時エラーにつながるリスクがあります。
+バックエンド（FastAPI / Pydantic）のスキーマ定義（`backend/app/schemas/`）と、フロントエンド（Vite / TypeScript）の型定義（`frontend/src/lib/types/generated/`）を自動同期する仕組み。
 
 ### 目的
 FastAPI が自動生成する `openapi.json` を活用し、フロントエンド側の TypeScript 型定義を自動生成・同期できる仕組みを導入する。
@@ -30,7 +32,10 @@ FastAPI が自動生成する `openapi.json` を活用し、フロントエン�
 
 ---
 
-## Task 2: GitHub Actions CI ワークフローのパスフィルター設計
+## Task 2: GitHub Actions CI ワークフローのパスフィルター設計 [完了]
+
+> [!NOTE]
+> `.github/workflows/ci.yml` にて `dorny/paths-filter` を用いたパスフィルター付き CI を導入完了済み。
 
 ### 背景・課題
 モノレポ構成では、バックエンドのみの変更時にフロントエンドのビルドを走らせたり、ドキュメントのみの変更時にすべてのテストを走らせると、CI の待ち時間およびリソース消費が無駄になります。
@@ -57,31 +62,21 @@ FastAPI が自動生成する `openapi.json` を活用し、フロントエン�
 
 ---
 
-## Task 3: ユーザー管理機能およびアカウント退会時の論理削除・データ取り扱いポリシーの実装
+## Task 3: ユーザー管理機能およびアカウント退会時の論理削除・データ取り扱いポリシーの実装 [完了]
 
 **関連 Issue**: [#8](https://github.com/uryonym/ynym-portal/issues/8)
+
+> [!NOTE]
+> バックエンド（ユーザー一覧・更新・無効化・復元・管理者権限チェック）およびフロントエンド（管理者専用画面 `/users`）の実装完了済み。
 
 ### 背景・課題
 現在のシステムにはユーザーの作成・参照（`/users/me`）のみが存在し、ユーザー情報の管理機能やアカウント退会（ユーザー削除）機能が存在しません。
 
-### 目的・検討内容
-1. ユーザー管理機能（プロフィール編集、アカウント削除等）の API および UI 設計
-2. `User` モデルへの論理削除フィールド（`SoftDeleteMixin` / `deleted_at`）の導入検討
-3. アカウント退会時の関連データ（Task, Vehicle, FuelRecord, Note, NoteCategory）の取り扱いポリシー策定（カスケード論理削除 or 保持 or 個人情報マスキング）
-4. 退会済みユーザーの認証・ログイン遮断処理の実装
-
 ---
 
-## Task 4: 論理削除データのゴミ箱機能（一覧・復元・完全削除）の実装
+## Task 4: 論理削除データのゴミ箱機能（一覧・復元・完全削除）の実装 [完了]
 
 **関連 Issue**: [#9](https://github.com/uryonym/ynym-portal/issues/9)
 
-### 背景・課題
-各主導データに論理削除が導入されましたが、現状は削除 API 呼び出し時に `deleted_at` を設定して通常の一覧から除外するのみとなっています。  
-誤って削除してしまったデータの復旧や、不要データの完全消去を行えるようにするためのゴミ箱・復元機能が求められます。
-
-### 目的・検討内容
-1. 論理削除されたデータを一覧取得するゴミ箱用 API の設計・実装（例: `GET /api/trash` または `?include_deleted=true` 等）
-2. 論理削除されたデータを元に戻す復元 API の設計・実装（`deleted_at = None` への更新、親データ削除時の復元制約考慮）
-3. 不要となったデータを物理削除する完全削除（Purge）API またはバッチ処理（一定日数経過後の自動削除等）の設計・実装
-4. フロントエンドでのゴミ箱画面・復元・完全削除 UI の実装
+> [!NOTE]
+> バックエンド（Trash サービス・サマリー・復元・完全削除・一括完全削除 API）およびフロントエンド（`/trash` 画面・各リソースタブ）の実装完了済み。
