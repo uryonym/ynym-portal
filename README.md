@@ -1,6 +1,6 @@
 # ynym-portal
 
-`ynym-portal` は、バックエンド (FastAPI) とフロントエンド (Next.js) を統合したモノレポ構成の Web アプリケーションポータルです。
+`ynym-portal` は、バックエンド (FastAPI / BFF 認証) とフロントエンド (Vite + TanStack Router + TanStack Query SPA) を統合したモノレポ構成の Web アプリケーションポータルです。
 
 ## プロジェクト構成
 
@@ -12,13 +12,16 @@
 │   ├── tests/             # pytest ユニット/統合テスト
 │   ├── pyproject.toml     # Python 依存関係および設定
 │   └── Dockerfile         # バックエンドコンテナ定義
-├── frontend/              # Next.js フロントエンド (TypeScript / React 19 / npm)
-│   ├── app/               # App Router ページ・レイアウト
-│   ├── components/        # UI コンポーネント (shadcn/ui, Radix UI)
-│   ├── hooks/             # カスタムフック
-│   ├── lib/               # ユーティリティ・API クライアント
-│   └── Dockerfile         # フロントエンドコンテナ定義
-├── .github/               # GitHub 設定および指示ファイル (コミット規約等)
+├── frontend/              # Vite SPA フロントエンド (TypeScript / React 19 / npm)
+│   ├── src/
+│   │   ├── routes/        # TanStack Router ファイルベースルーティング
+│   │   ├── components/    # UI コンポーネント (shadcn/ui)
+│   │   ├── hooks/         # カスタムフック (queries/ に TanStack Query フック)
+│   │   └── lib/           # ユーティリティ・API クライアント・型定義
+│   ├── nginx.conf         # 本番配信向け Nginx 設定 (SPA ルーティング)
+│   └── Dockerfile         # フロントエンドコンテナ定義 (マルチステージ Nginx)
+├── docs/                  # 設計・開発・運用ガイドライン
+├── .github/               # GitHub 設定 (CI ワークフロー, コミット規約等)
 ├── .vscode/               # VS Code / Cursor 共通設定 (デバッグ, フォーマッタ, MCP)
 ├── .tool-versions         # asdf バージョン管理定義 (Node.js, Python)
 ├── compose.yml            # Docker Compose 全体構成定義
@@ -84,7 +87,7 @@ make dev
 
 ```bash
 make dev-backend   # FastAPI のみ起動 (port 8000)
-make dev-frontend  # Next.js のみ起動 (port 3000)
+make dev-frontend  # Vite のみ起動 (port 3000)
 ```
 
 ## テスト・コード品質
@@ -109,7 +112,7 @@ docker compose build
 docker compose up -d
 ```
 
-> **注意**: `NEXT_PUBLIC_*` 環境変数は Next.js の仕様上 Docker イメージのビルド時に JS に埋め込まれます。URL 等の環境変数を変更した場合は `docker compose build --no-cache ynym-portal-frontend` を実行して再ビルドしてください。
+> **注意**: `VITE_*` 環境変数は Vite の仕様上 Docker イメージのビルド時に JS に埋め込まれます。URL 等の環境変数を変更した場合は `docker compose build --no-cache ynym-portal-frontend` を実行して再ビルドしてください。
 
 ## コミットメッセージ規約
 
