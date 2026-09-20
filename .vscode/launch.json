@@ -14,14 +14,14 @@
       "jinja": true
     },
     {
-      "name": "Next.js: debug full stack",
+      "name": "Frontend: debug full stack",
       "type": "node-terminal",
       "request": "launch",
       "command": "npm run dev",
       "cwd": "${workspaceFolder}/frontend"
     },
     {
-      "name": "Next.js: debug client-side",
+      "name": "Frontend: debug client-side",
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:3000"
