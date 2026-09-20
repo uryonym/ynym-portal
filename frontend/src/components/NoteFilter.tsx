@@ -1,4 +1,3 @@
-'use client'
 import { Folder } from 'lucide-react'
 
 import type { NoteCategoryFilter } from '@/lib/types/note'

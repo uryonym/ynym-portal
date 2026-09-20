@@ -1,4 +1,3 @@
-'use client'
 import { FuelRecordItem } from './FuelRecordItem'
 
 import type { FuelRecord } from '@/lib/types/fuel-record'

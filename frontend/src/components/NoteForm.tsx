@@ -1,4 +1,3 @@
-'use client'
 import { useEffect, useMemo, useRef } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'

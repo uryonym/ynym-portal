@@ -1,4 +1,3 @@
-'use client'
 import {
   RotateCcw,
   Trash2,
