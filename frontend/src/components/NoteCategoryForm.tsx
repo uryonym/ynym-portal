@@ -1,13 +1,12 @@
 'use client'
 import { useEffect, useRef } from 'react'
-import { useForm, type Resolver } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
+import type { Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash2 } from 'lucide-react'
 import type { NoteCategory } from '@/lib/types/note-category'
-import {
-  noteCategoryFormSchema,
-  type NoteCategoryFormValues,
-} from '@/lib/validations/note-category'
+import { noteCategoryFormSchema } from '@/lib/validations/note-category'
+import type { NoteCategoryFormValues } from '@/lib/validations/note-category'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {

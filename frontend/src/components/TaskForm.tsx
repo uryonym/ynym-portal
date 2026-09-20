@@ -1,12 +1,14 @@
 'use client'
 import { useEffect, useRef } from 'react'
-import { useForm, type Resolver } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
+import type { Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { Trash2, Calendar as CalendarIcon, X } from 'lucide-react'
 import { parseDateString, formatDisplayDate } from '@/lib/date'
 import type { Task, CreateTaskInput, UpdateTaskInput } from '@/lib/types/task'
-import { taskFormSchema, type TaskFormValues } from '@/lib/validations/schemas'
+import { taskFormSchema } from '@/lib/validations/schemas'
+import type { TaskFormValues } from '@/lib/validations/schemas'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -64,7 +66,7 @@ export function TaskForm({
   const handleFormSubmit = (values: TaskFormValues) => {
     onSubmit({
       title: values.title.trim(),
-      description: values.description?.trim() || null,
+      description: values.description.trim() || null,
       due_date: values.due_date || null,
     })
   }
@@ -108,7 +110,7 @@ export function TaskForm({
               <FormControl>
                 <Textarea
                   {...field}
-                  value={field.value ?? ''}
+                  value={field.value}
                   placeholder="タスクの詳細説明（任意）"
                   disabled={isLoading}
                   className="min-h-24 resize-none"

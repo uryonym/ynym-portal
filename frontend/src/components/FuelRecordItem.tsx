@@ -64,9 +64,7 @@ export function FuelRecordItem({ record, onEdit }: FuelRecordItemProps) {
               ¥{record.total_cost.toLocaleString()}
             </strong>
           </span>
-          {record.unit_price != null && (
-            <span className="text-slate-400">(¥{record.unit_price}/L)</span>
-          )}
+          <span className="text-slate-400">(¥{record.unit_price}/L)</span>
         </div>
 
         {record.gas_station_name && (

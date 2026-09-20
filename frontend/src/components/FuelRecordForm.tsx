@@ -55,10 +55,10 @@ export function FuelRecordForm({
     ) as Resolver<FuelRecordFormValues>,
     defaultValues: {
       refuel_datetime: toDatetimeLocalValue(initialData?.refuel_datetime),
-      total_mileage: initialData?.total_mileage?.toString() ?? '',
+      total_mileage: initialData?.total_mileage.toString() ?? '',
       fuel_type: initialData?.fuel_type ?? '',
-      unit_price: initialData?.unit_price?.toString() ?? '',
-      total_cost: initialData?.total_cost?.toString() ?? '',
+      unit_price: initialData?.unit_price.toString() ?? '',
+      total_cost: initialData?.total_cost.toString() ?? '',
       is_full_tank: initialData?.is_full_tank ?? false,
       gas_station_name: initialData?.gas_station_name ?? '',
     },
@@ -67,10 +67,10 @@ export function FuelRecordForm({
   useEffect(() => {
     form.reset({
       refuel_datetime: toDatetimeLocalValue(initialData?.refuel_datetime),
-      total_mileage: initialData?.total_mileage?.toString() ?? '',
+      total_mileage: initialData?.total_mileage.toString() ?? '',
       fuel_type: initialData?.fuel_type ?? '',
-      unit_price: initialData?.unit_price?.toString() ?? '',
-      total_cost: initialData?.total_cost?.toString() ?? '',
+      unit_price: initialData?.unit_price.toString() ?? '',
+      total_cost: initialData?.total_cost.toString() ?? '',
       is_full_tank: initialData?.is_full_tank ?? false,
       gas_station_name: initialData?.gas_station_name ?? '',
     })
@@ -89,7 +89,7 @@ export function FuelRecordForm({
       unit_price: parseInt(values.unit_price, 10),
       total_cost: parseInt(values.total_cost, 10),
       is_full_tank: values.is_full_tank,
-      ...(values.gas_station_name?.trim() && {
+      ...(values.gas_station_name.trim() && {
         gas_station_name: values.gas_station_name.trim(),
       }),
     }

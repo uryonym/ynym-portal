@@ -92,7 +92,7 @@ function UsersPage() {
       <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full">
         <UserList
           users={users}
-          currentUserId={currentUser?.id}
+          currentUserId={currentUser.id}
           includeDeleted={includeDeleted}
           onToggleIncludeDeleted={setIncludeDeleted}
           search={search}

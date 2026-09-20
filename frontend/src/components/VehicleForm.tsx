@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef } from 'react'
-import { useForm, type Resolver } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
+import type { Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash2 } from 'lucide-react'
 import type {
@@ -8,10 +9,8 @@ import type {
   CreateVehicleInput,
   UpdateVehicleInput,
 } from '@/lib/types/vehicle'
-import {
-  vehicleFormSchema,
-  type VehicleFormValues,
-} from '@/lib/validations/schemas'
+import { vehicleFormSchema } from '@/lib/validations/schemas'
+import type { VehicleFormValues } from '@/lib/validations/schemas'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
