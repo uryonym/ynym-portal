@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef } from 'react'
-import { useForm, type Resolver } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
+import type { Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash2 } from 'lucide-react'
 import { toDatetimeLocalValue, toUtcIsoString } from '@/lib/date'
@@ -9,10 +10,8 @@ import type {
   CreateFuelRecordInput,
   UpdateFuelRecordInput,
 } from '@/lib/types/fuel-record'
-import {
-  fuelRecordFormSchema,
-  type FuelRecordFormValues,
-} from '@/lib/validations/schemas'
+import { fuelRecordFormSchema } from '@/lib/validations/schemas'
+import type { FuelRecordFormValues } from '@/lib/validations/schemas'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
