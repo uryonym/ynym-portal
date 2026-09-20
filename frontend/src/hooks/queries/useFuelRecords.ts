@@ -1,22 +1,25 @@
 import { useState, useCallback } from 'react'
+
 import {
   useQuery,
   useMutation,
   useQueryClient,
   queryOptions,
 } from '@tanstack/react-query'
+import { toast } from 'sonner'
+
 import {
   fetchFuelRecords,
   createFuelRecord as createFuelRecordAPI,
   updateFuelRecord as updateFuelRecordAPI,
   deleteFuelRecord as deleteFuelRecordAPI,
 } from '@/lib/api/fuel-records'
-import {
+
+import type {
   FuelRecord,
   CreateFuelRecordInput,
   UpdateFuelRecordInput,
 } from '@/lib/types/fuel-record'
-import { toast } from 'sonner'
 
 export const fuelRecordKeys = {
   all: ['fuel-records'] as const,
@@ -24,7 +27,6 @@ export const fuelRecordKeys = {
   list: (vehicleId: string | null) =>
     [...fuelRecordKeys.lists(), { vehicleId }] as const,
 }
-
 function sortFuelRecords(records: FuelRecord[]): FuelRecord[] {
   return [...records].sort((a, b) => {
     return (
@@ -33,7 +35,6 @@ function sortFuelRecords(records: FuelRecord[]): FuelRecord[] {
     )
   })
 }
-
 export const fuelRecordQueries = {
   list: (vehicleId: string | null) =>
     queryOptions({
@@ -46,11 +47,9 @@ export const fuelRecordQueries = {
       enabled: Boolean(vehicleId),
     }),
 }
-
 export function useFuelRecordsQuery(vehicleId: string | null) {
   return useQuery(fuelRecordQueries.list(vehicleId))
 }
-
 export function useCreateFuelRecordMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -65,7 +64,6 @@ export function useCreateFuelRecordMutation() {
     },
   })
 }
-
 export function useUpdateFuelRecordMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -81,7 +79,6 @@ export function useUpdateFuelRecordMutation() {
     },
   })
 }
-
 export function useDeleteFuelRecordMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -96,61 +93,55 @@ export function useDeleteFuelRecordMutation() {
     },
   })
 }
-
 /**
  * 既存コンポーネント向けの互換カスタムフック
  */
 export function useFuelRecords(vehicleId: string | null) {
   const [editingRecord, setEditingRecord] = useState<FuelRecord | null>(null)
-
   const { data: records = [], isLoading } = useFuelRecordsQuery(vehicleId)
-  const createMutation = useCreateFuelRecordMutation()
-  const updateMutation = useUpdateFuelRecordMutation()
-  const deleteMutation = useDeleteFuelRecordMutation()
-
+  const { mutateAsync: createFuelRecordAsync, isPending: isCreatePending } =
+    useCreateFuelRecordMutation()
+  const { mutateAsync: updateFuelRecordAsync, isPending: isUpdatePending } =
+    useUpdateFuelRecordMutation()
+  const { mutateAsync: deleteFuelRecordAsync, isPending: isDeletePending } =
+    useDeleteFuelRecordMutation()
   const addRecord = useCallback(
     async (data: CreateFuelRecordInput) => {
       try {
-        await createMutation.mutateAsync(data)
+        await createFuelRecordAsync(data)
         return true
       } catch {
         return false
       }
     },
-    [createMutation],
+    [createFuelRecordAsync],
   )
-
   const updateRecord = useCallback(
     async (id: string, data: UpdateFuelRecordInput) => {
       try {
-        await updateMutation.mutateAsync({ id, data })
+        await updateFuelRecordAsync({ id, data })
         return true
       } catch {
         return false
       }
     },
-    [updateMutation],
+    [updateFuelRecordAsync],
   )
-
   const deleteRecord = useCallback(
     async (id: string) => {
       try {
-        await deleteMutation.mutateAsync(id)
+        await deleteFuelRecordAsync(id)
         return true
       } catch {
         return false
       }
     },
-    [deleteMutation],
+    [deleteFuelRecordAsync],
   )
-
   return {
     records,
     isLoading:
-      isLoading ||
-      createMutation.isPending ||
-      updateMutation.isPending ||
-      deleteMutation.isPending,
+      isLoading || isCreatePending || isUpdatePending || isDeletePending,
     editingRecord,
     setEditingRecord,
     addRecord,

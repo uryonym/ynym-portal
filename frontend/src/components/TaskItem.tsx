@@ -1,17 +1,16 @@
-'use client'
-
-import { Task } from '@/lib/types/task'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Button } from '@/components/ui/button'
 import { Pencil, Calendar } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { formatDisplayDate } from '@/lib/date'
+
+import type { Task } from '@/lib/types/task'
 
 export interface TaskItemProps {
   task: Task
   onToggleComplete: (id: string) => void
   onEdit: (task: Task) => void
 }
-
 export function TaskItem({ task, onToggleComplete, onEdit }: TaskItemProps) {
   return (
     <div className="group flex items-start gap-3.5 p-4 bg-white rounded-xl border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all">
@@ -24,9 +23,7 @@ export function TaskItem({ task, onToggleComplete, onEdit }: TaskItemProps) {
 
       <div className="flex-1 min-w-0">
         <h3
-          className={`text-sm sm:text-base font-medium wrap-break-word leading-snug transition-colors ${
-            task.is_completed ? 'line-through text-slate-400' : 'text-slate-900'
-          }`}
+          className={`text-sm sm:text-base font-medium wrap-break-word leading-snug transition-colors ${task.is_completed ? 'line-through text-slate-400' : 'text-slate-900'}`}
         >
           {task.title}
         </h3>

@@ -1,13 +1,13 @@
-'use client'
-
-import { Task, CreateTaskInput, UpdateTaskInput } from '@/lib/types/task'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+
 import { TaskForm } from './TaskForm'
+
+import type { Task, CreateTaskInput, UpdateTaskInput } from '@/lib/types/task'
 
 export interface TaskDialogProps {
   open: boolean
@@ -17,7 +17,6 @@ export interface TaskDialogProps {
   onDelete?: (id: string) => void
   isLoading?: boolean
 }
-
 export function TaskDialog({
   open,
   onOpenChange,
@@ -27,7 +26,6 @@ export function TaskDialog({
   isLoading = false,
 }: TaskDialogProps) {
   const title = initialData ? 'タスクを編集' : '新しいタスクを作成'
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-md mx-auto">

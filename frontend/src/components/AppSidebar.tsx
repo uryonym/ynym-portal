@@ -1,3 +1,16 @@
+import { Link, useLocation } from '@tanstack/react-router'
+import {
+  Home,
+  CheckSquare,
+  StickyNote,
+  Folder,
+  Car,
+  Fuel,
+  Trash2,
+  User,
+  Users,
+} from 'lucide-react'
+
 import {
   Sidebar,
   SidebarContent,
@@ -11,18 +24,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import {
-  Home,
-  CheckSquare,
-  StickyNote,
-  Folder,
-  Car,
-  Fuel,
-  Trash2,
-  User,
-  Users,
-} from 'lucide-react'
-import { Link, useLocation } from '@tanstack/react-router'
 import { useAuthUserQuery } from '@/hooks/queries/useAuth'
 
 const menuItems = [

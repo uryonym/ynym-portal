@@ -1,18 +1,16 @@
-'use client'
-
-import { FuelRecord } from '@/lib/types/fuel-record'
 import { Pencil, Fuel } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import { formatDisplayDateTime } from '@/lib/date'
+
+import type { FuelRecord } from '@/lib/types/fuel-record'
 
 interface FuelRecordItemProps {
   record: FuelRecord
   onEdit: (record: FuelRecord) => void
 }
-
 export function FuelRecordItem({ record, onEdit }: FuelRecordItemProps) {
   const refuelDate = formatDisplayDateTime(record.refuel_datetime)
-
   return (
     <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-white rounded-xl border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all">
       <div className="flex-1 min-w-0 space-y-2">
@@ -67,9 +65,7 @@ export function FuelRecordItem({ record, onEdit }: FuelRecordItemProps) {
               ¥{record.total_cost.toLocaleString()}
             </strong>
           </span>
-          {record.unit_price != null && (
-            <span className="text-slate-400">(¥{record.unit_price}/L)</span>
-          )}
+          <span className="text-slate-400">(¥{record.unit_price}/L)</span>
         </div>
 
         {record.gas_station_name && (

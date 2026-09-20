@@ -1,8 +1,7 @@
-'use client'
-
-import { NoteCategory } from '@/lib/types/note-category'
-import { NoteCategoryFilter } from '@/lib/types/note'
 import { Folder } from 'lucide-react'
+
+import type { NoteCategoryFilter } from '@/lib/types/note'
+import type { NoteCategory } from '@/lib/types/note-category'
 
 interface NoteFilterProps {
   categories: NoteCategory[]
@@ -10,7 +9,6 @@ interface NoteFilterProps {
   onFilterChange: (filter: NoteCategoryFilter) => void
   disabled?: boolean
 }
-
 export function NoteFilter({
   categories,
   selectedFilter,

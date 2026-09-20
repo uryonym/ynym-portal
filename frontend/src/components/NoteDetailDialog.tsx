@@ -1,8 +1,6 @@
-'use client'
-
-import { Note } from '@/lib/types/note'
-import { NoteCategory } from '@/lib/types/note-category'
 import { Folder, Pencil, Trash2 } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -10,8 +8,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 import { formatDisplayDate } from '@/lib/date'
+
+import type { Note } from '@/lib/types/note'
+import type { NoteCategory } from '@/lib/types/note-category'
 
 interface NoteDetailDialogProps {
   open: boolean
@@ -21,7 +21,6 @@ interface NoteDetailDialogProps {
   onEdit: (note: Note) => void
   onDelete: (note: Note) => void
 }
-
 export function NoteDetailDialog({
   open,
   onOpenChange,
@@ -31,7 +30,6 @@ export function NoteDetailDialog({
   onDelete,
 }: NoteDetailDialogProps) {
   if (!note) return null
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-xl mx-auto max-h-[90vh] flex flex-col">

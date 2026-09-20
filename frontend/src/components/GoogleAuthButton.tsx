@@ -1,6 +1,7 @@
+import { cn } from 'cn'
+
 import { Button } from '@/components/ui/button'
 import { getGoogleLoginUrl } from '@/lib/api/auth'
-import { cn } from '@/lib/utils'
 
 const GoogleIcon = () => (
   <svg

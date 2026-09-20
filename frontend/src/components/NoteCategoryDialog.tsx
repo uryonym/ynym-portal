@@ -1,14 +1,14 @@
-'use client'
-
-import { NoteCategory } from '@/lib/types/note-category'
-import { NoteCategoryFormValues } from '@/lib/validations/note-category'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+
 import { NoteCategoryForm } from './NoteCategoryForm'
+
+import type { NoteCategory } from '@/lib/types/note-category'
+import type { NoteCategoryFormValues } from '@/lib/validations/note-category'
 
 interface NoteCategoryDialogProps {
   open: boolean
@@ -18,7 +18,6 @@ interface NoteCategoryDialogProps {
   onDelete?: (category: NoteCategory) => void
   isLoading?: boolean
 }
-
 export function NoteCategoryDialog({
   open,
   onOpenChange,
@@ -28,7 +27,6 @@ export function NoteCategoryDialog({
   isLoading = false,
 }: NoteCategoryDialogProps) {
   const title = initialData ? 'カテゴリを編集' : '新しいカテゴリを作成'
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-md mx-auto">

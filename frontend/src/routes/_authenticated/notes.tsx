@@ -1,19 +1,21 @@
 import { useState, useMemo } from 'react'
+
 import { createFileRoute } from '@tanstack/react-router'
-import { useNotes } from '@/hooks/queries/useNotes'
-import { useNoteCategories } from '@/hooks/queries/useNoteCategories'
-import { NoteList } from '@/components/NoteList'
-import { NoteDialog } from '@/components/NoteDialog'
-import { NoteDetailDialog } from '@/components/NoteDetailDialog'
+
 import { NoteDeleteDialog } from '@/components/NoteDeleteDialog'
-import { Note } from '@/lib/types/note'
-import { NoteCategory } from '@/lib/types/note-category'
-import { NoteFormValues } from '@/lib/validations/note'
+import { NoteDetailDialog } from '@/components/NoteDetailDialog'
+import { NoteDialog } from '@/components/NoteDialog'
+import { NoteList } from '@/components/NoteList'
+import { useNoteCategories } from '@/hooks/queries/useNoteCategories'
+import { useNotes } from '@/hooks/queries/useNotes'
+
+import type { Note } from '@/lib/types/note'
+import type { NoteCategory } from '@/lib/types/note-category'
+import type { NoteFormValues } from '@/lib/validations/note'
 
 export const Route = createFileRoute('/_authenticated/notes')({
   component: NotesPage,
 })
-
 function NotesPage() {
   const {
     filteredNotes,
@@ -28,40 +30,32 @@ function NotesPage() {
     updateNote,
     deleteNote,
   } = useNotes()
-
   const { categories, isLoading: isCategoriesLoading } = useNoteCategories()
-
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [deletingNote, setDeletingNote] = useState<Note | null>(null)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
-
   const categoryMap = useMemo(() => {
     const map = new Map<string, NoteCategory>()
     categories.forEach((c) => map.set(c.id, c))
     return map
   }, [categories])
-
   const handleAddNew = () => {
     setEditingNote(null)
     setIsFormOpen(true)
   }
-
   const handleEditNote = (note: Note) => {
     setEditingNote(note)
     setIsFormOpen(true)
   }
-
   const handleViewNote = (note: Note) => {
     setViewingNote(note)
   }
-
   const handleDeleteClick = (note: Note) => {
     setIsFormOpen(false)
     setViewingNote(null)
     setDeletingNote(note)
     setIsDeleteOpen(true)
   }
-
   const handleSubmitForm = async (data: NoteFormValues) => {
     let success: boolean
     if (editingNote) {
@@ -74,7 +68,6 @@ function NotesPage() {
       setEditingNote(null)
     }
   }
-
   const handleConfirmDelete = async (id: string) => {
     const success = await deleteNote(id)
     if (success) {
@@ -82,7 +75,6 @@ function NotesPage() {
       setDeletingNote(null)
     }
   }
-
   return (
     <div className="max-w-4xl mx-auto w-full">
       <NoteList

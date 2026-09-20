@@ -1,10 +1,11 @@
 import { useState } from 'react'
+
 import { createFileRoute } from '@tanstack/react-router'
-import { TrashResourceType } from '@/lib/types/trash'
-import { TrashTable, BaseTrashItem } from '@/components/trash/TrashTable'
-import { PurgeConfirmDialog } from '@/components/trash/PurgeConfirmDialog'
-import { Button } from '@/components/ui/button'
 import { Trash2, ShieldAlert } from 'lucide-react'
+
+import { PurgeConfirmDialog } from '@/components/trash/PurgeConfirmDialog'
+import { TrashTable } from '@/components/trash/TrashTable'
+import { Button } from '@/components/ui/button'
 import {
   useTrashSummaryQuery,
   useTrashItemsQuery,
@@ -13,39 +14,37 @@ import {
   useEmptyTrashMutation,
 } from '@/hooks/queries/useTrash'
 
+import type { TrashResourceType } from '@/lib/types/trash'
+
 export const Route = createFileRoute('/_authenticated/trash')({
   component: TrashPage,
 })
-
-const TABS: { id: TrashResourceType; label: string }[] = [
+const TABS: {
+  id: TrashResourceType
+  label: string
+}[] = [
   { id: 'tasks', label: 'タスク' },
   { id: 'notes', label: 'ノート' },
   { id: 'note_categories', label: 'カテゴリ' },
   { id: 'vehicles', label: '車両' },
   { id: 'fuel_records', label: '燃費記録' },
 ]
-
 function TrashPage() {
   const [selectedTab, setSelectedTab] = useState<TrashResourceType>('tasks')
-
   const { data: summary, isLoading: isLoadingSummary } = useTrashSummaryQuery()
   const { data: items = [], isLoading: isLoadingItems } =
     useTrashItemsQuery(selectedTab)
-
   const restoreMutation = useRestoreTrashMutation()
   const purgeMutation = usePurgeTrashMutation()
   const emptyMutation = useEmptyTrashMutation()
-
   const [restoringId, setRestoringId] = useState<string | null>(null)
   const [purgingId, setPurgingId] = useState<string | null>(null)
-
   // 完全削除ダイアログの状態
   const [purgeTarget, setPurgeTarget] = useState<{
     id: string
     name: string
   } | null>(null)
   const [isEmptyingTrash, setIsEmptyingTrash] = useState(false)
-
   const handleRestore = async (id: string, _name?: string) => {
     setRestoringId(id)
     try {
@@ -54,12 +53,10 @@ function TrashPage() {
       setRestoringId(null)
     }
   }
-
   const handleOpenPurgeDialog = (id: string, name: string) => {
     setIsEmptyingTrash(false)
     setPurgeTarget({ id, name })
   }
-
   const handleOpenEmptyDialog = () => {
     setIsEmptyingTrash(true)
     const currentTabLabel =
@@ -69,10 +66,8 @@ function TrashPage() {
       name: `「${currentTabLabel}」のすべての削除済みデータ`,
     })
   }
-
   const handleConfirmPurge = async () => {
     if (!purgeTarget) return
-
     if (isEmptyingTrash) {
       await emptyMutation.mutateAsync(selectedTab)
     } else {
@@ -88,9 +83,7 @@ function TrashPage() {
     }
     setPurgeTarget(null)
   }
-
   const currentTabCount = summary ? summary[selectedTab] : 0
-
   return (
     <div className="max-w-4xl mx-auto w-full space-y-6">
       {/* ページタイトル & 注意喚起 */}
@@ -134,7 +127,6 @@ function TrashPage() {
           {TABS.map((tab) => {
             const count = summary ? summary[tab.id] : 0
             const isActive = selectedTab === tab.id
-
             return (
               <button
                 key={tab.id}
@@ -168,7 +160,7 @@ function TrashPage() {
       {/* 一覧テーブル */}
       <TrashTable
         resourceType={selectedTab}
-        items={items as BaseTrashItem[]}
+        items={items}
         onRestore={handleRestore}
         onPurge={handleOpenPurgeDialog}
         isLoading={isLoadingItems}

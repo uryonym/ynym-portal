@@ -1,16 +1,18 @@
 import { useState } from 'react'
+
 import { createFileRoute } from '@tanstack/react-router'
-import { useNoteCategories } from '@/hooks/queries/useNoteCategories'
-import { NoteCategoryList } from '@/components/NoteCategoryList'
-import { NoteCategoryDialog } from '@/components/NoteCategoryDialog'
+
 import { NoteCategoryDeleteDialog } from '@/components/NoteCategoryDeleteDialog'
-import { NoteCategory } from '@/lib/types/note-category'
-import { NoteCategoryFormValues } from '@/lib/validations/note-category'
+import { NoteCategoryDialog } from '@/components/NoteCategoryDialog'
+import { NoteCategoryList } from '@/components/NoteCategoryList'
+import { useNoteCategories } from '@/hooks/queries/useNoteCategories'
+
+import type { NoteCategory } from '@/lib/types/note-category'
+import type { NoteCategoryFormValues } from '@/lib/validations/note-category'
 
 export const Route = createFileRoute('/_authenticated/note-categories')({
   component: NoteCategoriesPage,
 })
-
 function NoteCategoriesPage() {
   const {
     categories,
@@ -21,29 +23,24 @@ function NoteCategoriesPage() {
     updateCategory,
     deleteCategory,
   } = useNoteCategories()
-
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [deletingCategory, setDeletingCategory] = useState<NoteCategory | null>(
     null,
   )
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
-
   const handleAddNew = () => {
     setEditingCategory(null)
     setIsFormOpen(true)
   }
-
   const handleEditCategory = (category: NoteCategory) => {
     setEditingCategory(category)
     setIsFormOpen(true)
   }
-
   const handleDeleteClick = (category: NoteCategory) => {
     setIsFormOpen(false)
     setDeletingCategory(category)
     setIsDeleteOpen(true)
   }
-
   const handleSubmitForm = async (data: NoteCategoryFormValues) => {
     let success: boolean
     if (editingCategory) {
@@ -56,7 +53,6 @@ function NoteCategoriesPage() {
       setEditingCategory(null)
     }
   }
-
   const handleConfirmDelete = async (id: string) => {
     const success = await deleteCategory(id)
     if (success) {
@@ -64,7 +60,6 @@ function NoteCategoriesPage() {
       setDeletingCategory(null)
     }
   }
-
   return (
     <div className="max-w-4xl mx-auto w-full">
       <NoteCategoryList

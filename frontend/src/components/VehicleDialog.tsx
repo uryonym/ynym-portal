@@ -1,17 +1,17 @@
-'use client'
-
-import {
-  Vehicle,
-  CreateVehicleInput,
-  UpdateVehicleInput,
-} from '@/lib/types/vehicle'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+
 import { VehicleForm } from './VehicleForm'
+
+import type {
+  Vehicle,
+  CreateVehicleInput,
+  UpdateVehicleInput,
+} from '@/lib/types/vehicle'
 
 interface VehicleDialogProps {
   open: boolean
@@ -21,7 +21,6 @@ interface VehicleDialogProps {
   onDelete?: (id: string) => void
   isLoading?: boolean
 }
-
 export function VehicleDialog({
   open,
   onOpenChange,
@@ -31,7 +30,6 @@ export function VehicleDialog({
   isLoading = false,
 }: VehicleDialogProps) {
   const title = initialData ? '車両を編集' : '新しい車両を登録'
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-md mx-auto">

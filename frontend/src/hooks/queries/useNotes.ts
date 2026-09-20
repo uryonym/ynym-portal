@@ -1,29 +1,31 @@
 import { useState, useCallback, useMemo } from 'react'
+
 import {
   useQuery,
   useMutation,
   useQueryClient,
   queryOptions,
 } from '@tanstack/react-query'
+import { toast } from 'sonner'
+
 import {
   fetchNotes,
   createNote as createNoteAPI,
   updateNote as updateNoteAPI,
   deleteNote as deleteNoteAPI,
 } from '@/lib/api/notes'
-import {
+
+import type {
   Note,
   CreateNoteInput,
   UpdateNoteInput,
   NoteCategoryFilter,
 } from '@/lib/types/note'
-import { toast } from 'sonner'
 
 export const noteKeys = {
   all: ['notes'] as const,
   lists: () => [...noteKeys.all, 'list'] as const,
 }
-
 export const noteQueries = {
   list: () =>
     queryOptions({
@@ -34,11 +36,9 @@ export const noteQueries = {
       },
     }),
 }
-
 export function useNotesQuery() {
   return useQuery(noteQueries.list())
 }
-
 export function useCreateNoteMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -53,7 +53,6 @@ export function useCreateNoteMutation() {
     },
   })
 }
-
 export function useUpdateNoteMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -69,7 +68,6 @@ export function useUpdateNoteMutation() {
     },
   })
 }
-
 export function useDeleteNoteMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -84,7 +82,6 @@ export function useDeleteNoteMutation() {
     },
   })
 }
-
 /**
  * 既存コンポーネント向けの互換カスタムフック
  */
@@ -93,12 +90,13 @@ export function useNotes() {
   const [viewingNote, setViewingNote] = useState<Note | null>(null)
   const [categoryFilter, setCategoryFilter] =
     useState<NoteCategoryFilter>('all')
-
   const { data: notes = [], isLoading } = useNotesQuery()
-  const createMutation = useCreateNoteMutation()
-  const updateMutation = useUpdateNoteMutation()
-  const deleteMutation = useDeleteNoteMutation()
-
+  const { mutateAsync: createNoteAsync, isPending: isCreatePending } =
+    useCreateNoteMutation()
+  const { mutateAsync: updateNoteAsync, isPending: isUpdatePending } =
+    useUpdateNoteMutation()
+  const { mutateAsync: deleteNoteAsync, isPending: isDeletePending } =
+    useDeleteNoteMutation()
   const filteredNotes = useMemo(() => {
     if (categoryFilter === 'all') return notes
     if (categoryFilter === 'uncategorized') {
@@ -106,51 +104,44 @@ export function useNotes() {
     }
     return notes.filter((note) => note.category_id === categoryFilter)
   }, [notes, categoryFilter])
-
   const addNote = useCallback(
     async (data: CreateNoteInput) => {
       try {
-        await createMutation.mutateAsync(data)
+        await createNoteAsync(data)
         return true
       } catch {
         return false
       }
     },
-    [createMutation],
+    [createNoteAsync],
   )
-
   const updateNote = useCallback(
     async (id: string, data: UpdateNoteInput) => {
       try {
-        await updateMutation.mutateAsync({ id, data })
+        await updateNoteAsync({ id, data })
         return true
       } catch {
         return false
       }
     },
-    [updateMutation],
+    [updateNoteAsync],
   )
-
   const deleteNote = useCallback(
     async (id: string) => {
       try {
-        await deleteMutation.mutateAsync(id)
+        await deleteNoteAsync(id)
         return true
       } catch {
         return false
       }
     },
-    [deleteMutation],
+    [deleteNoteAsync],
   )
-
   return {
     notes,
     filteredNotes,
     isLoading:
-      isLoading ||
-      createMutation.isPending ||
-      updateMutation.isPending ||
-      deleteMutation.isPending,
+      isLoading || isCreatePending || isUpdatePending || isDeletePending,
     editingNote,
     setEditingNote,
     viewingNote,

@@ -1,10 +1,10 @@
-'use client'
-
-import { Note } from '@/lib/types/note'
-import { NoteCategory } from '@/lib/types/note-category'
 import { Folder, Pencil, Trash2 } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import { formatDisplayDate } from '@/lib/date'
+
+import type { Note } from '@/lib/types/note'
+import type { NoteCategory } from '@/lib/types/note-category'
 
 interface NoteItemProps {
   note: Note
@@ -13,7 +13,6 @@ interface NoteItemProps {
   onEdit: (note: Note) => void
   onDelete: (note: Note) => void
 }
-
 export function NoteItem({
   note,
   category,

@@ -1,15 +1,15 @@
-'use client'
-
-import { Note } from '@/lib/types/note'
-import { NoteCategory } from '@/lib/types/note-category'
-import { NoteFormValues } from '@/lib/validations/note'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+
 import { NoteForm } from './NoteForm'
+
+import type { Note } from '@/lib/types/note'
+import type { NoteCategory } from '@/lib/types/note-category'
+import type { NoteFormValues } from '@/lib/validations/note'
 
 interface NoteDialogProps {
   open: boolean
@@ -20,7 +20,6 @@ interface NoteDialogProps {
   onDelete?: (note: Note) => void
   isLoading?: boolean
 }
-
 export function NoteDialog({
   open,
   onOpenChange,
@@ -31,7 +30,6 @@ export function NoteDialog({
   isLoading = false,
 }: NoteDialogProps) {
   const title = initialData ? 'ノートを編集' : '新しいノートを作成'
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-lg mx-auto max-h-[90vh] overflow-y-auto">

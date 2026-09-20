@@ -1,12 +1,14 @@
-'use client'
-
 import { useMemo } from 'react'
-import { Note, NoteCategoryFilter } from '@/lib/types/note'
-import { NoteCategory } from '@/lib/types/note-category'
-import { Button } from '@/components/ui/button'
+
 import { Plus } from 'lucide-react'
-import { NoteItem } from './NoteItem'
+
+import { Button } from '@/components/ui/button'
+
 import { NoteFilter } from './NoteFilter'
+import { NoteItem } from './NoteItem'
+
+import type { Note, NoteCategoryFilter } from '@/lib/types/note'
+import type { NoteCategory } from '@/lib/types/note-category'
 
 interface NoteListProps {
   notes: Note[]
@@ -19,7 +21,6 @@ interface NoteListProps {
   onAddNew: () => void
   isLoading?: boolean
 }
-
 export function NoteList({
   notes,
   categories,
@@ -36,7 +37,6 @@ export function NoteList({
     categories.forEach((c) => map.set(c.id, c))
     return map
   }, [categories])
-
   return (
     <div className="space-y-6">
       {/* ヘッダー */}

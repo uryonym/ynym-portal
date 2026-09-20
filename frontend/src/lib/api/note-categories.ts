@@ -1,10 +1,11 @@
-import {
+import { apiClient } from './client'
+
+import type {
   NoteCategoriesResponse,
   NoteCategoryResponse,
   CreateNoteCategoryInput,
   UpdateNoteCategoryInput,
 } from '@/lib/types/note-category'
-import { apiClient } from './client'
 
 export async function fetchCategories(
   skip?: number,
@@ -21,16 +22,13 @@ export async function fetchCategories(
   const endpoint = queryString
     ? `/api/note-categories?${queryString}`
     : '/api/note-categories'
-
   return apiClient.get<NoteCategoriesResponse>(endpoint)
 }
-
 export async function createCategory(
   input: CreateNoteCategoryInput,
 ): Promise<NoteCategoryResponse> {
   return apiClient.post<NoteCategoryResponse>('/api/note-categories', input)
 }
-
 export async function updateCategory(
   id: string,
   input: UpdateNoteCategoryInput,
@@ -40,7 +38,6 @@ export async function updateCategory(
     input,
   )
 }
-
 export async function deleteCategory(id: string): Promise<void> {
   return apiClient.delete<void>(`/api/note-categories/${id}`)
 }

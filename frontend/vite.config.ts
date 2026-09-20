@@ -1,21 +1,17 @@
-import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
-import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
-import react from '@vitejs/plugin-react'
+import { devtools } from '@tanstack/devtools-vite'
+import { tanstackRouter } from '@tanstack/router-plugin/vite'
+import viteReact from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
-// https://vite.dev/config/
-export default defineConfig({
+const config = defineConfig({
+  resolve: { tsconfigPaths: true },
   plugins: [
-    TanStackRouterVite({ target: 'react', autoCodeSplitting: true }),
-    react(),
+    devtools(),
     tailwindcss(),
+    tanstackRouter({ target: 'react', autoCodeSplitting: true }),
+    viteReact(),
   ],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
   server: {
     port: 3000,
     proxy: {
@@ -27,3 +23,5 @@ export default defineConfig({
     },
   },
 })
+
+export default config

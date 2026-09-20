@@ -1,8 +1,13 @@
+import { TanStackDevtools } from '@tanstack/react-devtools'
+import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/router-devtools'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import type { QueryClient } from '@tanstack/react-query'
+import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
+
 import { Toaster } from '@/components/ui/sonner'
+
+import type { QueryClient } from '@tanstack/react-query'
+
+import '../index.css'
 
 export interface RouterContext {
   queryClient: QueryClient
@@ -17,12 +22,13 @@ function RootComponent() {
     <>
       <Outlet />
       <Toaster />
-      {import.meta.env.DEV && (
-        <>
-          <TanStackRouterDevtools position="bottom-right" />
-          <ReactQueryDevtools buttonPosition="bottom-left" />
-        </>
-      )}
+      <TanStackDevtools
+        config={{ position: 'bottom-right' }}
+        plugins={[
+          { name: 'TanStack Router', render: <TanStackRouterDevtoolsPanel /> },
+          { name: 'TanStack Query', render: <ReactQueryDevtoolsPanel /> },
+        ]}
+      />
     </>
   )
 }

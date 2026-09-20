@@ -1,7 +1,8 @@
-import { SidebarTrigger } from '@/components/ui/sidebar'
-import { Separator } from '@/components/ui/separator'
-import { Button } from '@/components/ui/button'
 import { LogOut, User } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { SidebarTrigger } from '@/components/ui/sidebar'
 import { useAuthUserQuery, useLogoutMutation } from '@/hooks/queries/useAuth'
 
 export function Header() {

@@ -1,6 +1,6 @@
-'use client'
+import { AlertTriangle } from 'lucide-react'
 
-import { User } from '@/lib/types/user'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -9,8 +9,8 @@ import {
   DialogFooter,
   DialogDescription,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { AlertTriangle } from 'lucide-react'
+
+import type { User } from '@/lib/types/user'
 
 interface UserDeleteDialogProps {
   user: User | null
@@ -19,7 +19,6 @@ interface UserDeleteDialogProps {
   onConfirm: (userId: string) => Promise<boolean>
   isLoading?: boolean
 }
-
 export function UserDeleteDialog({
   user,
   open,
@@ -28,14 +27,12 @@ export function UserDeleteDialog({
   isLoading = false,
 }: UserDeleteDialogProps) {
   if (!user) return null
-
   const handleConfirm = async () => {
     const success = await onConfirm(user.id)
     if (success) {
       onOpenChange(false)
     }
   }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-md mx-auto">

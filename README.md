@@ -60,7 +60,7 @@ asdf install
 cp backend/.env.sample backend/.env
 
 # フロントエンド (.env.local を作成/確認)
-# 例: NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+# 例: VITE_API_BASE_URL=http://localhost:8000
 ```
 
 ### 3. 依存パッケージのインストール

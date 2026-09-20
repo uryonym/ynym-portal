@@ -1,28 +1,30 @@
 import { useState, useCallback } from 'react'
+
 import {
   useQuery,
   useMutation,
   useQueryClient,
   queryOptions,
 } from '@tanstack/react-query'
+import { toast } from 'sonner'
+
 import {
   fetchVehicles,
   createVehicle as createVehicleAPI,
   updateVehicle as updateVehicleAPI,
   deleteVehicle as deleteVehicleAPI,
 } from '@/lib/api/vehicles'
-import {
+
+import type {
   Vehicle,
   CreateVehicleInput,
   UpdateVehicleInput,
 } from '@/lib/types/vehicle'
-import { toast } from 'sonner'
 
 export const vehicleKeys = {
   all: ['vehicles'] as const,
   lists: () => [...vehicleKeys.all, 'list'] as const,
 }
-
 export const vehicleQueries = {
   list: () =>
     queryOptions({
@@ -33,11 +35,9 @@ export const vehicleQueries = {
       },
     }),
 }
-
 export function useVehiclesQuery() {
   return useQuery(vehicleQueries.list())
 }
-
 export function useCreateVehicleMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -52,7 +52,6 @@ export function useCreateVehicleMutation() {
     },
   })
 }
-
 export function useUpdateVehicleMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -68,7 +67,6 @@ export function useUpdateVehicleMutation() {
     },
   })
 }
-
 export function useDeleteVehicleMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -83,61 +81,55 @@ export function useDeleteVehicleMutation() {
     },
   })
 }
-
 /**
  * 既存コンポーネント向けの互換カスタムフック
  */
 export function useVehicles() {
   const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null)
-
   const { data: vehicles = [], isLoading } = useVehiclesQuery()
-  const createMutation = useCreateVehicleMutation()
-  const updateMutation = useUpdateVehicleMutation()
-  const deleteMutation = useDeleteVehicleMutation()
-
+  const { mutateAsync: createVehicleAsync, isPending: isCreatePending } =
+    useCreateVehicleMutation()
+  const { mutateAsync: updateVehicleAsync, isPending: isUpdatePending } =
+    useUpdateVehicleMutation()
+  const { mutateAsync: deleteVehicleAsync, isPending: isDeletePending } =
+    useDeleteVehicleMutation()
   const addVehicle = useCallback(
     async (data: CreateVehicleInput) => {
       try {
-        await createMutation.mutateAsync(data)
+        await createVehicleAsync(data)
         return true
       } catch {
         return false
       }
     },
-    [createMutation],
+    [createVehicleAsync],
   )
-
   const updateVehicle = useCallback(
     async (id: string, data: UpdateVehicleInput) => {
       try {
-        await updateMutation.mutateAsync({ id, data })
+        await updateVehicleAsync({ id, data })
         return true
       } catch {
         return false
       }
     },
-    [updateMutation],
+    [updateVehicleAsync],
   )
-
   const deleteVehicle = useCallback(
     async (id: string) => {
       try {
-        await deleteMutation.mutateAsync(id)
+        await deleteVehicleAsync(id)
         return true
       } catch {
         return false
       }
     },
-    [deleteMutation],
+    [deleteVehicleAsync],
   )
-
   return {
     vehicles,
     isLoading:
-      isLoading ||
-      createMutation.isPending ||
-      updateMutation.isPending ||
-      deleteMutation.isPending,
+      isLoading || isCreatePending || isUpdatePending || isDeletePending,
     editingVehicle,
     setEditingVehicle,
     addVehicle,

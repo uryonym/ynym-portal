@@ -1,28 +1,30 @@
 import { useState, useCallback } from 'react'
+
 import {
   useQuery,
   useMutation,
   useQueryClient,
   queryOptions,
 } from '@tanstack/react-query'
+import { toast } from 'sonner'
+
 import {
   fetchCategories,
   createCategory as createCategoryAPI,
   updateCategory as updateCategoryAPI,
   deleteCategory as deleteCategoryAPI,
 } from '@/lib/api/note-categories'
-import {
+
+import type {
   NoteCategory,
   CreateNoteCategoryInput,
   UpdateNoteCategoryInput,
 } from '@/lib/types/note-category'
-import { toast } from 'sonner'
 
 export const noteCategoryKeys = {
   all: ['note-categories'] as const,
   lists: () => [...noteCategoryKeys.all, 'list'] as const,
 }
-
 export const noteCategoryQueries = {
   list: () =>
     queryOptions({
@@ -33,11 +35,9 @@ export const noteCategoryQueries = {
       },
     }),
 }
-
 export function useNoteCategoriesQuery() {
   return useQuery(noteCategoryQueries.list())
 }
-
 export function useCreateNoteCategoryMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -52,7 +52,6 @@ export function useCreateNoteCategoryMutation() {
     },
   })
 }
-
 export function useUpdateNoteCategoryMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -68,7 +67,6 @@ export function useUpdateNoteCategoryMutation() {
     },
   })
 }
-
 export function useDeleteNoteCategoryMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -83,7 +81,6 @@ export function useDeleteNoteCategoryMutation() {
     },
   })
 }
-
 /**
  * 既存コンポーネント向けの互換カスタムフック
  */
@@ -91,55 +88,50 @@ export function useNoteCategories() {
   const [editingCategory, setEditingCategory] = useState<NoteCategory | null>(
     null,
   )
-
   const { data: categories = [], isLoading } = useNoteCategoriesQuery()
-  const createMutation = useCreateNoteCategoryMutation()
-  const updateMutation = useUpdateNoteCategoryMutation()
-  const deleteMutation = useDeleteNoteCategoryMutation()
-
+  const { mutateAsync: createCategoryAsync, isPending: isCreatePending } =
+    useCreateNoteCategoryMutation()
+  const { mutateAsync: updateCategoryAsync, isPending: isUpdatePending } =
+    useUpdateNoteCategoryMutation()
+  const { mutateAsync: deleteCategoryAsync, isPending: isDeletePending } =
+    useDeleteNoteCategoryMutation()
   const addCategory = useCallback(
     async (data: CreateNoteCategoryInput) => {
       try {
-        await createMutation.mutateAsync(data)
+        await createCategoryAsync(data)
         return true
       } catch {
         return false
       }
     },
-    [createMutation],
+    [createCategoryAsync],
   )
-
   const updateCategory = useCallback(
     async (id: string, data: UpdateNoteCategoryInput) => {
       try {
-        await updateMutation.mutateAsync({ id, data })
+        await updateCategoryAsync({ id, data })
         return true
       } catch {
         return false
       }
     },
-    [updateMutation],
+    [updateCategoryAsync],
   )
-
   const deleteCategory = useCallback(
     async (id: string) => {
       try {
-        await deleteMutation.mutateAsync(id)
+        await deleteCategoryAsync(id)
         return true
       } catch {
         return false
       }
     },
-    [deleteMutation],
+    [deleteCategoryAsync],
   )
-
   return {
     categories,
     isLoading:
-      isLoading ||
-      createMutation.isPending ||
-      updateMutation.isPending ||
-      deleteMutation.isPending,
+      isLoading || isCreatePending || isUpdatePending || isDeletePending,
     editingCategory,
     setEditingCategory,
     addCategory,

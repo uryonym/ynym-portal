@@ -1,22 +1,10 @@
-'use client'
-
 import { useEffect, useRef } from 'react'
-import { useForm, type Resolver } from 'react-hook-form'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash2 } from 'lucide-react'
-import { toDatetimeLocalValue, toUtcIsoString } from '@/lib/date'
+import { useForm } from 'react-hook-form'
 
-import {
-  FuelRecord,
-  CreateFuelRecordInput,
-  UpdateFuelRecordInput,
-} from '@/lib/types/fuel-record'
-import {
-  fuelRecordFormSchema,
-  type FuelRecordFormValues,
-} from '@/lib/validations/schemas'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Form,
@@ -26,6 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -34,6 +23,16 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { FUEL_TYPES } from '@/lib/constants'
+import { toDatetimeLocalValue, toUtcIsoString } from '@/lib/date'
+import { fuelRecordFormSchema } from '@/lib/validations/schemas'
+
+import type {
+  FuelRecord,
+  CreateFuelRecordInput,
+  UpdateFuelRecordInput,
+} from '@/lib/types/fuel-record'
+import type { FuelRecordFormValues } from '@/lib/validations/schemas'
+import type { Resolver } from 'react-hook-form'
 
 interface FuelRecordFormProps {
   initialData?: FuelRecord | null
@@ -43,7 +42,6 @@ interface FuelRecordFormProps {
   onDelete?: (id: string) => void
   isLoading?: boolean
 }
-
 export function FuelRecordForm({
   initialData,
   vehicleId,
@@ -53,41 +51,37 @@ export function FuelRecordForm({
   isLoading = false,
 }: FuelRecordFormProps) {
   const refuelRef = useRef<HTMLInputElement>(null)
-
   const form = useForm<FuelRecordFormValues>({
     resolver: zodResolver(
       fuelRecordFormSchema,
     ) as Resolver<FuelRecordFormValues>,
     defaultValues: {
       refuel_datetime: toDatetimeLocalValue(initialData?.refuel_datetime),
-      total_mileage: initialData?.total_mileage?.toString() ?? '',
+      total_mileage: initialData?.total_mileage.toString() ?? '',
       fuel_type: initialData?.fuel_type ?? '',
-      unit_price: initialData?.unit_price?.toString() ?? '',
-      total_cost: initialData?.total_cost?.toString() ?? '',
+      unit_price: initialData?.unit_price.toString() ?? '',
+      total_cost: initialData?.total_cost.toString() ?? '',
       is_full_tank: initialData?.is_full_tank ?? false,
       gas_station_name: initialData?.gas_station_name ?? '',
     },
   })
-
   // initialData が変わった場合（新規追加・別アイテムの編集など）にフォームをリセット
   useEffect(() => {
     form.reset({
       refuel_datetime: toDatetimeLocalValue(initialData?.refuel_datetime),
-      total_mileage: initialData?.total_mileage?.toString() ?? '',
+      total_mileage: initialData?.total_mileage.toString() ?? '',
       fuel_type: initialData?.fuel_type ?? '',
-      unit_price: initialData?.unit_price?.toString() ?? '',
-      total_cost: initialData?.total_cost?.toString() ?? '',
+      unit_price: initialData?.unit_price.toString() ?? '',
+      total_cost: initialData?.total_cost.toString() ?? '',
       is_full_tank: initialData?.is_full_tank ?? false,
       gas_station_name: initialData?.gas_station_name ?? '',
     })
-
     if (initialData && refuelRef.current) {
       setTimeout(() => {
         refuelRef.current?.blur()
       }, 0)
     }
   }, [initialData, form])
-
   const handleFormSubmit = (values: FuelRecordFormValues) => {
     const data = {
       vehicle_id: vehicleId,
@@ -97,14 +91,12 @@ export function FuelRecordForm({
       unit_price: parseInt(values.unit_price, 10),
       total_cost: parseInt(values.total_cost, 10),
       is_full_tank: values.is_full_tank,
-      ...(values.gas_station_name?.trim() && {
+      ...(values.gas_station_name.trim() && {
         gas_station_name: values.gas_station_name.trim(),
       }),
     }
-
     onSubmit(data)
   }
-
   return (
     <Form {...form}>
       <form

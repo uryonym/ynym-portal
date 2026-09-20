@@ -1,9 +1,10 @@
-'use client'
-
-import { NoteCategory } from '@/lib/types/note-category'
-import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+
 import { NoteCategoryItem } from './NoteCategoryItem'
+
+import type { NoteCategory } from '@/lib/types/note-category'
 
 interface NoteCategoryListProps {
   categories: NoteCategory[]
@@ -12,7 +13,6 @@ interface NoteCategoryListProps {
   onAddNew: () => void
   isLoading?: boolean
 }
-
 export function NoteCategoryList({
   categories,
   onEdit,

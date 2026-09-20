@@ -6,20 +6,14 @@ import { z } from 'zod'
  * プロキシ利用時は API_BASE_URL は空文字（相対パス）でも動作します。
  */
 const envSchema = z.object({
-  NEXT_PUBLIC_API_BASE_URL: z.string().default(''),
-  NEXT_PUBLIC_SITE_URL: z.string().default('http://localhost:3000'),
+  VITE_API_BASE_URL: z.string().default(''),
+  VITE_SITE_URL: z.string().default('http://localhost:3000'),
 })
 
 function parseEnv() {
   const parsed = envSchema.safeParse({
-    NEXT_PUBLIC_API_BASE_URL:
-      import.meta.env.VITE_API_BASE_URL ??
-      import.meta.env.NEXT_PUBLIC_API_BASE_URL ??
-      '',
-    NEXT_PUBLIC_SITE_URL:
-      import.meta.env.VITE_SITE_URL ??
-      import.meta.env.NEXT_PUBLIC_SITE_URL ??
-      'http://localhost:3000',
+    VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL ?? '',
+    VITE_SITE_URL: import.meta.env.VITE_SITE_URL ?? 'http://localhost:3000',
   })
 
   if (!parsed.success) {

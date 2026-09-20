@@ -1,26 +1,28 @@
 import { useState, useCallback } from 'react'
+
 import {
   useQuery,
   useMutation,
   useQueryClient,
   queryOptions,
 } from '@tanstack/react-query'
+import { toast } from 'sonner'
+
 import {
   fetchTasks,
   createTask as createTaskAPI,
   updateTask as updateTaskAPI,
   deleteTask as deleteTaskAPI,
-  TaskFilter,
 } from '@/lib/api/tasks'
-import { Task, CreateTaskInput, UpdateTaskInput } from '@/lib/types/task'
-import { toast } from 'sonner'
+
+import type { TaskFilter } from '@/lib/api/tasks'
+import type { Task, CreateTaskInput, UpdateTaskInput } from '@/lib/types/task'
 
 export const taskKeys = {
   all: ['tasks'] as const,
   lists: () => [...taskKeys.all, 'list'] as const,
   list: (filter: TaskFilter) => [...taskKeys.lists(), { filter }] as const,
 }
-
 function sortTasks(tasks: Task[]): Task[] {
   return [...tasks].sort((a, b) => {
     if (a.is_completed !== b.is_completed) {
@@ -34,7 +36,6 @@ function sortTasks(tasks: Task[]): Task[] {
     return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
   })
 }
-
 export const taskQueries = {
   list: (filter: TaskFilter) =>
     queryOptions({
@@ -45,11 +46,9 @@ export const taskQueries = {
       },
     }),
 }
-
 export function useTasksQuery(filter: TaskFilter = 'active') {
   return useQuery(taskQueries.list(filter))
 }
-
 export function useCreateTaskMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -64,7 +63,6 @@ export function useCreateTaskMutation() {
     },
   })
 }
-
 export function useUpdateTaskMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -80,7 +78,6 @@ export function useUpdateTaskMutation() {
     },
   })
 }
-
 export function useDeleteTaskMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -95,60 +92,53 @@ export function useDeleteTaskMutation() {
     },
   })
 }
-
 /**
  * 既存コンポーネント向けの互換カスタムフック
  */
 export function useTasks(initialFilter: TaskFilter = 'active') {
   const [filter, setFilter] = useState<TaskFilter>(initialFilter)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
-
   const { data: tasks = [], isLoading } = useTasksQuery(filter)
-  const createMutation = useCreateTaskMutation()
-  const updateMutation = useUpdateTaskMutation()
-  const deleteMutation = useDeleteTaskMutation()
-
+  const { mutateAsync: createTaskAsync, isPending: isCreatePending } =
+    useCreateTaskMutation()
+  const { mutateAsync: updateTaskAsync, isPending: isUpdatePending } =
+    useUpdateTaskMutation()
+  const { mutateAsync: deleteTaskAsync, isPending: isDeletePending } =
+    useDeleteTaskMutation()
   const addTask = useCallback(
     async (data: CreateTaskInput) => {
-      await createMutation.mutateAsync(data)
+      await createTaskAsync(data)
     },
-    [createMutation],
+    [createTaskAsync],
   )
-
   const updateTask = useCallback(
     async (id: string, data: UpdateTaskInput) => {
-      await updateMutation.mutateAsync({ id, data })
+      await updateTaskAsync({ id, data })
     },
-    [updateMutation],
+    [updateTaskAsync],
   )
-
   const deleteTask = useCallback(
     async (id: string) => {
-      await deleteMutation.mutateAsync(id)
+      await deleteTaskAsync(id)
     },
-    [deleteMutation],
+    [deleteTaskAsync],
   )
-
   const toggleComplete = useCallback(
     async (id: string) => {
       const task = tasks.find((t) => t.id === id)
       if (task) {
-        await updateMutation.mutateAsync({
+        await updateTaskAsync({
           id,
           data: { is_completed: !task.is_completed },
         })
       }
     },
-    [tasks, updateMutation],
+    [tasks, updateTaskAsync],
   )
-
   return {
     tasks,
     isLoading:
-      isLoading ||
-      createMutation.isPending ||
-      updateMutation.isPending ||
-      deleteMutation.isPending,
+      isLoading || isCreatePending || isUpdatePending || isDeletePending,
     editingTask,
     setEditingTask,
     addTask,

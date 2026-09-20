@@ -7,6 +7,7 @@ import {
   Folder,
   ArrowRight,
 } from 'lucide-react'
+
 import { useAuthUserQuery } from '@/hooks/queries/useAuth'
 
 export const Route = createFileRoute('/_authenticated/')({

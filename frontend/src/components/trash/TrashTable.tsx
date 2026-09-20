@@ -1,8 +1,3 @@
-'use client'
-
-import { TrashResourceType } from '@/lib/types/trash'
-import { formatDisplayDateTime } from '@/lib/date'
-import { Button } from '@/components/ui/button'
 import {
   RotateCcw,
   Trash2,
@@ -13,6 +8,11 @@ import {
   Car,
   Fuel,
 } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+import { formatDisplayDateTime } from '@/lib/date'
+
+import type { TrashResourceType } from '@/lib/types/trash'
 
 export interface BaseTrashItem {
   id: string
@@ -31,7 +31,6 @@ export interface BaseTrashItem {
   total_mileage?: number | null
   gas_station_name?: string | null
 }
-
 interface TrashTableProps {
   resourceType: TrashResourceType
   items: BaseTrashItem[]
@@ -41,7 +40,6 @@ interface TrashTableProps {
   restoringId: string | null
   purgingId: string | null
 }
-
 export function TrashTable({
   resourceType,
   items,
@@ -59,7 +57,6 @@ export function TrashTable({
       </div>
     )
   }
-
   if (items.length === 0) {
     return (
       <div className="py-16 text-center border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50">
@@ -71,7 +68,6 @@ export function TrashTable({
       </div>
     )
   }
-
   // リソースに応じたアイテム情報の抽出
   const getItemDetails = (item: BaseTrashItem) => {
     switch (resourceType) {
@@ -124,7 +120,6 @@ export function TrashTable({
         }
     }
   }
-
   return (
     <div className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-xs">
       <ul className="divide-y divide-slate-100">
@@ -133,7 +128,6 @@ export function TrashTable({
           const Icon = details.icon
           const isRestoring = restoringId === item.id
           const isPurging = purgingId === item.id
-
           return (
             <li
               key={item.id}

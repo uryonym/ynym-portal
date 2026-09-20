@@ -1,6 +1,4 @@
-'use client'
-
-import { Note } from '@/lib/types/note'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -9,7 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
+
+import type { Note } from '@/lib/types/note'
 
 interface NoteDeleteDialogProps {
   open: boolean
@@ -18,7 +17,6 @@ interface NoteDeleteDialogProps {
   onConfirm: (id: string) => void
   isLoading?: boolean
 }
-
 export function NoteDeleteDialog({
   open,
   onOpenChange,
@@ -27,11 +25,9 @@ export function NoteDeleteDialog({
   isLoading = false,
 }: NoteDeleteDialogProps) {
   if (!note) return null
-
   const handleDelete = () => {
     onConfirm(note.id)
   }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-md mx-auto">

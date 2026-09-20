@@ -1,14 +1,13 @@
-'use client'
-
-import { Vehicle } from '@/lib/types/vehicle'
 import { Pencil, Car } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
+
+import type { Vehicle } from '@/lib/types/vehicle'
 
 interface VehicleItemProps {
   vehicle: Vehicle
   onEdit: (vehicle: Vehicle) => void
 }
-
 export function VehicleItem({ vehicle, onEdit }: VehicleItemProps) {
   return (
     <div className="group flex flex-col justify-between p-4 bg-white rounded-xl border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all">
