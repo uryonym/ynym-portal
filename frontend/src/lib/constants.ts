@@ -1,7 +1,7 @@
 import { env } from '@/lib/env'
 
-export const API_BASE_URL = env.NEXT_PUBLIC_API_BASE_URL
-export const SITE_URL = env.NEXT_PUBLIC_SITE_URL
+export const API_BASE_URL = env.VITE_API_BASE_URL
+export const SITE_URL = env.VITE_SITE_URL
 
 // ---  Auth URLs from API contract ---
 export const GOOGLE_AUTH_LOGIN_URL = `${API_BASE_URL}/api/auth/google/login`
