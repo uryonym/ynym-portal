@@ -11,12 +11,6 @@ export default [
   ...pluginRouter.configs['flat/recommended'],
   ...pluginQuery.configs['flat/recommended'],
   {
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
     plugins: {
       'react-hooks': reactHooks,
     },
@@ -31,21 +25,6 @@ export default [
 
       // React Hooks ルール
       ...reactHooks.configs.recommended.rules,
-
-      // プロジェクト・ライブラリ調和設定
-      '@tanstack/query/no-unstable-deps': 'warn',
-      'import/consistent-type-specifier-style': 'off',
-      '@typescript-eslint/consistent-type-imports': 'off',
-      'node/prefer-node-protocol': 'off',
-      '@typescript-eslint/no-unnecessary-condition': 'warn',
-      '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
-      '@typescript-eslint/no-unused-vars': [
-        'warn',
-        {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-        },
-      ],
     },
   },
   {
