@@ -10,6 +10,7 @@
     "build": "vite build && tsc",
     "preview": "vite preview",
     "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "codegen": "openapi-typescript ../backend/openapi.json -o src/lib/types/generated/schema.ts"
