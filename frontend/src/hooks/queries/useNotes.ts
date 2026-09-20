@@ -88,9 +88,12 @@ export function useNotes() {
   const [categoryFilter, setCategoryFilter] =
     useState<NoteCategoryFilter>('all')
   const { data: notes = [], isLoading } = useNotesQuery()
-  const createMutation = useCreateNoteMutation()
-  const updateMutation = useUpdateNoteMutation()
-  const deleteMutation = useDeleteNoteMutation()
+  const { mutateAsync: createNoteAsync, isPending: isCreatePending } =
+    useCreateNoteMutation()
+  const { mutateAsync: updateNoteAsync, isPending: isUpdatePending } =
+    useUpdateNoteMutation()
+  const { mutateAsync: deleteNoteAsync, isPending: isDeletePending } =
+    useDeleteNoteMutation()
   const filteredNotes = useMemo(() => {
     if (categoryFilter === 'all') return notes
     if (categoryFilter === 'uncategorized') {
@@ -101,44 +104,41 @@ export function useNotes() {
   const addNote = useCallback(
     async (data: CreateNoteInput) => {
       try {
-        await createMutation.mutateAsync(data)
+        await createNoteAsync(data)
         return true
       } catch {
         return false
       }
     },
-    [createMutation],
+    [createNoteAsync],
   )
   const updateNote = useCallback(
     async (id: string, data: UpdateNoteInput) => {
       try {
-        await updateMutation.mutateAsync({ id, data })
+        await updateNoteAsync({ id, data })
         return true
       } catch {
         return false
       }
     },
-    [updateMutation],
+    [updateNoteAsync],
   )
   const deleteNote = useCallback(
     async (id: string) => {
       try {
-        await deleteMutation.mutateAsync(id)
+        await deleteNoteAsync(id)
         return true
       } catch {
         return false
       }
     },
-    [deleteMutation],
+    [deleteNoteAsync],
   )
   return {
     notes,
     filteredNotes,
     isLoading:
-      isLoading ||
-      createMutation.isPending ||
-      updateMutation.isPending ||
-      deleteMutation.isPending,
+      isLoading || isCreatePending || isUpdatePending || isDeletePending,
     editingNote,
     setEditingNote,
     viewingNote,

@@ -96,49 +96,49 @@ export function useDeleteFuelRecordMutation() {
 export function useFuelRecords(vehicleId: string | null) {
   const [editingRecord, setEditingRecord] = useState<FuelRecord | null>(null)
   const { data: records = [], isLoading } = useFuelRecordsQuery(vehicleId)
-  const createMutation = useCreateFuelRecordMutation()
-  const updateMutation = useUpdateFuelRecordMutation()
-  const deleteMutation = useDeleteFuelRecordMutation()
+  const { mutateAsync: createFuelRecordAsync, isPending: isCreatePending } =
+    useCreateFuelRecordMutation()
+  const { mutateAsync: updateFuelRecordAsync, isPending: isUpdatePending } =
+    useUpdateFuelRecordMutation()
+  const { mutateAsync: deleteFuelRecordAsync, isPending: isDeletePending } =
+    useDeleteFuelRecordMutation()
   const addRecord = useCallback(
     async (data: CreateFuelRecordInput) => {
       try {
-        await createMutation.mutateAsync(data)
+        await createFuelRecordAsync(data)
         return true
       } catch {
         return false
       }
     },
-    [createMutation],
+    [createFuelRecordAsync],
   )
   const updateRecord = useCallback(
     async (id: string, data: UpdateFuelRecordInput) => {
       try {
-        await updateMutation.mutateAsync({ id, data })
+        await updateFuelRecordAsync({ id, data })
         return true
       } catch {
         return false
       }
     },
-    [updateMutation],
+    [updateFuelRecordAsync],
   )
   const deleteRecord = useCallback(
     async (id: string) => {
       try {
-        await deleteMutation.mutateAsync(id)
+        await deleteFuelRecordAsync(id)
         return true
       } catch {
         return false
       }
     },
-    [deleteMutation],
+    [deleteFuelRecordAsync],
   )
   return {
     records,
     isLoading:
-      isLoading ||
-      createMutation.isPending ||
-      updateMutation.isPending ||
-      deleteMutation.isPending,
+      isLoading || isCreatePending || isUpdatePending || isDeletePending,
     editingRecord,
     setEditingRecord,
     addRecord,

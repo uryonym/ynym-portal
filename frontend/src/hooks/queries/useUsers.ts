@@ -123,62 +123,66 @@ export function useUsers() {
     include_deleted: includeDeleted,
     search: search || undefined,
   })
-  const createMutation = useCreateUserMutation()
-  const updateMutation = useUpdateUserMutation()
-  const deleteMutation = useDeleteUserMutation()
-  const restoreMutation = useRestoreUserMutation()
+  const { mutateAsync: createUserAsync, isPending: isCreatePending } =
+    useCreateUserMutation()
+  const { mutateAsync: updateUserAsync, isPending: isUpdatePending } =
+    useUpdateUserMutation()
+  const { mutateAsync: deleteUserAsync, isPending: isDeletePending } =
+    useDeleteUserMutation()
+  const { mutateAsync: restoreUserAsync, isPending: isRestorePending } =
+    useRestoreUserMutation()
   const addUser = useCallback(
     async (data: UserCreate) => {
       try {
-        await createMutation.mutateAsync(data)
+        await createUserAsync(data)
         return true
       } catch {
         return false
       }
     },
-    [createMutation],
+    [createUserAsync],
   )
   const updateUser = useCallback(
     async (id: string, data: UserUpdate) => {
       try {
-        await updateMutation.mutateAsync({ id, data })
+        await updateUserAsync({ id, data })
         return true
       } catch {
         return false
       }
     },
-    [updateMutation],
+    [updateUserAsync],
   )
   const deleteUser = useCallback(
     async (id: string) => {
       try {
-        await deleteMutation.mutateAsync(id)
+        await deleteUserAsync(id)
         return true
       } catch {
         return false
       }
     },
-    [deleteMutation],
+    [deleteUserAsync],
   )
   const restoreUser = useCallback(
     async (id: string) => {
       try {
-        await restoreMutation.mutateAsync(id)
+        await restoreUserAsync(id)
         return true
       } catch {
         return false
       }
     },
-    [restoreMutation],
+    [restoreUserAsync],
   )
   return {
     users,
     isLoading:
       isLoading ||
-      createMutation.isPending ||
-      updateMutation.isPending ||
-      deleteMutation.isPending ||
-      restoreMutation.isPending,
+      isCreatePending ||
+      isUpdatePending ||
+      isDeletePending ||
+      isRestorePending,
     includeDeleted,
     setIncludeDeleted,
     search,

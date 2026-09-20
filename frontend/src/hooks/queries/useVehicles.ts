@@ -84,49 +84,49 @@ export function useDeleteVehicleMutation() {
 export function useVehicles() {
   const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null)
   const { data: vehicles = [], isLoading } = useVehiclesQuery()
-  const createMutation = useCreateVehicleMutation()
-  const updateMutation = useUpdateVehicleMutation()
-  const deleteMutation = useDeleteVehicleMutation()
+  const { mutateAsync: createVehicleAsync, isPending: isCreatePending } =
+    useCreateVehicleMutation()
+  const { mutateAsync: updateVehicleAsync, isPending: isUpdatePending } =
+    useUpdateVehicleMutation()
+  const { mutateAsync: deleteVehicleAsync, isPending: isDeletePending } =
+    useDeleteVehicleMutation()
   const addVehicle = useCallback(
     async (data: CreateVehicleInput) => {
       try {
-        await createMutation.mutateAsync(data)
+        await createVehicleAsync(data)
         return true
       } catch {
         return false
       }
     },
-    [createMutation],
+    [createVehicleAsync],
   )
   const updateVehicle = useCallback(
     async (id: string, data: UpdateVehicleInput) => {
       try {
-        await updateMutation.mutateAsync({ id, data })
+        await updateVehicleAsync({ id, data })
         return true
       } catch {
         return false
       }
     },
-    [updateMutation],
+    [updateVehicleAsync],
   )
   const deleteVehicle = useCallback(
     async (id: string) => {
       try {
-        await deleteMutation.mutateAsync(id)
+        await deleteVehicleAsync(id)
         return true
       } catch {
         return false
       }
     },
-    [deleteMutation],
+    [deleteVehicleAsync],
   )
   return {
     vehicles,
     isLoading:
-      isLoading ||
-      createMutation.isPending ||
-      updateMutation.isPending ||
-      deleteMutation.isPending,
+      isLoading || isCreatePending || isUpdatePending || isDeletePending,
     editingVehicle,
     setEditingVehicle,
     addVehicle,

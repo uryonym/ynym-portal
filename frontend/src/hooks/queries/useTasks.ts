@@ -10,8 +10,8 @@ import {
   createTask as createTaskAPI,
   updateTask as updateTaskAPI,
   deleteTask as deleteTaskAPI,
-  type TaskFilter,
 } from '@/lib/api/tasks'
+import type { TaskFilter } from '@/lib/api/tasks'
 import type { Task, CreateTaskInput, UpdateTaskInput } from '@/lib/types/task'
 import { toast } from 'sonner'
 
@@ -96,46 +96,46 @@ export function useTasks(initialFilter: TaskFilter = 'active') {
   const [filter, setFilter] = useState<TaskFilter>(initialFilter)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
   const { data: tasks = [], isLoading } = useTasksQuery(filter)
-  const createMutation = useCreateTaskMutation()
-  const updateMutation = useUpdateTaskMutation()
-  const deleteMutation = useDeleteTaskMutation()
+  const { mutateAsync: createTaskAsync, isPending: isCreatePending } =
+    useCreateTaskMutation()
+  const { mutateAsync: updateTaskAsync, isPending: isUpdatePending } =
+    useUpdateTaskMutation()
+  const { mutateAsync: deleteTaskAsync, isPending: isDeletePending } =
+    useDeleteTaskMutation()
   const addTask = useCallback(
     async (data: CreateTaskInput) => {
-      await createMutation.mutateAsync(data)
+      await createTaskAsync(data)
     },
-    [createMutation],
+    [createTaskAsync],
   )
   const updateTask = useCallback(
     async (id: string, data: UpdateTaskInput) => {
-      await updateMutation.mutateAsync({ id, data })
+      await updateTaskAsync({ id, data })
     },
-    [updateMutation],
+    [updateTaskAsync],
   )
   const deleteTask = useCallback(
     async (id: string) => {
-      await deleteMutation.mutateAsync(id)
+      await deleteTaskAsync(id)
     },
-    [deleteMutation],
+    [deleteTaskAsync],
   )
   const toggleComplete = useCallback(
     async (id: string) => {
       const task = tasks.find((t) => t.id === id)
       if (task) {
-        await updateMutation.mutateAsync({
+        await updateTaskAsync({
           id,
           data: { is_completed: !task.is_completed },
         })
       }
     },
-    [tasks, updateMutation],
+    [tasks, updateTaskAsync],
   )
   return {
     tasks,
     isLoading:
-      isLoading ||
-      createMutation.isPending ||
-      updateMutation.isPending ||
-      deleteMutation.isPending,
+      isLoading || isCreatePending || isUpdatePending || isDeletePending,
     editingTask,
     setEditingTask,
     addTask,

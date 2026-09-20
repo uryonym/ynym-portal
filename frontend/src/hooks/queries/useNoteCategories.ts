@@ -86,49 +86,49 @@ export function useNoteCategories() {
     null,
   )
   const { data: categories = [], isLoading } = useNoteCategoriesQuery()
-  const createMutation = useCreateNoteCategoryMutation()
-  const updateMutation = useUpdateNoteCategoryMutation()
-  const deleteMutation = useDeleteNoteCategoryMutation()
+  const { mutateAsync: createCategoryAsync, isPending: isCreatePending } =
+    useCreateNoteCategoryMutation()
+  const { mutateAsync: updateCategoryAsync, isPending: isUpdatePending } =
+    useUpdateNoteCategoryMutation()
+  const { mutateAsync: deleteCategoryAsync, isPending: isDeletePending } =
+    useDeleteNoteCategoryMutation()
   const addCategory = useCallback(
     async (data: CreateNoteCategoryInput) => {
       try {
-        await createMutation.mutateAsync(data)
+        await createCategoryAsync(data)
         return true
       } catch {
         return false
       }
     },
-    [createMutation],
+    [createCategoryAsync],
   )
   const updateCategory = useCallback(
     async (id: string, data: UpdateNoteCategoryInput) => {
       try {
-        await updateMutation.mutateAsync({ id, data })
+        await updateCategoryAsync({ id, data })
         return true
       } catch {
         return false
       }
     },
-    [updateMutation],
+    [updateCategoryAsync],
   )
   const deleteCategory = useCallback(
     async (id: string) => {
       try {
-        await deleteMutation.mutateAsync(id)
+        await deleteCategoryAsync(id)
         return true
       } catch {
         return false
       }
     },
-    [deleteMutation],
+    [deleteCategoryAsync],
   )
   return {
     categories,
     isLoading:
-      isLoading ||
-      createMutation.isPending ||
-      updateMutation.isPending ||
-      deleteMutation.isPending,
+      isLoading || isCreatePending || isUpdatePending || isDeletePending,
     editingCategory,
     setEditingCategory,
     addCategory,
