@@ -73,15 +73,9 @@ function FuelRecordsPage() {
   const handleSubmitForm = async (
     data: CreateFuelRecordInput | UpdateFuelRecordInput,
   ) => {
-    let success = false
-    if (editingRecord) {
-      success = await updateRecord(
-        editingRecord.id,
-        data as UpdateFuelRecordInput,
-      )
-    } else {
-      success = await addRecord(data as CreateFuelRecordInput)
-    }
+    const success = editingRecord
+      ? await updateRecord(editingRecord.id, data as UpdateFuelRecordInput)
+      : await addRecord(data as CreateFuelRecordInput)
     if (success) {
       setIsDialogOpen(false)
     }
