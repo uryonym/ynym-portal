@@ -40,6 +40,7 @@ export default [
       'node_modules',
       'src/routeTree.gen.ts',
       'src/lib/types/generated/schema.ts',
+      'src/components/ui/**',
     ],
   },
   prettier,
