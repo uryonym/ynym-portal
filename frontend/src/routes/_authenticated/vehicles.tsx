@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useVehicles } from '@/hooks/queries/useVehicles'
 import { VehicleList } from '@/components/VehicleList'
 import { VehicleDialog } from '@/components/VehicleDialog'
-import {
+import type {
   Vehicle,
   CreateVehicleInput,
   UpdateVehicleInput,
@@ -12,7 +12,6 @@ import {
 export const Route = createFileRoute('/_authenticated/vehicles')({
   component: VehiclesPage,
 })
-
 function VehiclesPage() {
   const {
     vehicles,
@@ -24,26 +23,22 @@ function VehiclesPage() {
     deleteVehicle,
   } = useVehicles()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-
   const handleAddNew = () => {
     setEditingVehicle(null)
     setIsDialogOpen(true)
   }
-
   const handleEditVehicle = (vehicleToEdit: Vehicle) => {
     setEditingVehicle(vehicleToEdit)
     setIsDialogOpen(true)
   }
-
   const handleSubmitForm = (data: CreateVehicleInput | UpdateVehicleInput) => {
     if (editingVehicle) {
-      updateVehicle(editingVehicle.id, data as UpdateVehicleInput)
+      updateVehicle(editingVehicle.id, data)
     } else {
       addVehicle(data as CreateVehicleInput)
     }
     setIsDialogOpen(false)
   }
-
   return (
     <>
       <div className="max-w-4xl mx-auto w-full">

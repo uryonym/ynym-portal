@@ -1,6 +1,5 @@
 'use client'
-
-import { User } from '@/lib/types/user'
+import type { User } from '@/lib/types/user'
 import {
   Dialog,
   DialogContent,
@@ -19,7 +18,6 @@ interface UserDeleteDialogProps {
   onConfirm: (userId: string) => Promise<boolean>
   isLoading?: boolean
 }
-
 export function UserDeleteDialog({
   user,
   open,
@@ -28,14 +26,12 @@ export function UserDeleteDialog({
   isLoading = false,
 }: UserDeleteDialogProps) {
   if (!user) return null
-
   const handleConfirm = async () => {
     const success = await onConfirm(user.id)
     if (success) {
       onOpenChange(false)
     }
   }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-md mx-auto">

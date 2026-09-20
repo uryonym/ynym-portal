@@ -1,6 +1,5 @@
 'use client'
-
-import { NoteCategory } from '@/lib/types/note-category'
+import type { NoteCategory } from '@/lib/types/note-category'
 import {
   Dialog,
   DialogContent,
@@ -18,7 +17,6 @@ interface NoteCategoryDeleteDialogProps {
   onConfirm: (id: string) => void
   isLoading?: boolean
 }
-
 export function NoteCategoryDeleteDialog({
   open,
   onOpenChange,
@@ -27,11 +25,9 @@ export function NoteCategoryDeleteDialog({
   isLoading = false,
 }: NoteCategoryDeleteDialogProps) {
   if (!category) return null
-
   const handleDelete = () => {
     onConfirm(category.id)
   }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-md mx-auto">

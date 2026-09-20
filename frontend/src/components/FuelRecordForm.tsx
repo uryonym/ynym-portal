@@ -1,12 +1,10 @@
 'use client'
-
 import { useEffect, useRef } from 'react'
 import { useForm, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash2 } from 'lucide-react'
 import { toDatetimeLocalValue, toUtcIsoString } from '@/lib/date'
-
-import {
+import type {
   FuelRecord,
   CreateFuelRecordInput,
   UpdateFuelRecordInput,
@@ -43,7 +41,6 @@ interface FuelRecordFormProps {
   onDelete?: (id: string) => void
   isLoading?: boolean
 }
-
 export function FuelRecordForm({
   initialData,
   vehicleId,
@@ -53,7 +50,6 @@ export function FuelRecordForm({
   isLoading = false,
 }: FuelRecordFormProps) {
   const refuelRef = useRef<HTMLInputElement>(null)
-
   const form = useForm<FuelRecordFormValues>({
     resolver: zodResolver(
       fuelRecordFormSchema,
@@ -68,7 +64,6 @@ export function FuelRecordForm({
       gas_station_name: initialData?.gas_station_name ?? '',
     },
   })
-
   // initialData が変わった場合（新規追加・別アイテムの編集など）にフォームをリセット
   useEffect(() => {
     form.reset({
@@ -80,14 +75,12 @@ export function FuelRecordForm({
       is_full_tank: initialData?.is_full_tank ?? false,
       gas_station_name: initialData?.gas_station_name ?? '',
     })
-
     if (initialData && refuelRef.current) {
       setTimeout(() => {
         refuelRef.current?.blur()
       }, 0)
     }
   }, [initialData, form])
-
   const handleFormSubmit = (values: FuelRecordFormValues) => {
     const data = {
       vehicle_id: vehicleId,
@@ -101,10 +94,8 @@ export function FuelRecordForm({
         gas_station_name: values.gas_station_name.trim(),
       }),
     }
-
     onSubmit(data)
   }
-
   return (
     <Form {...form}>
       <form

@@ -11,7 +11,7 @@ import {
   updateVehicle as updateVehicleAPI,
   deleteVehicle as deleteVehicleAPI,
 } from '@/lib/api/vehicles'
-import {
+import type {
   Vehicle,
   CreateVehicleInput,
   UpdateVehicleInput,
@@ -22,7 +22,6 @@ export const vehicleKeys = {
   all: ['vehicles'] as const,
   lists: () => [...vehicleKeys.all, 'list'] as const,
 }
-
 export const vehicleQueries = {
   list: () =>
     queryOptions({
@@ -33,11 +32,9 @@ export const vehicleQueries = {
       },
     }),
 }
-
 export function useVehiclesQuery() {
   return useQuery(vehicleQueries.list())
 }
-
 export function useCreateVehicleMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -52,7 +49,6 @@ export function useCreateVehicleMutation() {
     },
   })
 }
-
 export function useUpdateVehicleMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -68,7 +64,6 @@ export function useUpdateVehicleMutation() {
     },
   })
 }
-
 export function useDeleteVehicleMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -83,18 +78,15 @@ export function useDeleteVehicleMutation() {
     },
   })
 }
-
 /**
  * 既存コンポーネント向けの互換カスタムフック
  */
 export function useVehicles() {
   const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null)
-
   const { data: vehicles = [], isLoading } = useVehiclesQuery()
   const createMutation = useCreateVehicleMutation()
   const updateMutation = useUpdateVehicleMutation()
   const deleteMutation = useDeleteVehicleMutation()
-
   const addVehicle = useCallback(
     async (data: CreateVehicleInput) => {
       try {
@@ -106,7 +98,6 @@ export function useVehicles() {
     },
     [createMutation],
   )
-
   const updateVehicle = useCallback(
     async (id: string, data: UpdateVehicleInput) => {
       try {
@@ -118,7 +109,6 @@ export function useVehicles() {
     },
     [updateMutation],
   )
-
   const deleteVehicle = useCallback(
     async (id: string) => {
       try {
@@ -130,7 +120,6 @@ export function useVehicles() {
     },
     [deleteMutation],
   )
-
   return {
     vehicles,
     isLoading:

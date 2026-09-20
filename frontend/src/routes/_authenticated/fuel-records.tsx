@@ -4,7 +4,7 @@ import { useVehicles } from '@/hooks/queries/useVehicles'
 import { useFuelRecords } from '@/hooks/queries/useFuelRecords'
 import { FuelRecordList } from '@/components/FuelRecordList'
 import { FuelRecordDialog } from '@/components/FuelRecordDialog'
-import {
+import type {
   CreateFuelRecordInput,
   UpdateFuelRecordInput,
   FuelRecord,
@@ -21,10 +21,8 @@ import {
 export const Route = createFileRoute('/_authenticated/fuel-records')({
   component: FuelRecordsPage,
 })
-
 function FuelRecordsPage() {
   const { vehicles, isLoading: vehiclesLoading } = useVehicles()
-
   // seqが最大の車両IDを計算
   const defaultVehicleId = useMemo(() => {
     if (vehicles.length === 0) return null
@@ -33,21 +31,17 @@ function FuelRecordsPage() {
     )
     return vehicleWithMaxSeq.id
   }, [vehicles])
-
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(
     null,
   )
-
   // 選択中の車両ID（未選択の場合はデフォルトを使用）
   const activeVehicleId = selectedVehicleId ?? defaultVehicleId
-
   // 表示用の車両名マッピング（SelectValue で ID ではなく車両名を表示するため）
   const vehicleItems = useMemo(() => {
     return Object.fromEntries(
       vehicles.map((v) => [v.id, `${v.name} (${v.maker} ${v.model})`]),
     )
   }, [vehicles])
-
   const {
     records,
     isLoading,
@@ -57,30 +51,25 @@ function FuelRecordsPage() {
     updateRecord,
     deleteRecord,
   } = useFuelRecords(activeVehicleId)
-
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-
   const handleOpenDialog = () => {
     setEditingRecord(null)
     setIsDialogOpen(true)
   }
-
   const handleEditRecord = (recordToEdit: FuelRecord) => {
     setEditingRecord(recordToEdit)
     setIsDialogOpen(true)
   }
-
   const handleSubmitForm = async (
     data: CreateFuelRecordInput | UpdateFuelRecordInput,
   ) => {
     const success = editingRecord
-      ? await updateRecord(editingRecord.id, data as UpdateFuelRecordInput)
+      ? await updateRecord(editingRecord.id, data)
       : await addRecord(data as CreateFuelRecordInput)
     if (success) {
       setIsDialogOpen(false)
     }
   }
-
   if (vehiclesLoading) {
     return (
       <div className="max-w-4xl mx-auto w-full text-center py-12 text-slate-500">
@@ -88,7 +77,6 @@ function FuelRecordsPage() {
       </div>
     )
   }
-
   if (vehicles.length === 0) {
     return (
       <div className="max-w-4xl mx-auto w-full text-center py-12 space-y-4">
@@ -101,7 +89,6 @@ function FuelRecordsPage() {
       </div>
     )
   }
-
   return (
     <>
       <div className="max-w-4xl mx-auto w-full space-y-6">

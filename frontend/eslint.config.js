@@ -13,7 +13,7 @@ export default [
   {
     languageOptions: {
       parserOptions: {
-        project: ['./tsconfig.app.json', './tsconfig.node.json'],
+        project: ['./tsconfig.json'],
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -50,7 +50,7 @@ export default [
   },
   {
     ignores: [
-      'eslint.config.mjs',
+      'eslint.config.js',
       'prettier.config.js',
       'dist',
       'node_modules',

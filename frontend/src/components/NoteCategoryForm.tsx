@@ -1,11 +1,9 @@
 'use client'
-
 import { useEffect, useRef } from 'react'
 import { useForm, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash2 } from 'lucide-react'
-
-import { NoteCategory } from '@/lib/types/note-category'
+import type { NoteCategory } from '@/lib/types/note-category'
 import {
   noteCategoryFormSchema,
   type NoteCategoryFormValues,
@@ -28,7 +26,6 @@ interface NoteCategoryFormProps {
   onDelete?: (category: NoteCategory) => void
   isLoading?: boolean
 }
-
 export function NoteCategoryForm({
   initialData,
   onSubmit,
@@ -37,7 +34,6 @@ export function NoteCategoryForm({
   isLoading = false,
 }: NoteCategoryFormProps) {
   const nameInputRef = useRef<HTMLInputElement>(null)
-
   const form = useForm<NoteCategoryFormValues>({
     resolver: zodResolver(
       noteCategoryFormSchema,
@@ -46,25 +42,21 @@ export function NoteCategoryForm({
       name: initialData?.name ?? '',
     },
   })
-
   useEffect(() => {
     form.reset({
       name: initialData?.name ?? '',
     })
-
     if (initialData && nameInputRef.current) {
       setTimeout(() => {
         nameInputRef.current?.focus()
       }, 0)
     }
   }, [initialData, form])
-
   const handleFormSubmit = (values: NoteCategoryFormValues) => {
     onSubmit({
       name: values.name.trim(),
     })
   }
-
   return (
     <Form {...form}>
       <form

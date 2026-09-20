@@ -1,7 +1,6 @@
 'use client'
-
-import { Task } from '@/lib/types/task'
-import { TaskFilter } from '@/lib/api/tasks'
+import type { Task } from '@/lib/types/task'
+import type { TaskFilter } from '@/lib/api/tasks'
 import { TaskItem } from './TaskItem'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
@@ -15,7 +14,6 @@ export interface TaskListProps {
   onFilterChange: (filter: TaskFilter) => void
   isLoading?: boolean
 }
-
 export function TaskList({
   tasks,
   onToggleComplete,

@@ -5,14 +5,13 @@ import { useUsers } from '@/hooks/queries/useUsers'
 import { UserList } from '@/components/UserList'
 import { UserDialog } from '@/components/UserDialog'
 import { UserDeleteDialog } from '@/components/UserDeleteDialog'
-import { User, UserCreate, UserUpdate } from '@/lib/types/user'
+import type { User, UserCreate, UserUpdate } from '@/lib/types/user'
 import { ShieldAlert } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/_authenticated/users')({
   component: UsersPage,
 })
-
 function UsersPage() {
   const navigate = useNavigate()
   const { user: currentUser, isLoading: isAuthLoading } = useAuth()
@@ -32,10 +31,8 @@ function UsersPage() {
     deleteUser,
     restoreUser,
   } = useUsers()
-
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-
   if (isAuthLoading) {
     return (
       <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full flex items-center justify-center min-h-[50vh]">
@@ -43,7 +40,6 @@ function UsersPage() {
       </main>
     )
   }
-
   // 管理者権限チェック
   if (!currentUser?.is_admin) {
     return (
@@ -69,34 +65,28 @@ function UsersPage() {
       </main>
     )
   }
-
   const handleAddNew = () => {
     setEditingUser(null)
     setIsDialogOpen(true)
   }
-
   const handleEdit = (userToEdit: User) => {
     setEditingUser(userToEdit)
     setIsDialogOpen(true)
   }
-
   const handleDelete = (userToDelete: User) => {
     setDeletingUser(userToDelete)
     setIsDeleteDialogOpen(true)
   }
-
   const handleSubmitDialog = async (data: UserCreate | UserUpdate) => {
     if (editingUser) {
-      return await updateUser(editingUser.id, data as UserUpdate)
+      return await updateUser(editingUser.id, data)
     } else {
       return await addUser(data as UserCreate)
     }
   }
-
   const handleConfirmDelete = async (userId: string) => {
     return await deleteUser(userId)
   }
-
   return (
     <>
       <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full">

@@ -1,6 +1,5 @@
 'use client'
-
-import {
+import type {
   FuelRecord,
   CreateFuelRecordInput,
   UpdateFuelRecordInput,
@@ -22,7 +21,6 @@ interface FuelRecordDialogProps {
   onDelete?: (id: string) => void
   isLoading?: boolean
 }
-
 export function FuelRecordDialog({
   open,
   onOpenChange,
@@ -33,7 +31,6 @@ export function FuelRecordDialog({
   isLoading = false,
 }: FuelRecordDialogProps) {
   const title = initialData ? '記録を編集' : '新しい記録を作成'
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-md mx-auto">

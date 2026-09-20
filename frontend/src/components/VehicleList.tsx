@@ -1,6 +1,5 @@
 'use client'
-
-import { Vehicle } from '@/lib/types/vehicle'
+import type { Vehicle } from '@/lib/types/vehicle'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { VehicleItem } from './VehicleItem'
@@ -10,7 +9,6 @@ interface VehicleListProps {
   onEdit: (vehicle: Vehicle) => void
   onAddNew: () => void
 }
-
 export function VehicleList({ vehicles, onEdit, onAddNew }: VehicleListProps) {
   return (
     <div className="space-y-6">

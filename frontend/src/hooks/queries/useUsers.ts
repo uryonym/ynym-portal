@@ -12,7 +12,7 @@ import {
   deleteUser as deleteUserAPI,
   restoreUser as restoreUserAPI,
 } from '@/lib/api/users'
-import { User, UserCreate, UserUpdate } from '@/lib/types/user'
+import type { User, UserCreate, UserUpdate } from '@/lib/types/user'
 import { ApiError } from '@/lib/api/client'
 import { toast } from 'sonner'
 
@@ -22,7 +22,6 @@ export const userKeys = {
   list: (params: { include_deleted: boolean; search?: string }) =>
     [...userKeys.lists(), params] as const,
 }
-
 function getErrorMessage(error: unknown, defaultMessage: string): string {
   if (error instanceof ApiError) {
     if (
@@ -30,7 +29,7 @@ function getErrorMessage(error: unknown, defaultMessage: string): string {
       error.data !== null &&
       'detail' in error.data
     ) {
-      const detail = (error.data as { detail: unknown }).detail
+      const detail = error.data.detail
       if (typeof detail === 'string') return detail
     }
     return error.message || defaultMessage
@@ -40,7 +39,6 @@ function getErrorMessage(error: unknown, defaultMessage: string): string {
   }
   return defaultMessage
 }
-
 export const userQueries = {
   list: (params: { include_deleted: boolean; search?: string }) =>
     queryOptions({
@@ -50,14 +48,12 @@ export const userQueries = {
       },
     }),
 }
-
 export function useUsersQuery(params: {
   include_deleted: boolean
   search?: string
 }) {
   return useQuery(userQueries.list(params))
 }
-
 export function useCreateUserMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -72,7 +68,6 @@ export function useCreateUserMutation() {
     },
   })
 }
-
 export function useUpdateUserMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -88,7 +83,6 @@ export function useUpdateUserMutation() {
     },
   })
 }
-
 export function useDeleteUserMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -103,7 +97,6 @@ export function useDeleteUserMutation() {
     },
   })
 }
-
 export function useRestoreUserMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -118,7 +111,6 @@ export function useRestoreUserMutation() {
     },
   })
 }
-
 /**
  * 既存コンポーネント向けの互換カスタムフック
  */
@@ -127,17 +119,14 @@ export function useUsers() {
   const [search, setSearch] = useState('')
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [deletingUser, setDeletingUser] = useState<User | null>(null)
-
   const { data: users = [], isLoading } = useUsersQuery({
     include_deleted: includeDeleted,
     search: search || undefined,
   })
-
   const createMutation = useCreateUserMutation()
   const updateMutation = useUpdateUserMutation()
   const deleteMutation = useDeleteUserMutation()
   const restoreMutation = useRestoreUserMutation()
-
   const addUser = useCallback(
     async (data: UserCreate) => {
       try {
@@ -149,7 +138,6 @@ export function useUsers() {
     },
     [createMutation],
   )
-
   const updateUser = useCallback(
     async (id: string, data: UserUpdate) => {
       try {
@@ -161,7 +149,6 @@ export function useUsers() {
     },
     [updateMutation],
   )
-
   const deleteUser = useCallback(
     async (id: string) => {
       try {
@@ -173,7 +160,6 @@ export function useUsers() {
     },
     [deleteMutation],
   )
-
   const restoreUser = useCallback(
     async (id: string) => {
       try {
@@ -185,7 +171,6 @@ export function useUsers() {
     },
     [restoreMutation],
   )
-
   return {
     users,
     isLoading:

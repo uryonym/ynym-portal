@@ -11,7 +11,7 @@ import {
   updateCategory as updateCategoryAPI,
   deleteCategory as deleteCategoryAPI,
 } from '@/lib/api/note-categories'
-import {
+import type {
   NoteCategory,
   CreateNoteCategoryInput,
   UpdateNoteCategoryInput,
@@ -22,7 +22,6 @@ export const noteCategoryKeys = {
   all: ['note-categories'] as const,
   lists: () => [...noteCategoryKeys.all, 'list'] as const,
 }
-
 export const noteCategoryQueries = {
   list: () =>
     queryOptions({
@@ -33,11 +32,9 @@ export const noteCategoryQueries = {
       },
     }),
 }
-
 export function useNoteCategoriesQuery() {
   return useQuery(noteCategoryQueries.list())
 }
-
 export function useCreateNoteCategoryMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -52,7 +49,6 @@ export function useCreateNoteCategoryMutation() {
     },
   })
 }
-
 export function useUpdateNoteCategoryMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -68,7 +64,6 @@ export function useUpdateNoteCategoryMutation() {
     },
   })
 }
-
 export function useDeleteNoteCategoryMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -83,7 +78,6 @@ export function useDeleteNoteCategoryMutation() {
     },
   })
 }
-
 /**
  * 既存コンポーネント向けの互換カスタムフック
  */
@@ -91,12 +85,10 @@ export function useNoteCategories() {
   const [editingCategory, setEditingCategory] = useState<NoteCategory | null>(
     null,
   )
-
   const { data: categories = [], isLoading } = useNoteCategoriesQuery()
   const createMutation = useCreateNoteCategoryMutation()
   const updateMutation = useUpdateNoteCategoryMutation()
   const deleteMutation = useDeleteNoteCategoryMutation()
-
   const addCategory = useCallback(
     async (data: CreateNoteCategoryInput) => {
       try {
@@ -108,7 +100,6 @@ export function useNoteCategories() {
     },
     [createMutation],
   )
-
   const updateCategory = useCallback(
     async (id: string, data: UpdateNoteCategoryInput) => {
       try {
@@ -120,7 +111,6 @@ export function useNoteCategories() {
     },
     [updateMutation],
   )
-
   const deleteCategory = useCallback(
     async (id: string) => {
       try {
@@ -132,7 +122,6 @@ export function useNoteCategories() {
     },
     [deleteMutation],
   )
-
   return {
     categories,
     isLoading:

@@ -11,7 +11,7 @@ import {
   updateFuelRecord as updateFuelRecordAPI,
   deleteFuelRecord as deleteFuelRecordAPI,
 } from '@/lib/api/fuel-records'
-import {
+import type {
   FuelRecord,
   CreateFuelRecordInput,
   UpdateFuelRecordInput,
@@ -24,7 +24,6 @@ export const fuelRecordKeys = {
   list: (vehicleId: string | null) =>
     [...fuelRecordKeys.lists(), { vehicleId }] as const,
 }
-
 function sortFuelRecords(records: FuelRecord[]): FuelRecord[] {
   return [...records].sort((a, b) => {
     return (
@@ -33,7 +32,6 @@ function sortFuelRecords(records: FuelRecord[]): FuelRecord[] {
     )
   })
 }
-
 export const fuelRecordQueries = {
   list: (vehicleId: string | null) =>
     queryOptions({
@@ -46,11 +44,9 @@ export const fuelRecordQueries = {
       enabled: Boolean(vehicleId),
     }),
 }
-
 export function useFuelRecordsQuery(vehicleId: string | null) {
   return useQuery(fuelRecordQueries.list(vehicleId))
 }
-
 export function useCreateFuelRecordMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -65,7 +61,6 @@ export function useCreateFuelRecordMutation() {
     },
   })
 }
-
 export function useUpdateFuelRecordMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -81,7 +76,6 @@ export function useUpdateFuelRecordMutation() {
     },
   })
 }
-
 export function useDeleteFuelRecordMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -96,18 +90,15 @@ export function useDeleteFuelRecordMutation() {
     },
   })
 }
-
 /**
  * 既存コンポーネント向けの互換カスタムフック
  */
 export function useFuelRecords(vehicleId: string | null) {
   const [editingRecord, setEditingRecord] = useState<FuelRecord | null>(null)
-
   const { data: records = [], isLoading } = useFuelRecordsQuery(vehicleId)
   const createMutation = useCreateFuelRecordMutation()
   const updateMutation = useUpdateFuelRecordMutation()
   const deleteMutation = useDeleteFuelRecordMutation()
-
   const addRecord = useCallback(
     async (data: CreateFuelRecordInput) => {
       try {
@@ -119,7 +110,6 @@ export function useFuelRecords(vehicleId: string | null) {
     },
     [createMutation],
   )
-
   const updateRecord = useCallback(
     async (id: string, data: UpdateFuelRecordInput) => {
       try {
@@ -131,7 +121,6 @@ export function useFuelRecords(vehicleId: string | null) {
     },
     [updateMutation],
   )
-
   const deleteRecord = useCallback(
     async (id: string) => {
       try {
@@ -143,7 +132,6 @@ export function useFuelRecords(vehicleId: string | null) {
     },
     [deleteMutation],
   )
-
   return {
     records,
     isLoading:

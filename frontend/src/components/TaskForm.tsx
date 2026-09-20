@@ -1,13 +1,11 @@
 'use client'
-
 import { useEffect, useRef } from 'react'
 import { useForm, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { Trash2, Calendar as CalendarIcon, X } from 'lucide-react'
 import { parseDateString, formatDisplayDate } from '@/lib/date'
-
-import { Task, CreateTaskInput, UpdateTaskInput } from '@/lib/types/task'
+import type { Task, CreateTaskInput, UpdateTaskInput } from '@/lib/types/task'
 import { taskFormSchema, type TaskFormValues } from '@/lib/validations/schemas'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -34,7 +32,6 @@ export interface TaskFormProps {
   onDelete?: (id: string) => void
   isLoading?: boolean
 }
-
 export function TaskForm({
   initialData,
   onSubmit,
@@ -43,7 +40,6 @@ export function TaskForm({
   isLoading = false,
 }: TaskFormProps) {
   const titleInputRef = useRef<HTMLInputElement>(null)
-
   const form = useForm<TaskFormValues>({
     resolver: zodResolver(taskFormSchema) as Resolver<TaskFormValues>,
     defaultValues: {
@@ -52,7 +48,6 @@ export function TaskForm({
       due_date: initialData?.due_date ?? '',
     },
   })
-
   // initialData が変わった場合（新規追加・別アイテムの編集など）にフォームをリセット
   useEffect(() => {
     form.reset({
@@ -60,14 +55,12 @@ export function TaskForm({
       description: initialData?.description ?? '',
       due_date: initialData?.due_date ?? '',
     })
-
     if (initialData && titleInputRef.current) {
       setTimeout(() => {
         titleInputRef.current?.blur()
       }, 0)
     }
   }, [initialData, form])
-
   const handleFormSubmit = (values: TaskFormValues) => {
     onSubmit({
       title: values.title.trim(),
@@ -75,7 +68,6 @@ export function TaskForm({
       due_date: values.due_date || null,
     })
   }
-
   return (
     <Form {...form}>
       <form

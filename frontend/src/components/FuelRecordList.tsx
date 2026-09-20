@@ -1,6 +1,5 @@
 'use client'
-
-import { FuelRecord } from '@/lib/types/fuel-record'
+import type { FuelRecord } from '@/lib/types/fuel-record'
 import { FuelRecordItem } from './FuelRecordItem'
 
 interface FuelRecordListProps {
@@ -8,12 +7,10 @@ interface FuelRecordListProps {
   onEdit: (record: FuelRecord) => void
   onAddNew?: () => void
 }
-
 export function FuelRecordList({ records, onEdit }: FuelRecordListProps) {
   if (!records) {
     return null
   }
-
   return (
     <div className="space-y-3">
       {records.length === 0 ? (

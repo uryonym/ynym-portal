@@ -1,7 +1,6 @@
 'use client'
-
 import { useState } from 'react'
-import { User, UserCreate, UserUpdate } from '@/lib/types/user'
+import type { User, UserCreate, UserUpdate } from '@/lib/types/user'
 import {
   Dialog,
   DialogContent,
@@ -21,14 +20,12 @@ interface UserDialogProps {
   onSubmit: (data: UserCreate | UserUpdate) => Promise<boolean>
   isLoading?: boolean
 }
-
 interface UserFormProps {
   initialData?: User | null
   onSubmit: (data: UserCreate | UserUpdate) => Promise<boolean>
   onClose: () => void
   isLoading: boolean
 }
-
 function UserForm({
   initialData,
   onSubmit,
@@ -40,7 +37,6 @@ function UserForm({
   const [email, setEmail] = useState(initialData?.email ?? '')
   const [isAdmin, setIsAdmin] = useState(initialData?.is_admin ?? false)
   const [errors, setErrors] = useState<Record<string, string>>({})
-
   const validate = () => {
     const newErrors: Record<string, string> = {}
     if (!googleUid.trim()) {
@@ -57,25 +53,20 @@ function UserForm({
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validate()) return
-
     const success = await onSubmit({
       google_uid: googleUid.trim(),
       name: name.trim(),
       email: email.trim(),
       is_admin: isAdmin,
     })
-
     if (success) {
       onClose()
     }
   }
-
   const isEdit = !!initialData
-
   return (
     <form onSubmit={handleSubmit} className="space-y-4 py-2">
       <div className="space-y-1.5">
@@ -168,7 +159,6 @@ function UserForm({
     </form>
   )
 }
-
 export function UserDialog({
   open,
   onOpenChange,
@@ -177,7 +167,6 @@ export function UserDialog({
   isLoading = false,
 }: UserDialogProps) {
   const isEdit = !!initialData
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-md mx-auto">

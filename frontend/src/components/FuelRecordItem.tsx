@@ -1,6 +1,5 @@
 'use client'
-
-import { FuelRecord } from '@/lib/types/fuel-record'
+import type { FuelRecord } from '@/lib/types/fuel-record'
 import { Pencil, Fuel } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { formatDisplayDateTime } from '@/lib/date'
@@ -9,10 +8,8 @@ interface FuelRecordItemProps {
   record: FuelRecord
   onEdit: (record: FuelRecord) => void
 }
-
 export function FuelRecordItem({ record, onEdit }: FuelRecordItemProps) {
   const refuelDate = formatDisplayDateTime(record.refuel_datetime)
-
   return (
     <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-white rounded-xl border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all">
       <div className="flex-1 min-w-0 space-y-2">

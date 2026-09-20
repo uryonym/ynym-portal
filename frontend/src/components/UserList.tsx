@@ -1,7 +1,6 @@
 'use client'
-
 import { useState } from 'react'
-import { User } from '@/lib/types/user'
+import type { User } from '@/lib/types/user'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -30,7 +29,6 @@ interface UserListProps {
   onRestore: (userId: string) => Promise<boolean>
   isLoading?: boolean
 }
-
 export function UserList({
   users,
   currentUserId,
@@ -45,7 +43,6 @@ export function UserList({
   isLoading = false,
 }: UserListProps) {
   const [restoringId, setRestoringId] = useState<string | null>(null)
-
   const handleRestore = async (userId: string) => {
     setRestoringId(userId)
     try {
@@ -54,7 +51,6 @@ export function UserList({
       setRestoringId(null)
     }
   }
-
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -134,13 +130,10 @@ export function UserList({
                 users.map((user) => {
                   const isDeleted = !!user.deleted_at
                   const isSelf = user.id === currentUserId
-
                   return (
                     <tr
                       key={user.id}
-                      className={`hover:bg-slate-50/60 transition-colors ${
-                        isDeleted ? 'bg-slate-50/40 text-slate-400' : ''
-                      }`}
+                      className={`hover:bg-slate-50/60 transition-colors ${isDeleted ? 'bg-slate-50/40 text-slate-400' : ''}`}
                     >
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-3">
@@ -150,9 +143,7 @@ export function UserList({
                               alt={user.name}
                               width={36}
                               height={36}
-                              className={`h-9 w-9 rounded-full object-cover ring-1 ring-slate-200 shrink-0 ${
-                                isDeleted ? 'grayscale opacity-60' : ''
-                              }`}
+                              className={`h-9 w-9 rounded-full object-cover ring-1 ring-slate-200 shrink-0 ${isDeleted ? 'grayscale opacity-60' : ''}`}
                             />
                           ) : (
                             <div className="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-semibold text-xs shrink-0">

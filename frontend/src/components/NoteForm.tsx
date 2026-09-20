@@ -1,12 +1,10 @@
 'use client'
-
 import { useEffect, useMemo, useRef } from 'react'
 import { useForm, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash2 } from 'lucide-react'
-
-import { Note } from '@/lib/types/note'
-import { NoteCategory } from '@/lib/types/note-category'
+import type { Note } from '@/lib/types/note'
+import type { NoteCategory } from '@/lib/types/note-category'
 import { noteFormSchema, type NoteFormValues } from '@/lib/validations/note'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -35,9 +33,7 @@ interface NoteFormProps {
   onDelete?: (note: Note) => void
   isLoading?: boolean
 }
-
 const NONE_CATEGORY_VALUE = '__none__'
-
 export function NoteForm({
   initialData,
   categories,
@@ -47,7 +43,6 @@ export function NoteForm({
   isLoading = false,
 }: NoteFormProps) {
   const titleInputRef = useRef<HTMLInputElement>(null)
-
   const categoryItems = useMemo(() => {
     const items: Record<string, string> = {
       [NONE_CATEGORY_VALUE]: '未分類（なし）',
@@ -57,7 +52,6 @@ export function NoteForm({
     })
     return items
   }, [categories])
-
   const form = useForm<NoteFormValues>({
     resolver: zodResolver(noteFormSchema) as Resolver<NoteFormValues>,
     defaultValues: {
@@ -66,34 +60,29 @@ export function NoteForm({
       category_id: initialData?.category_id ?? '',
     },
   })
-
   useEffect(() => {
     form.reset({
       title: initialData?.title ?? '',
       body: initialData?.body ?? '',
       category_id: initialData?.category_id ?? '',
     })
-
     if (initialData && titleInputRef.current) {
       setTimeout(() => {
         titleInputRef.current?.focus()
       }, 0)
     }
   }, [initialData, form])
-
   const handleFormSubmit = (values: NoteFormValues) => {
     const categoryId =
       values.category_id === NONE_CATEGORY_VALUE || !values.category_id
         ? ''
         : values.category_id
-
     onSubmit({
       title: values.title.trim(),
       body: values.body.trim(),
       category_id: categoryId,
     })
   }
-
   return (
     <Form {...form}>
       <form

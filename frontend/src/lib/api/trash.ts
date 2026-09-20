@@ -1,4 +1,4 @@
-import {
+import type {
   TrashResourceType,
   TrashSummaryResponse,
   TrashListResponse,
@@ -10,7 +10,6 @@ import { apiClient } from './client'
 export async function fetchTrashSummary(): Promise<TrashSummaryResponse> {
   return apiClient.get<TrashSummaryResponse>('/api/trash/summary')
 }
-
 export async function fetchTrashItems<T>(
   resourceType: TrashResourceType,
   skip = 0,
@@ -24,7 +23,6 @@ export async function fetchTrashItems<T>(
     `/api/trash/${resourceType}?${params.toString()}`,
   )
 }
-
 export async function restoreTrashItem<T>(
   resourceType: TrashResourceType,
   id: string,
@@ -33,14 +31,12 @@ export async function restoreTrashItem<T>(
     `/api/trash/${resourceType}/${id}/restore`,
   )
 }
-
 export async function purgeTrashItem(
   resourceType: TrashResourceType,
   id: string,
 ): Promise<void> {
   return apiClient.delete<void>(`/api/trash/${resourceType}/${id}`)
 }
-
 export async function emptyTrash(
   resourceType: TrashResourceType,
 ): Promise<EmptyTrashResponse> {

@@ -1,11 +1,9 @@
 'use client'
-
 import { useEffect, useRef } from 'react'
 import { useForm, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash2 } from 'lucide-react'
-
-import {
+import type {
   Vehicle,
   CreateVehicleInput,
   UpdateVehicleInput,
@@ -32,7 +30,6 @@ interface VehicleFormProps {
   onDelete?: (id: string) => void
   isLoading?: boolean
 }
-
 export function VehicleForm({
   initialData,
   onSubmit,
@@ -41,7 +38,6 @@ export function VehicleForm({
   isLoading = false,
 }: VehicleFormProps) {
   const nameInputRef = useRef<HTMLInputElement>(null)
-
   const form = useForm<VehicleFormValues>({
     resolver: zodResolver(vehicleFormSchema) as Resolver<VehicleFormValues>,
     defaultValues: {
@@ -53,7 +49,6 @@ export function VehicleForm({
       tank_capacity: initialData?.tank_capacity?.toString() ?? '',
     },
   })
-
   // initialData が変わった場合（新規追加・別アイテムの編集など）にフォームをリセット
   useEffect(() => {
     form.reset({
@@ -64,14 +59,12 @@ export function VehicleForm({
       number: initialData?.number ?? '',
       tank_capacity: initialData?.tank_capacity?.toString() ?? '',
     })
-
     if (initialData && nameInputRef.current) {
       setTimeout(() => {
         nameInputRef.current?.blur()
       }, 0)
     }
   }, [initialData, form])
-
   const handleFormSubmit = (values: VehicleFormValues) => {
     const data: CreateVehicleInput = {
       name: values.name.trim(),
@@ -83,10 +76,8 @@ export function VehicleForm({
         tank_capacity: parseFloat(values.tank_capacity),
       }),
     }
-
     onSubmit(data)
   }
-
   return (
     <Form {...form}>
       <form

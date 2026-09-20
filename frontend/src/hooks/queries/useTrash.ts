@@ -11,8 +11,8 @@ import {
   purgeTrashItem as purgeTrashItemAPI,
   emptyTrash as emptyTrashAPI,
 } from '@/lib/api/trash'
-import { TrashResourceType, TrashSummary } from '@/lib/types/trash'
-import { BaseTrashItem } from '@/components/trash/TrashTable'
+import type { TrashResourceType, TrashSummary } from '@/lib/types/trash'
+import type { BaseTrashItem } from '@/components/trash/TrashTable'
 import { toast } from 'sonner'
 
 export const trashKeys = {
@@ -21,7 +21,6 @@ export const trashKeys = {
   items: (resourceType: TrashResourceType) =>
     [...trashKeys.all, 'items', resourceType] as const,
 }
-
 export const trashQueries = {
   summary: () =>
     queryOptions<TrashSummary>({
@@ -40,15 +39,12 @@ export const trashQueries = {
       },
     }),
 }
-
 export function useTrashSummaryQuery() {
   return useQuery(trashQueries.summary())
 }
-
 export function useTrashItemsQuery(resourceType: TrashResourceType) {
   return useQuery(trashQueries.items(resourceType))
 }
-
 export function useRestoreTrashMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -69,7 +65,6 @@ export function useRestoreTrashMutation() {
     },
   })
 }
-
 export function usePurgeTrashMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -90,7 +85,6 @@ export function usePurgeTrashMutation() {
     },
   })
 }
-
 export function useEmptyTrashMutation() {
   const queryClient = useQueryClient()
   return useMutation({
