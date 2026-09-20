@@ -1,32 +1,44 @@
-import js from '@eslint/js'
-import prettier from 'eslint-config-prettier'
-import reactHooks from 'eslint-plugin-react-hooks'
-import globals from 'globals'
-import tseslint from 'typescript-eslint'
+// @ts-check
 
-export default tseslint.config(
+import { tanstackConfig } from '@tanstack/eslint-config'
+import pluginRouter from '@tanstack/eslint-plugin-router'
+import pluginQuery from '@tanstack/eslint-plugin-query'
+import reactHooks from 'eslint-plugin-react-hooks'
+import prettier from 'eslint-config-prettier'
+
+export default [
+  ...tanstackConfig,
+  ...pluginRouter.configs['flat/recommended'],
+  ...pluginQuery.configs['flat/recommended'],
   {
-    ignores: [
-      'dist',
-      'node_modules',
-      '.next',
-      'app',
-      'legacy',
-      'src/routeTree.gen.ts',
-    ],
-  },
-  {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{ts,tsx}'],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      parserOptions: {
+        project: ['./tsconfig.app.json', './tsconfig.node.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
     plugins: {
       'react-hooks': reactHooks,
     },
     rules: {
+      // 公式テンプレート推奨の off 設定
+      'import/no-cycle': 'off',
+      'import/order': 'off',
+      'sort-imports': 'off',
+      '@typescript-eslint/array-type': 'off',
+      '@typescript-eslint/require-await': 'off',
+      'pnpm/json-enforce-catalog': 'off',
+
+      // React Hooks ルール
       ...reactHooks.configs.recommended.rules,
+
+      // プロジェクト・ライブラリ調和設定
+      '@tanstack/query/no-unstable-deps': 'warn',
+      'import/consistent-type-specifier-style': 'off',
+      '@typescript-eslint/consistent-type-imports': 'off',
+      'node/prefer-node-protocol': 'off',
+      '@typescript-eslint/no-unnecessary-condition': 'warn',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -36,5 +48,18 @@ export default tseslint.config(
       ],
     },
   },
+  {
+    ignores: [
+      'eslint.config.mjs',
+      'prettier.config.js',
+      'dist',
+      'node_modules',
+      '.next',
+      'app',
+      'legacy',
+      'src/routeTree.gen.ts',
+      'src/lib/types/generated/schema.ts',
+    ],
+  },
   prettier,
-)
+]
