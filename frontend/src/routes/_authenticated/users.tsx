@@ -1,13 +1,16 @@
 import { useState } from 'react'
+
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { ShieldAlert } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+import { UserDeleteDialog } from '@/components/UserDeleteDialog'
+import { UserDialog } from '@/components/UserDialog'
+import { UserList } from '@/components/UserList'
 import { useAuth } from '@/hooks/queries/useAuth'
 import { useUsers } from '@/hooks/queries/useUsers'
-import { UserList } from '@/components/UserList'
-import { UserDialog } from '@/components/UserDialog'
-import { UserDeleteDialog } from '@/components/UserDeleteDialog'
+
 import type { User, UserCreate, UserUpdate } from '@/lib/types/user'
-import { ShieldAlert } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/_authenticated/users')({
   component: UsersPage,

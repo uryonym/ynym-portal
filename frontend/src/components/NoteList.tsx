@@ -1,11 +1,15 @@
 'use client'
 import { useMemo } from 'react'
+
+import { Plus } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+
+import { NoteFilter } from './NoteFilter'
+import { NoteItem } from './NoteItem'
+
 import type { Note, NoteCategoryFilter } from '@/lib/types/note'
 import type { NoteCategory } from '@/lib/types/note-category'
-import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
-import { NoteItem } from './NoteItem'
-import { NoteFilter } from './NoteFilter'
 
 interface NoteListProps {
   notes: Note[]

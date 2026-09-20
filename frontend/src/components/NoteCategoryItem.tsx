@@ -1,8 +1,10 @@
 'use client'
-import type { NoteCategory } from '@/lib/types/note-category'
 import { Folder, Pencil, Trash2 } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import { formatDisplayDate } from '@/lib/date'
+
+import type { NoteCategory } from '@/lib/types/note-category'
 
 interface NoteCategoryItemProps {
   category: NoteCategory

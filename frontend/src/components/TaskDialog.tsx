@@ -1,12 +1,14 @@
 'use client'
-import type { Task, CreateTaskInput, UpdateTaskInput } from '@/lib/types/task'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+
 import { TaskForm } from './TaskForm'
+
+import type { Task, CreateTaskInput, UpdateTaskInput } from '@/lib/types/task'
 
 export interface TaskDialogProps {
   open: boolean

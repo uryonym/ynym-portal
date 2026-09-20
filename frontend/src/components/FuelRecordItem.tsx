@@ -1,8 +1,10 @@
 'use client'
-import type { FuelRecord } from '@/lib/types/fuel-record'
 import { Pencil, Fuel } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import { formatDisplayDateTime } from '@/lib/date'
+
+import type { FuelRecord } from '@/lib/types/fuel-record'
 
 interface FuelRecordItemProps {
   record: FuelRecord

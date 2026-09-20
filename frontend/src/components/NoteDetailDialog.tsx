@@ -1,7 +1,7 @@
 'use client'
-import type { Note } from '@/lib/types/note'
-import type { NoteCategory } from '@/lib/types/note-category'
 import { Folder, Pencil, Trash2 } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -9,8 +9,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 import { formatDisplayDate } from '@/lib/date'
+
+import type { Note } from '@/lib/types/note'
+import type { NoteCategory } from '@/lib/types/note-category'
 
 interface NoteDetailDialogProps {
   open: boolean

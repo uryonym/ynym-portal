@@ -1,9 +1,12 @@
 import { useState } from 'react'
+
 import { createFileRoute } from '@tanstack/react-router'
-import { useNoteCategories } from '@/hooks/queries/useNoteCategories'
-import { NoteCategoryList } from '@/components/NoteCategoryList'
-import { NoteCategoryDialog } from '@/components/NoteCategoryDialog'
+
 import { NoteCategoryDeleteDialog } from '@/components/NoteCategoryDeleteDialog'
+import { NoteCategoryDialog } from '@/components/NoteCategoryDialog'
+import { NoteCategoryList } from '@/components/NoteCategoryList'
+import { useNoteCategories } from '@/hooks/queries/useNoteCategories'
+
 import type { NoteCategory } from '@/lib/types/note-category'
 import type { NoteCategoryFormValues } from '@/lib/validations/note-category'
 

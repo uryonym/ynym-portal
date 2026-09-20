@@ -1,16 +1,18 @@
 'use client'
-import type {
-  FuelRecord,
-  CreateFuelRecordInput,
-  UpdateFuelRecordInput,
-} from '@/lib/types/fuel-record'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+
 import { FuelRecordForm } from './FuelRecordForm'
+
+import type {
+  FuelRecord,
+  CreateFuelRecordInput,
+  UpdateFuelRecordInput,
+} from '@/lib/types/fuel-record'
 
 interface FuelRecordDialogProps {
   open: boolean

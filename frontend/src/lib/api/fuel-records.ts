@@ -1,10 +1,11 @@
+import { apiClient } from './client'
+
 import type {
   FuelRecordResponse,
   FuelRecordsResponse,
   CreateFuelRecordInput,
   UpdateFuelRecordInput,
 } from '@/lib/types/fuel-record'
-import { apiClient } from './client'
 
 export async function fetchFuelRecords(
   vehicleId: string,

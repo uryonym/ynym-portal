@@ -1,9 +1,12 @@
 'use client'
-import type { Task } from '@/lib/types/task'
-import type { TaskFilter } from '@/lib/api/tasks'
-import { TaskItem } from './TaskItem'
-import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+
+import { TaskItem } from './TaskItem'
+
+import type { TaskFilter } from '@/lib/api/tasks'
+import type { Task } from '@/lib/types/task'
 
 export interface TaskListProps {
   tasks: Task[]

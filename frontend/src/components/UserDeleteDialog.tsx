@@ -1,5 +1,7 @@
 'use client'
-import type { User } from '@/lib/types/user'
+import { AlertTriangle } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -8,8 +10,8 @@ import {
   DialogFooter,
   DialogDescription,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { AlertTriangle } from 'lucide-react'
+
+import type { User } from '@/lib/types/user'
 
 interface UserDeleteDialogProps {
   user: User | null

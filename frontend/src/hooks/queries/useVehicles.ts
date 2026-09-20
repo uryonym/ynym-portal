@@ -1,22 +1,25 @@
 import { useState, useCallback } from 'react'
+
 import {
   useQuery,
   useMutation,
   useQueryClient,
   queryOptions,
 } from '@tanstack/react-query'
+import { toast } from 'sonner'
+
 import {
   fetchVehicles,
   createVehicle as createVehicleAPI,
   updateVehicle as updateVehicleAPI,
   deleteVehicle as deleteVehicleAPI,
 } from '@/lib/api/vehicles'
+
 import type {
   Vehicle,
   CreateVehicleInput,
   UpdateVehicleInput,
 } from '@/lib/types/vehicle'
-import { toast } from 'sonner'
 
 export const vehicleKeys = {
   all: ['vehicles'] as const,

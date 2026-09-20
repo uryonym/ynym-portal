@@ -1,8 +1,11 @@
 import { useState } from 'react'
+
 import { createFileRoute } from '@tanstack/react-router'
-import { useVehicles } from '@/hooks/queries/useVehicles'
-import { VehicleList } from '@/components/VehicleList'
+
 import { VehicleDialog } from '@/components/VehicleDialog'
+import { VehicleList } from '@/components/VehicleList'
+import { useVehicles } from '@/hooks/queries/useVehicles'
+
 import type {
   Vehicle,
   CreateVehicleInput,

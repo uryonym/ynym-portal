@@ -4,6 +4,8 @@ import {
   useQueryClient,
   queryOptions,
 } from '@tanstack/react-query'
+import { toast } from 'sonner'
+
 import {
   fetchTrashSummary,
   fetchTrashItems,
@@ -11,9 +13,9 @@ import {
   purgeTrashItem as purgeTrashItemAPI,
   emptyTrash as emptyTrashAPI,
 } from '@/lib/api/trash'
-import type { TrashResourceType, TrashSummary } from '@/lib/types/trash'
+
 import type { BaseTrashItem } from '@/components/trash/TrashTable'
-import { toast } from 'sonner'
+import type { TrashResourceType, TrashSummary } from '@/lib/types/trash'
 
 export const trashKeys = {
   all: ['trash'] as const,

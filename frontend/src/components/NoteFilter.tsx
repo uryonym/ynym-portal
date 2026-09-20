@@ -1,7 +1,8 @@
 'use client'
-import type { NoteCategory } from '@/lib/types/note-category'
-import type { NoteCategoryFilter } from '@/lib/types/note'
 import { Folder } from 'lucide-react'
+
+import type { NoteCategoryFilter } from '@/lib/types/note'
+import type { NoteCategory } from '@/lib/types/note-category'
 
 interface NoteFilterProps {
   categories: NoteCategory[]

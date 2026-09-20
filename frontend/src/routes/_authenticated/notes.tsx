@@ -1,11 +1,14 @@
 import { useState, useMemo } from 'react'
+
 import { createFileRoute } from '@tanstack/react-router'
-import { useNotes } from '@/hooks/queries/useNotes'
-import { useNoteCategories } from '@/hooks/queries/useNoteCategories'
-import { NoteList } from '@/components/NoteList'
-import { NoteDialog } from '@/components/NoteDialog'
-import { NoteDetailDialog } from '@/components/NoteDetailDialog'
+
 import { NoteDeleteDialog } from '@/components/NoteDeleteDialog'
+import { NoteDetailDialog } from '@/components/NoteDetailDialog'
+import { NoteDialog } from '@/components/NoteDialog'
+import { NoteList } from '@/components/NoteList'
+import { useNoteCategories } from '@/hooks/queries/useNoteCategories'
+import { useNotes } from '@/hooks/queries/useNotes'
+
 import type { Note } from '@/lib/types/note'
 import type { NoteCategory } from '@/lib/types/note-category'
 import type { NoteFormValues } from '@/lib/validations/note'

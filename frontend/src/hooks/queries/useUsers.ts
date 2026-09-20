@@ -1,10 +1,14 @@
 import { useState, useCallback } from 'react'
+
 import {
   useQuery,
   useMutation,
   useQueryClient,
   queryOptions,
 } from '@tanstack/react-query'
+import { toast } from 'sonner'
+
+import { ApiError } from '@/lib/api/client'
 import {
   listUsers,
   createUser as createUserAPI,
@@ -12,9 +16,8 @@ import {
   deleteUser as deleteUserAPI,
   restoreUser as restoreUserAPI,
 } from '@/lib/api/users'
+
 import type { User, UserCreate, UserUpdate } from '@/lib/types/user'
-import { ApiError } from '@/lib/api/client'
-import { toast } from 'sonner'
 
 export const userKeys = {
   all: ['users'] as const,

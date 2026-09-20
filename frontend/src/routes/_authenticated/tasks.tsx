@@ -1,8 +1,11 @@
 import { useState } from 'react'
+
 import { createFileRoute } from '@tanstack/react-router'
-import { TaskList } from '@/components/TaskList'
+
 import { TaskDialog } from '@/components/TaskDialog'
+import { TaskList } from '@/components/TaskList'
 import { useTasks } from '@/hooks/queries/useTasks'
+
 import type { Task, CreateTaskInput, UpdateTaskInput } from '@/lib/types/task'
 
 export const Route = createFileRoute('/_authenticated/tasks')({

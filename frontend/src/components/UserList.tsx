@@ -1,10 +1,6 @@
 'use client'
 import { useState } from 'react'
-import type { User } from '@/lib/types/user'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
+
 import {
   Plus,
   Search,
@@ -15,6 +11,13 @@ import {
   Trash2,
   RotateCcw,
 } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+
+import type { User } from '@/lib/types/user'
 
 interface UserListProps {
   users: User[]

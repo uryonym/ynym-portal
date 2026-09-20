@@ -1,7 +1,9 @@
 'use client'
-import type { Vehicle } from '@/lib/types/vehicle'
 import { Pencil, Car } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
+
+import type { Vehicle } from '@/lib/types/vehicle'
 
 interface VehicleItemProps {
   vehicle: Vehicle

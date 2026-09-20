@@ -1,6 +1,8 @@
 'use client'
 import { useState } from 'react'
-import type { User, UserCreate, UserUpdate } from '@/lib/types/user'
+
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -8,10 +10,10 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
+
+import type { User, UserCreate, UserUpdate } from '@/lib/types/user'
 
 interface UserDialogProps {
   open: boolean

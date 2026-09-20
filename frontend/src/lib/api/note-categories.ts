@@ -1,10 +1,11 @@
+import { apiClient } from './client'
+
 import type {
   NoteCategoriesResponse,
   NoteCategoryResponse,
   CreateNoteCategoryInput,
   UpdateNoteCategoryInput,
 } from '@/lib/types/note-category'
-import { apiClient } from './client'
 
 export async function fetchCategories(
   skip?: number,

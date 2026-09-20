@@ -1,14 +1,16 @@
 'use client'
-import type { Note } from '@/lib/types/note'
-import type { NoteCategory } from '@/lib/types/note-category'
-import type { NoteFormValues } from '@/lib/validations/note'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+
 import { NoteForm } from './NoteForm'
+
+import type { Note } from '@/lib/types/note'
+import type { NoteCategory } from '@/lib/types/note-category'
+import type { NoteFormValues } from '@/lib/validations/note'
 
 interface NoteDialogProps {
   open: boolean

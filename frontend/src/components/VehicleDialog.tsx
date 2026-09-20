@@ -1,16 +1,18 @@
 'use client'
-import type {
-  Vehicle,
-  CreateVehicleInput,
-  UpdateVehicleInput,
-} from '@/lib/types/vehicle'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+
 import { VehicleForm } from './VehicleForm'
+
+import type {
+  Vehicle,
+  CreateVehicleInput,
+  UpdateVehicleInput,
+} from '@/lib/types/vehicle'
 
 interface VehicleDialogProps {
   open: boolean

@@ -1,10 +1,11 @@
+import { apiClient } from './client'
+
 import type {
   TasksResponse,
   TaskResponse,
   CreateTaskInput,
   UpdateTaskInput,
 } from '@/lib/types/task'
-import { apiClient } from './client'
 
 export type TaskFilter = 'all' | 'active' | 'completed'
 export async function fetchTasks(

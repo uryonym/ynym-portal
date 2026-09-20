@@ -1,8 +1,11 @@
 'use client'
-import type { Vehicle } from '@/lib/types/vehicle'
-import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+
 import { VehicleItem } from './VehicleItem'
+
+import type { Vehicle } from '@/lib/types/vehicle'
 
 interface VehicleListProps {
   vehicles: Vehicle[]

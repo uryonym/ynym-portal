@@ -1,10 +1,11 @@
+import { apiClient } from './client'
+
 import type {
   VehiclesResponse,
   VehicleResponse,
   CreateVehicleInput,
   UpdateVehicleInput,
 } from '@/lib/types/vehicle'
-import { apiClient } from './client'
 
 export async function fetchVehicles(): Promise<VehiclesResponse> {
   return apiClient.get<VehiclesResponse>('/api/vehicles')

@@ -1,3 +1,5 @@
+import { apiClient, ApiError } from './client'
+
 import type {
   LogoutResponse,
   User,
@@ -6,7 +8,6 @@ import type {
   UserSingleResponse,
   UserUpdate,
 } from '@/lib/types/user'
-import { apiClient, ApiError } from './client'
 
 export async function fetchCurrentUser(): Promise<User | null> {
   try {

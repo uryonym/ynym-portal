@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { AlertCircle, Home } from 'lucide-react'
 import { z } from 'zod'
+
 import { GoogleAuthButton } from '@/components/GoogleAuthButton'
 import { authQueries } from '@/hooks/queries/useAuth'
 

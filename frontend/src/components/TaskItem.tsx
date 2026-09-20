@@ -1,9 +1,11 @@
 'use client'
-import type { Task } from '@/lib/types/task'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Button } from '@/components/ui/button'
 import { Pencil, Calendar } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { formatDisplayDate } from '@/lib/date'
+
+import type { Task } from '@/lib/types/task'
 
 export interface TaskItemProps {
   task: Task

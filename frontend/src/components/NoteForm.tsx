@@ -1,23 +1,11 @@
 'use client'
 import { useEffect, useMemo, useRef } from 'react'
-import { useForm } from 'react-hook-form'
-import type { Resolver } from 'react-hook-form'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash2 } from 'lucide-react'
-import type { Note } from '@/lib/types/note'
-import type { NoteCategory } from '@/lib/types/note-category'
-import { noteFormSchema } from '@/lib/validations/note'
-import type { NoteFormValues } from '@/lib/validations/note'
+import { useForm } from 'react-hook-form'
+
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import {
   Form,
   FormControl,
@@ -26,6 +14,21 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import { noteFormSchema } from '@/lib/validations/note'
+
+import type { Note } from '@/lib/types/note'
+import type { NoteCategory } from '@/lib/types/note-category'
+import type { NoteFormValues } from '@/lib/validations/note'
+import type { Resolver } from 'react-hook-form'
 
 interface NoteFormProps {
   initialData?: Note | null

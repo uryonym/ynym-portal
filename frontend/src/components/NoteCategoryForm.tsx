@@ -1,14 +1,11 @@
 'use client'
 import { useEffect, useRef } from 'react'
-import { useForm } from 'react-hook-form'
-import type { Resolver } from 'react-hook-form'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash2 } from 'lucide-react'
-import type { NoteCategory } from '@/lib/types/note-category'
-import { noteCategoryFormSchema } from '@/lib/validations/note-category'
-import type { NoteCategoryFormValues } from '@/lib/validations/note-category'
+import { useForm } from 'react-hook-form'
+
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import {
   Form,
   FormControl,
@@ -17,6 +14,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { noteCategoryFormSchema } from '@/lib/validations/note-category'
+
+import type { NoteCategory } from '@/lib/types/note-category'
+import type { NoteCategoryFormValues } from '@/lib/validations/note-category'
+import type { Resolver } from 'react-hook-form'
 
 interface NoteCategoryFormProps {
   initialData?: NoteCategory | null

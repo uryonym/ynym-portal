@@ -1,14 +1,9 @@
 import { useState, useMemo } from 'react'
+
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useVehicles } from '@/hooks/queries/useVehicles'
-import { useFuelRecords } from '@/hooks/queries/useFuelRecords'
-import { FuelRecordList } from '@/components/FuelRecordList'
+
 import { FuelRecordDialog } from '@/components/FuelRecordDialog'
-import type {
-  CreateFuelRecordInput,
-  UpdateFuelRecordInput,
-  FuelRecord,
-} from '@/lib/types/fuel-record'
+import { FuelRecordList } from '@/components/FuelRecordList'
 import { Button } from '@/components/ui/button'
 import {
   Select,
@@ -17,6 +12,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useFuelRecords } from '@/hooks/queries/useFuelRecords'
+import { useVehicles } from '@/hooks/queries/useVehicles'
+
+import type {
+  CreateFuelRecordInput,
+  UpdateFuelRecordInput,
+  FuelRecord,
+} from '@/lib/types/fuel-record'
 
 export const Route = createFileRoute('/_authenticated/fuel-records')({
   component: FuelRecordsPage,

@@ -1,22 +1,25 @@
 import { useState, useCallback } from 'react'
+
 import {
   useQuery,
   useMutation,
   useQueryClient,
   queryOptions,
 } from '@tanstack/react-query'
+import { toast } from 'sonner'
+
 import {
   fetchFuelRecords,
   createFuelRecord as createFuelRecordAPI,
   updateFuelRecord as updateFuelRecordAPI,
   deleteFuelRecord as deleteFuelRecordAPI,
 } from '@/lib/api/fuel-records'
+
 import type {
   FuelRecord,
   CreateFuelRecordInput,
   UpdateFuelRecordInput,
 } from '@/lib/types/fuel-record'
-import { toast } from 'sonner'
 
 export const fuelRecordKeys = {
   all: ['fuel-records'] as const,

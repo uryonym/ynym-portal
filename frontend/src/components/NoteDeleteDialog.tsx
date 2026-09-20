@@ -1,5 +1,5 @@
 'use client'
-import type { Note } from '@/lib/types/note'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -8,7 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
+
+import type { Note } from '@/lib/types/note'
 
 interface NoteDeleteDialogProps {
   open: boolean

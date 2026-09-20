@@ -1,10 +1,11 @@
 import { useState } from 'react'
+
 import { createFileRoute } from '@tanstack/react-router'
-import type { TrashResourceType } from '@/lib/types/trash'
-import { TrashTable } from '@/components/trash/TrashTable'
-import { PurgeConfirmDialog } from '@/components/trash/PurgeConfirmDialog'
-import { Button } from '@/components/ui/button'
 import { Trash2, ShieldAlert } from 'lucide-react'
+
+import { PurgeConfirmDialog } from '@/components/trash/PurgeConfirmDialog'
+import { TrashTable } from '@/components/trash/TrashTable'
+import { Button } from '@/components/ui/button'
 import {
   useTrashSummaryQuery,
   useTrashItemsQuery,
@@ -12,6 +13,8 @@ import {
   usePurgeTrashMutation,
   useEmptyTrashMutation,
 } from '@/hooks/queries/useTrash'
+
+import type { TrashResourceType } from '@/lib/types/trash'
 
 export const Route = createFileRoute('/_authenticated/trash')({
   component: TrashPage,

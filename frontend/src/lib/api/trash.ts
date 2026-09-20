@@ -1,3 +1,5 @@
+import { apiClient } from './client'
+
 import type {
   TrashResourceType,
   TrashSummaryResponse,
@@ -5,7 +7,6 @@ import type {
   TrashRestoreResponse,
   EmptyTrashResponse,
 } from '@/lib/types/trash'
-import { apiClient } from './client'
 
 export async function fetchTrashSummary(): Promise<TrashSummaryResponse> {
   return apiClient.get<TrashSummaryResponse>('/api/trash/summary')

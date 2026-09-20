@@ -1,6 +1,7 @@
 'use client'
-import type { FuelRecord } from '@/lib/types/fuel-record'
 import { FuelRecordItem } from './FuelRecordItem'
+
+import type { FuelRecord } from '@/lib/types/fuel-record'
 
 interface FuelRecordListProps {
   records: FuelRecord[]

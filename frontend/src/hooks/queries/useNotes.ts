@@ -1,23 +1,26 @@
 import { useState, useCallback, useMemo } from 'react'
+
 import {
   useQuery,
   useMutation,
   useQueryClient,
   queryOptions,
 } from '@tanstack/react-query'
+import { toast } from 'sonner'
+
 import {
   fetchNotes,
   createNote as createNoteAPI,
   updateNote as updateNoteAPI,
   deleteNote as deleteNoteAPI,
 } from '@/lib/api/notes'
+
 import type {
   Note,
   CreateNoteInput,
   UpdateNoteInput,
   NoteCategoryFilter,
 } from '@/lib/types/note'
-import { toast } from 'sonner'
 
 export const noteKeys = {
   all: ['notes'] as const,

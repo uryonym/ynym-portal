@@ -1,22 +1,25 @@
 import { useState, useCallback } from 'react'
+
 import {
   useQuery,
   useMutation,
   useQueryClient,
   queryOptions,
 } from '@tanstack/react-query'
+import { toast } from 'sonner'
+
 import {
   fetchCategories,
   createCategory as createCategoryAPI,
   updateCategory as updateCategoryAPI,
   deleteCategory as deleteCategoryAPI,
 } from '@/lib/api/note-categories'
+
 import type {
   NoteCategory,
   CreateNoteCategoryInput,
   UpdateNoteCategoryInput,
 } from '@/lib/types/note-category'
-import { toast } from 'sonner'
 
 export const noteCategoryKeys = {
   all: ['note-categories'] as const,
