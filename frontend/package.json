@@ -12,8 +12,7 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "codegen": "openapi-typescript ../backend/openapi.json -o src/lib/types/generated/schema.ts"
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
@@ -52,7 +51,6 @@
     "eslint": "^10.10.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "openapi-typescript": "^7.13.0",
     "prettier": "^3.9.7",
     "typescript": "^6.0.2",
     "vite": "^8.3.0"
