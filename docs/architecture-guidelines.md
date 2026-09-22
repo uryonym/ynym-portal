@@ -79,7 +79,7 @@ graph TB
 | **UI コンポーネント** | shadcn/ui (Base UI) | コンポーネントライブラリ（直接改変禁止） |
 | **バックエンド基盤** | FastAPI | Python 3.12 (uv 管理) |
 | **ORM / DB** | SQLAlchemy 2.0 | `psycopg` (PostgreSQL 16) |
-| **型同期 (Codegen)** | openapi-typescript | OpenAPI 3.1 -> TypeScript 型自動生成 |
+| **型定義** | TypeScript | `src/lib/types/` 配下で手動定義・管理 |
 
 ---
 
@@ -236,9 +236,9 @@ backend/app/
 ### 2.4 API 通信・型定義設計
 
 1. **API パス統一**: バックエンドのルーターはすべて `/api` プレフィックス配下に集約（例: `/api/tasks`, `/api/auth/me`）。
-2. **型同期 (Codegen)**:
-   - バックエンドの FastAPI が生成する OpenAPI スキーマ (`openapi.json`) を `openapi-typescript` によりフロントエンドの型定義 (`src/lib/types/generated/schema.ts`) に自動同期します。
-   - `make codegen` コマンドによりワンステップで生成。
+2. **型定義管理**:
+   - バックエンド（FastAPI / Pydantic）のスキーマに対応する TypeScript 型を `frontend/src/lib/types/` 配下に手動で明示的に定義・管理します。
+   - 共通レスポンス構造（`SuccessResponse<T>`, `MessageResponse`, `ErrorResponse`）をベースに、型安全な API 通信を実現します。
 
 ---
 

@@ -63,7 +63,6 @@ npm run dev
 | `npm run lint`         | ESLint によるコード静的解析                                 |
 | `npm run format`       | Prettier によるコード自動整形                               |
 | `npm run format:check` | Prettier による整形チェック                                 |
-| `npm run codegen`      | OpenAPI スキーマから TypeScript 型定義を自動生成            |
 
 ## プロジェクト構成
 
