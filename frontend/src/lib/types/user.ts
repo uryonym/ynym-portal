@@ -1,22 +1,44 @@
-import type { components } from './generated/schema'
+import type { SuccessResponse, MessageResponse } from './api'
 
-export type User = components['schemas']['UserResponse']
-export type UserCreate = components['schemas']['UserCreate']
-export type UserUpdate = components['schemas']['UserUpdate']
+export interface User {
+  id: string
+  email: string
+  name: string
+  avatar_url: string | null
+  google_uid: string | null
+  is_admin: boolean
+  created_at: string
+  updated_at: string
+  deleted_at?: string | null
+}
+
+export interface UserCreate {
+  google_uid: string
+  email: string
+  name: string
+  is_admin?: boolean
+}
+
+export interface UserUpdate {
+  name?: string | null
+  email?: string | null
+  google_uid?: string | null
+  is_admin?: boolean | null
+}
 
 // Auth-related user state
 export type AuthUser = User | null
 
 // For authentication status
-export type AuthState = {
+export interface AuthState {
   user: AuthUser
   isLoading: boolean
   error: string | null
 }
 
-export type LogoutResponse = components['schemas']['MessageResponse']
-export type MessageResponse = components['schemas']['MessageResponse']
-export type UserListResponse =
-  components['schemas']['SuccessResponse_list_UserResponse__']
-export type UserSingleResponse =
-  components['schemas']['SuccessResponse_UserResponse_']
+export type LogoutResponse = MessageResponse
+export type { MessageResponse }
+export type UserResponse = SuccessResponse<User>
+export type UserSingleResponse = SuccessResponse<User>
+export type UserListResponse = SuccessResponse<User[]>
+export type UsersResponse = SuccessResponse<User[]>

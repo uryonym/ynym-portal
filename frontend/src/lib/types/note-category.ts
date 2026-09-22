@@ -1,11 +1,21 @@
-import type { components } from './generated/schema'
+import type { SuccessResponse } from './api'
 
-export type NoteCategory = components['schemas']['NoteCategoryResponse']
-export type CreateNoteCategoryInput =
-  components['schemas']['NoteCategoryCreate']
-export type UpdateNoteCategoryInput =
-  components['schemas']['NoteCategoryUpdate']
-export type NoteCategoryResponse =
-  components['schemas']['SuccessResponse_NoteCategoryResponse_']
-export type NoteCategoriesResponse =
-  components['schemas']['SuccessResponse_list_NoteCategoryResponse__']
+export interface NoteCategory {
+  id: string
+  user_id: string
+  name: string
+  created_at: string
+  updated_at: string
+  deleted_at?: string | null
+}
+
+export interface CreateNoteCategoryInput {
+  name: string
+}
+
+export interface UpdateNoteCategoryInput {
+  name?: string | null
+}
+
+export type NoteCategoryResponse = SuccessResponse<NoteCategory>
+export type NoteCategoriesResponse = SuccessResponse<NoteCategory[]>

@@ -5,10 +5,10 @@
 
 ---
 
-## Task 1: FastAPI OpenAPI スキーマからの TypeScript 型自動生成環境の導入 [完了]
+## Task 1: FastAPI OpenAPI スキーマからの TypeScript 型自動生成環境の導入 [対応完了・手動定義へ移行]
 
 > [!NOTE]
-> `openapi-typescript` による `make codegen` および CI での `make check-codegen` として導入完了済み。
+> 当初 `openapi-typescript` を導入していましたが、TypeScript 6 移行に伴う peerDependencies 競合の解消および依存関係のシンプル化のため、手動型定義構成へ移行・完了済み。
 
 ### 背景・課題
 バックエンド（FastAPI / Pydantic）のスキーマ定義（`backend/app/schemas/`）と、フロントエンド（Vite / TypeScript）の型定義（`frontend/src/lib/types/generated/`）を自動同期する仕組み。

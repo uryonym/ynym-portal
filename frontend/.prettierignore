@@ -2,7 +2,5 @@ node_modules
 dist
 routeTree.gen.ts
 src/routeTree.gen.ts
-src/lib/types/generated
 src/components/ui
-lib/types/generated
 components/ui

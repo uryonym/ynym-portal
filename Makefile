@@ -1,4 +1,4 @@
-.PHONY: help dev dev-backend dev-frontend test test-backend test-frontend lint lint-backend lint-frontend format format-backend format-frontend format-check format-check-backend format-check-frontend install codegen codegen-backend codegen-frontend check-codegen
+.PHONY: help dev dev-backend dev-frontend test test-backend test-frontend lint lint-backend lint-frontend format format-backend format-frontend format-check format-check-backend format-check-frontend install
 
 .DEFAULT_GOAL := help
 
@@ -51,13 +51,3 @@ format-check-backend: ## バックエンドのコード整形チェック (ruff 
 format-check-frontend: ## フロントエンドのコード整形チェック (prettier --check)
 	cd frontend && npm run format:check
 
-codegen: codegen-backend codegen-frontend ## スキーマ出力から TypeScript 型生成まで一括実行
-
-codegen-backend: ## バックエンドの OpenAPI スキーマを JSON 出力
-	cd backend && uv run python scripts/export_openapi.py
-
-codegen-frontend: ## openapi-typescript によるフロントエンド型定義生成
-	cd frontend && npm run codegen
-
-check-codegen: codegen ## 型定義が最新化されているか検証 (CI用)
-	git diff --exit-code backend/openapi.json frontend/src/lib/types/generated/

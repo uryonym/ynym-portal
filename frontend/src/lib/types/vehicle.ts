@@ -1,9 +1,38 @@
-import type { components } from './generated/schema'
+import type { SuccessResponse } from './api'
 
-export type Vehicle = components['schemas']['VehicleResponse']
-export type CreateVehicleInput = components['schemas']['VehicleCreate']
-export type UpdateVehicleInput = components['schemas']['VehicleUpdate']
-export type VehicleResponse =
-  components['schemas']['SuccessResponse_VehicleResponse_']
-export type VehiclesResponse =
-  components['schemas']['SuccessResponse_list_VehicleResponse__']
+export interface Vehicle {
+  id: string
+  user_id: string
+  name: string
+  seq: number
+  maker: string
+  model: string
+  year: number | null
+  number: string | null
+  tank_capacity: number | null
+  created_at: string
+  updated_at: string
+  deleted_at?: string | null
+}
+
+export interface CreateVehicleInput {
+  name: string
+  maker: string
+  model: string
+  year?: number | null
+  number?: string | null
+  tank_capacity?: number | null
+}
+
+export interface UpdateVehicleInput {
+  name?: string | null
+  seq?: number | null
+  maker?: string | null
+  model?: string | null
+  year?: number | null
+  number?: string | null
+  tank_capacity?: number | null
+}
+
+export type VehicleResponse = SuccessResponse<Vehicle>
+export type VehiclesResponse = SuccessResponse<Vehicle[]>
