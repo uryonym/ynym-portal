@@ -1,12 +1,18 @@
-import type { components } from './generated/schema'
+import type { SuccessResponse } from './api'
 
 export type TrashResourceType =
   'tasks' | 'notes' | 'note_categories' | 'vehicles' | 'fuel_records'
 
-export type TrashSummary = components['schemas']['TrashSummary']
+export interface TrashSummary {
+  tasks: number
+  notes: number
+  note_categories: number
+  vehicles: number
+  fuel_records: number
+  total: number
+}
 
-export type TrashSummaryResponse =
-  components['schemas']['SuccessResponse_TrashSummary_']
+export type TrashSummaryResponse = SuccessResponse<TrashSummary>
 
 export interface TrashListResponse<T> {
   data: T[]
