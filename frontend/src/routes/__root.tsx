@@ -9,7 +9,7 @@ import type { QueryClient } from '@tanstack/react-query'
 
 import '../index.css'
 
-export interface RouterContext {
+interface RouterContext {
   queryClient: QueryClient
 }
 

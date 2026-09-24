@@ -1,6 +1,5 @@
-node_modules
-dist
-routeTree.gen.ts
 src/routeTree.gen.ts
 src/components/ui
-components/ui
+
+node_modules
+dist
