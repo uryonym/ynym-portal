@@ -33,6 +33,14 @@
 - インデックス名のリネーム（`idx_task_*` → `idx_tasks_*`）
 - 主キー制約および CHECK 制約名のリネーム（`task_pkey` → `tasks_pkey`、`task_order_check` → `tasks_order_check`）
 
+### 010_add_is_pinned_to_notes.sql
+
+**目的**: notes テーブルへのピン留め（is_pinned）フラグ追加
+**内容**:
+
+- notes テーブルへの `is_pinned` カラム追加（BOOLEAN NOT NULL DEFAULT FALSE）
+- `idx_notes_is_pinned` インデックス作成
+
 ## 前提条件
 
 ### 必要なもの
