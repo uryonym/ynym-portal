@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 
 import {
   fetchNotes,
+  getNote as getNoteAPI,
   createNote as createNoteAPI,
   updateNote as updateNoteAPI,
   deleteNote as deleteNoteAPI,
@@ -25,6 +26,8 @@ import type {
 export const noteKeys = {
   all: ['notes'] as const,
   lists: () => [...noteKeys.all, 'list'] as const,
+  details: () => [...noteKeys.all, 'detail'] as const,
+  detail: (id: string) => [...noteKeys.details(), id] as const,
 }
 export const noteQueries = {
   list: () =>
@@ -35,9 +38,21 @@ export const noteQueries = {
         return response.data
       },
     }),
+  detail: (id: string) =>
+    queryOptions({
+      queryKey: noteKeys.detail(id),
+      queryFn: async () => {
+        const response = await getNoteAPI(id)
+        return response.data
+      },
+      enabled: Boolean(id),
+    }),
 }
 export function useNotesQuery() {
   return useQuery(noteQueries.list())
+}
+export function useNoteQuery(id: string) {
+  return useQuery(noteQueries.detail(id))
 }
 export function useCreateNoteMutation() {
   const queryClient = useQueryClient()
