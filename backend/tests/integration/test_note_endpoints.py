@@ -67,6 +67,39 @@ class TestNoteEndpoints:
         assert data["title"] == "更新後ノート"
         assert data["body"] == "更新後本文"
 
+    def test_note_pin_toggle_and_ordering(self, client: TestClient) -> None:
+        """ノートのピン留め切り替えと一覧ソート順（ピン留めが先頭）を検証."""
+        # 通常ノート 1 を作成
+        res1 = client.post(
+            "/api/notes",
+            json={"title": "通常ノートA", "body": "本文A", "is_pinned": False},
+        )
+        assert res1.status_code == 201
+        note1_id = res1.json()["data"]["id"]
+
+        # ピン留めノート 2 を作成
+        res2 = client.post(
+            "/api/notes",
+            json={"title": "重要ノートB", "body": "本文B", "is_pinned": True},
+        )
+        assert res2.status_code == 201
+        note2_id = res2.json()["data"]["id"]
+        assert res2.json()["data"]["is_pinned"] is True
+
+        # 一覧取得: 重要ノートB (is_pinned=True) が通常ノートA より先頭に来ることを確認
+        list_res = client.get("/api/notes")
+        assert list_res.status_code == 200
+        items = list_res.json()["data"]
+        item_ids = [item["id"] for item in items]
+        idx1 = item_ids.index(note1_id)
+        idx2 = item_ids.index(note2_id)
+        assert idx2 < idx1
+
+        # ノート1 をピン留め状態に更新
+        up_res = client.put(f"/api/notes/{note1_id}", json={"is_pinned": True})
+        assert up_res.status_code == 200
+        assert up_res.json()["data"]["is_pinned"] is True
+
     def test_put_note_not_found(self, client: TestClient) -> None:
         """存在しないノート ID の更新で 404 を返す."""
         response = client.put(

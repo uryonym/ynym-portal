@@ -14,6 +14,7 @@ class NoteCreate(BaseModel):
     )
     body: str = Field(..., description="本文（必須）")
     category_id: UUID | None = Field(default=None, description="カテゴリ ID（任意）")
+    is_pinned: bool = Field(default=False, description="ピン留めフラグ")
 
     @field_validator("title")
     @classmethod
@@ -42,6 +43,7 @@ class NoteUpdate(BaseModel):
     )
     body: str | None = Field(default=None, description="本文（オプション）")
     category_id: UUID | None = Field(default=None, description="カテゴリ ID（任意）")
+    is_pinned: bool | None = Field(default=None, description="ピン留めフラグ（任意）")
 
     @field_validator("title")
     @classmethod
@@ -76,6 +78,7 @@ class NoteResponse(BaseModel):
     category_id: UUID | None = Field(description="カテゴリ ID（任意）")
     title: str = Field(description="タイトル")
     body: str = Field(description="本文")
+    is_pinned: bool = Field(default=False, description="ピン留めフラグ")
     created_at: datetime = Field(description="作成日時（JST）")
     updated_at: datetime = Field(description="更新日時（JST）")
     deleted_at: datetime | None = Field(default=None, description="削除日時（JST）")

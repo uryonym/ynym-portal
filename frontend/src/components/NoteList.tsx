@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { Plus } from 'lucide-react'
+import { Pin, Plus } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
@@ -19,8 +19,10 @@ interface NoteListProps {
   onEdit: (note: Note) => void
   onDelete: (note: Note) => void
   onAddNew: () => void
+  onTogglePin?: (note: Note) => void
   isLoading?: boolean
 }
+
 export function NoteList({
   notes,
   categories,
@@ -30,6 +32,7 @@ export function NoteList({
   onEdit,
   onDelete,
   onAddNew,
+  onTogglePin,
   isLoading = false,
 }: NoteListProps) {
   const categoryMap = useMemo(() => {
@@ -37,6 +40,20 @@ export function NoteList({
     categories.forEach((c) => map.set(c.id, c))
     return map
   }, [categories])
+
+  const { pinnedNotes, otherNotes } = useMemo(() => {
+    const pinned: Note[] = []
+    const others: Note[] = []
+    notes.forEach((n) => {
+      if (n.is_pinned) {
+        pinned.push(n)
+      } else {
+        others.push(n)
+      }
+    })
+    return { pinnedNotes: pinned, otherNotes: others }
+  }, [notes])
+
   return (
     <div className="space-y-6">
       {/* ヘッダー */}
@@ -46,7 +63,7 @@ export function NoteList({
             ノート
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            日々のメモや記録をカテゴリごとに管理します
+            日々のメモや記録、生活マニュアルをまとめて管理します
           </p>
         </div>
         <Button
@@ -90,19 +107,61 @@ export function NoteList({
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {notes.map((note) => (
-            <NoteItem
-              key={note.id}
-              note={note}
-              category={
-                note.category_id ? categoryMap.get(note.category_id) : undefined
-              }
-              onView={onView}
-              onEdit={onEdit}
-              onDelete={onDelete}
-            />
-          ))}
+        <div className="space-y-6">
+          {/* ピン留めセクション */}
+          {pinnedNotes.length > 0 && (
+            <div className="space-y-3">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+                <Pin className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+                <span>ピン留めされたノート</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {pinnedNotes.map((note) => (
+                  <NoteItem
+                    key={note.id}
+                    note={note}
+                    category={
+                      note.category_id
+                        ? categoryMap.get(note.category_id)
+                        : undefined
+                    }
+                    onView={onView}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    onTogglePin={onTogglePin}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* その他のノートセクション */}
+          {otherNotes.length > 0 && (
+            <div className="space-y-3">
+              {pinnedNotes.length > 0 && (
+                <div className="text-xs font-semibold text-slate-400">
+                  すべてのノート
+                </div>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {otherNotes.map((note) => (
+                  <NoteItem
+                    key={note.id}
+                    note={note}
+                    category={
+                      note.category_id
+                        ? categoryMap.get(note.category_id)
+                        : undefined
+                    }
+                    onView={onView}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    onTogglePin={onTogglePin}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

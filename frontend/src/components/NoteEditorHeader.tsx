@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowLeft, Check, Cloud, Loader2, Trash2 } from 'lucide-react'
+import { ArrowLeft, Check, Cloud, Loader2, Pin, Trash2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -18,6 +18,8 @@ interface NoteEditorHeaderProps {
   categories: NoteCategory[]
   saveStatus: 'saved' | 'saving' | 'unsaved'
   lastSavedAt?: Date | null
+  isPinned?: boolean
+  onTogglePin?: () => void
   onSave?: () => void
   onDelete?: () => void
   isDeleting?: boolean
@@ -31,6 +33,8 @@ export function NoteEditorHeader({
   categories,
   saveStatus,
   lastSavedAt,
+  isPinned = false,
+  onTogglePin,
   onSave,
   onDelete,
   isDeleting = false,
@@ -105,6 +109,24 @@ export function NoteEditorHeader({
             </>
           )}
         </div>
+
+        {/* Pin Toggle Button */}
+        {onTogglePin && (
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            onClick={onTogglePin}
+            className={`h-8 px-2 cursor-pointer transition-colors ${
+              isPinned
+                ? 'text-amber-600 hover:text-amber-700 bg-amber-50 hover:bg-amber-100/80'
+                : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100'
+            }`}
+            title={isPinned ? 'ピン留めを解除' : '最上部にピン留めする'}
+          >
+            <Pin className={`h-4 w-4 ${isPinned ? 'fill-amber-600' : ''}`} />
+          </Button>
+        )}
 
         {/* Manual Save Button */}
         {onSave && (

@@ -1,3 +1,5 @@
+import { useRef } from 'react'
+
 import {
   Bold,
   Italic,
@@ -15,6 +17,7 @@ import {
   Undo2,
   Redo2,
   Link as LinkIcon,
+  ImageIcon,
 } from 'lucide-react'
 
 import type { Editor } from '@tiptap/react'
@@ -24,6 +27,8 @@ interface EditorToolbarProps {
 }
 
 export function EditorToolbar({ editor }: EditorToolbarProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
   if (!editor) return null
 
   const setLink = () => {
@@ -46,8 +51,34 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
       .run()
   }
 
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      const src = reader.result as string
+      editor.chain().focus().setImage({ src }).run()
+    }
+    reader.readAsDataURL(file)
+    e.target.value = ''
+  }
+
+  const handleInsertImage = () => {
+    fileInputRef.current?.click()
+  }
+
   return (
     <div className="flex flex-wrap items-center gap-0.5 p-1.5 border-b border-slate-200/80 bg-slate-50/70 rounded-t-xl text-slate-700">
+      {/* Hidden File Input for Image Upload */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleImageFileChange}
+        accept="image/*"
+        className="hidden"
+      />
+
       {/* Undo / Redo */}
       <button
         type="button"
@@ -226,6 +257,14 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         title="引用"
       >
         <Quote className="h-4 w-4" />
+      </button>
+      <button
+        type="button"
+        onClick={handleInsertImage}
+        className="p-1.5 rounded-md hover:bg-slate-200/70 transition-colors cursor-pointer"
+        title="画像を挿入"
+      >
+        <ImageIcon className="h-4 w-4" />
       </button>
       <button
         type="button"

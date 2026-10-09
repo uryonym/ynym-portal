@@ -20,6 +20,7 @@ function NotesPage() {
     isLoading: isNotesLoading,
     categoryFilter,
     setCategoryFilter,
+    updateNote,
     deleteNote,
   } = useNotes()
   const { categories, isLoading: isCategoriesLoading } = useNoteCategories()
@@ -36,6 +37,10 @@ function NotesPage() {
       to: '/notes/$noteId',
       params: { noteId: note.id },
     })
+  }
+
+  const handleTogglePin = async (note: Note) => {
+    await updateNote(note.id, { is_pinned: !note.is_pinned })
   }
 
   const handleDeleteClick = (note: Note) => {
@@ -62,6 +67,7 @@ function NotesPage() {
         onView={handleOpenNote}
         onEdit={handleOpenNote}
         onDelete={handleDeleteClick}
+        onTogglePin={handleTogglePin}
         isLoading={isNotesLoading || isCategoriesLoading}
       />
 

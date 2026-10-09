@@ -33,6 +33,7 @@ function NoteDetailPage() {
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
   const [categoryId, setCategoryId] = useState('')
+  const [isPinned, setIsPinned] = useState(false)
   const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'unsaved'>(
     'saved',
   )
@@ -50,6 +51,7 @@ function NoteDetailPage() {
       setTitle(note.title)
       setBody(note.body)
       setCategoryId(note.category_id ?? '')
+      setIsPinned(note.is_pinned)
       setLastSavedAt(new Date(note.updated_at))
       setSaveStatus('saved')
       isInitializedRef.current = true
@@ -58,7 +60,12 @@ function NoteDetailPage() {
 
   // 保存実行関数
   const handleSave = useCallback(
-    async (saveTitle = title, saveBody = body, saveCategoryId = categoryId) => {
+    async (
+      saveTitle = title,
+      saveBody = body,
+      saveCategoryId = categoryId,
+      saveIsPinned = isPinned,
+    ) => {
       if (!isDirtyRef.current) return
 
       const trimmedTitle = saveTitle.trim() || '無題のノート'
@@ -72,6 +79,7 @@ function NoteDetailPage() {
             title: trimmedTitle,
             body: trimmedBody,
             category_id: saveCategoryId || undefined,
+            is_pinned: saveIsPinned,
           },
         })
         isDirtyRef.current = false
@@ -83,12 +91,17 @@ function NoteDetailPage() {
         toast.error('ノートの保存に失敗しました')
       }
     },
-    [noteId, title, body, categoryId, updateNoteAsync],
+    [noteId, title, body, categoryId, isPinned, updateNoteAsync],
   )
 
   // 変更検知とデバウンス保存
   const triggerAutoSave = useCallback(
-    (newTitle: string, newBody: string, newCategoryId: string) => {
+    (
+      newTitle: string,
+      newBody: string,
+      newCategoryId: string,
+      newIsPinned: boolean,
+    ) => {
       if (!isInitializedRef.current) return
 
       isDirtyRef.current = true
@@ -99,7 +112,7 @@ function NoteDetailPage() {
       }
 
       debounceTimerRef.current = setTimeout(() => {
-        handleSave(newTitle, newBody, newCategoryId)
+        handleSave(newTitle, newBody, newCategoryId, newIsPinned)
       }, 1500)
     },
     [handleSave],
@@ -129,17 +142,24 @@ function NoteDetailPage() {
 
   const handleTitleChange = (newTitle: string) => {
     setTitle(newTitle)
-    triggerAutoSave(newTitle, body, categoryId)
+    triggerAutoSave(newTitle, body, categoryId, isPinned)
   }
 
   const handleBodyChange = (newBody: string) => {
     setBody(newBody)
-    triggerAutoSave(title, newBody, categoryId)
+    triggerAutoSave(title, newBody, categoryId, isPinned)
   }
 
   const handleCategoryChange = (newCategoryId: string) => {
     setCategoryId(newCategoryId)
-    triggerAutoSave(title, body, newCategoryId)
+    triggerAutoSave(title, body, newCategoryId, isPinned)
+  }
+
+  const handleTogglePin = async () => {
+    const nextPinned = !isPinned
+    setIsPinned(nextPinned)
+    isDirtyRef.current = true
+    await handleSave(title, body, categoryId, nextPinned)
   }
 
   const handleDeleteConfirm = async () => {
@@ -195,6 +215,8 @@ function NoteDetailPage() {
         categories={categories}
         saveStatus={saveStatus}
         lastSavedAt={lastSavedAt}
+        isPinned={isPinned}
+        onTogglePin={handleTogglePin}
         onSave={() => handleSave()}
         onDelete={() => setIsDeleteOpen(true)}
         isDeleting={isDeleting}

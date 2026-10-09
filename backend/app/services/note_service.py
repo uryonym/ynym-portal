@@ -50,6 +50,7 @@ class NoteService:
             title=note_create.title,
             body=note_create.body,
             category_id=note_create.category_id,
+            is_pinned=note_create.is_pinned,
         )
         return self.note_repo.save(note)
 

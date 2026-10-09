@@ -11,6 +11,7 @@ import {
   Code,
   Table as TableIcon,
   Minus,
+  ImageIcon,
 } from 'lucide-react'
 
 import type { Editor, Range } from '@tiptap/core'
@@ -113,6 +114,26 @@ export const defaultSlashCommands: SlashCommandItem[] = [
         .deleteRange(range)
         .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
         .run()
+    },
+  },
+  {
+    title: '画像',
+    description: '画像のURLまたは貼り付け',
+    icon: ImageIcon,
+    command: ({ editor, range }) => {
+      const url = window.prompt(
+        '画像URLを入力してください (画像を直接コピー＆ペースト・ドラッグでも挿入可能):',
+      )
+      if (url?.trim()) {
+        editor
+          .chain()
+          .focus()
+          .deleteRange(range)
+          .setImage({ src: url.trim() })
+          .run()
+      } else {
+        editor.chain().focus().deleteRange(range).run()
+      }
     },
   },
   {

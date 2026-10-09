@@ -2,7 +2,7 @@
 
 from uuid import UUID
 
-from sqlalchemy import String, Text
+from sqlalchemy import Boolean, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.base import Base, SoftDeleteMixin, TimestampMixin, UUIDPKMixin
@@ -17,3 +17,6 @@ class Note(UUIDPKMixin, TimestampMixin, SoftDeleteMixin, Base):
     category_id: Mapped[UUID | None] = mapped_column(index=True)
     title: Mapped[str] = mapped_column(String(255))
     body: Mapped[str] = mapped_column(Text)
+    is_pinned: Mapped[bool] = mapped_column(
+        Boolean, default=False, nullable=False, server_default="false"
+    )

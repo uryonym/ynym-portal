@@ -31,6 +31,7 @@ class NoteRepository(BaseRepository[Note]):
                 Note.deleted_at.is_(None),
             )
             .order_by(
+                Note.is_pinned.desc(),
                 nulls_last(asc(NoteCategory.name)),
                 asc(Note.title),
             )

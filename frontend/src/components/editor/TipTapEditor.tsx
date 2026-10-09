@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 
+import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Table } from '@tiptap/extension-table'
@@ -77,11 +78,64 @@ export function TipTapEditor({
           class: 'text-blue-600 underline hover:text-blue-800',
         },
       }),
+      Image.configure({
+        inline: false,
+        allowBase64: true,
+      }),
       Placeholder.configure({
         placeholder,
       }),
       SlashCommand,
     ],
+    editorProps: {
+      handlePaste: (view, event) => {
+        const items = event.clipboardData?.items
+        if (!items) return false
+
+        for (const item of items) {
+          if (item.type.startsWith('image/')) {
+            const file = item.getAsFile()
+            if (file) {
+              const reader = new FileReader()
+              reader.onload = () => {
+                const src = reader.result as string
+                const node = view.state.schema.nodes.image.create({ src })
+                const transaction = view.state.tr.replaceSelectionWith(node)
+                view.dispatch(transaction)
+              }
+              reader.readAsDataURL(file)
+              return true
+            }
+          }
+        }
+        return false
+      },
+      handleDrop: (view, event) => {
+        const files = event.dataTransfer?.files
+        if (!files || files.length === 0) return false
+
+        for (const file of files) {
+          if (file.type.startsWith('image/')) {
+            const reader = new FileReader()
+            reader.onload = () => {
+              const src = reader.result as string
+              const coordinates = view.posAtCoords({
+                left: event.clientX,
+                top: event.clientY,
+              })
+              if (coordinates) {
+                const node = view.state.schema.nodes.image.create({ src })
+                const transaction = view.state.tr.insert(coordinates.pos, node)
+                view.dispatch(transaction)
+              }
+            }
+            reader.readAsDataURL(file)
+            return true
+          }
+        }
+        return false
+      },
+    },
     content,
     editable,
     autofocus: autoFocus,

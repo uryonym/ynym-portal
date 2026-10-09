@@ -6,6 +6,7 @@ export interface Note {
   category_id: string | null
   title: string
   body: string
+  is_pinned: boolean
   created_at: string
   updated_at: string
   deleted_at?: string | null
@@ -15,12 +16,14 @@ export interface CreateNoteInput {
   title: string
   body: string
   category_id?: string | null
+  is_pinned?: boolean
 }
 
 export interface UpdateNoteInput {
   title?: string | null
   body?: string | null
   category_id?: string | null
+  is_pinned?: boolean
 }
 
 export type NoteResponse = SuccessResponse<Note>
