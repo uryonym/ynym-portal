@@ -8,15 +8,34 @@ import type {
 } from '@/lib/types/task'
 
 export type TaskFilter = 'all' | 'active' | 'completed'
+
+export interface FetchTasksOptions {
+  filter?: TaskFilter
+  due_from?: string
+  due_to?: string
+}
+
 export async function fetchTasks(
-  filter: TaskFilter = 'active',
+  optionsOrFilter: TaskFilter | FetchTasksOptions = 'active',
 ): Promise<TasksResponse> {
+  const options: FetchTasksOptions =
+    typeof optionsOrFilter === 'string'
+      ? { filter: optionsOrFilter }
+      : optionsOrFilter
+
   const params = new URLSearchParams()
-  if (filter === 'active') {
+  if (options.filter === 'active') {
     params.set('is_completed', 'false')
-  } else if (filter === 'completed') {
+  } else if (options.filter === 'completed') {
     params.set('is_completed', 'true')
   }
+  if (options.due_from) {
+    params.set('due_from', options.due_from)
+  }
+  if (options.due_to) {
+    params.set('due_to', options.due_to)
+  }
+
   const query = params.toString() ? `?${params.toString()}` : ''
   return apiClient.get<TasksResponse>(`/api/tasks${query}`)
 }

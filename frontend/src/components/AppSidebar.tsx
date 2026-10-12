@@ -1,5 +1,6 @@
 import { Link, useLocation } from '@tanstack/react-router'
 import {
+  Calendar,
   Home,
   CheckSquare,
   StickyNote,
@@ -32,6 +33,11 @@ const menuItems = [
     title: 'ホーム',
     url: '/',
     icon: Home,
+  },
+  {
+    title: 'カレンダー',
+    url: '/calendar',
+    icon: Calendar,
   },
   {
     title: 'タスク',

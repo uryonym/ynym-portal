@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
 import { Route as AuthenticatedFuelRecordsRouteImport } from './routes/_authenticated/fuel-records'
 import { Route as AuthenticatedNoteCategoriesRouteImport } from './routes/_authenticated/note-categories'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
@@ -34,6 +35,11 @@ const AuthRoute = AuthRouteImport.update({
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedCalendarRoute = AuthenticatedCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedFuelRecordsRoute =
@@ -88,6 +94,7 @@ const AuthenticatedNotesNewRoute = AuthenticatedNotesNewRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
+  '/calendar': typeof AuthenticatedCalendarRoute
   '/fuel-records': typeof AuthenticatedFuelRecordsRoute
   '/note-categories': typeof AuthenticatedNoteCategoriesRoute
   '/tasks': typeof AuthenticatedTasksRoute
@@ -100,6 +107,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
+  '/calendar': typeof AuthenticatedCalendarRoute
   '/fuel-records': typeof AuthenticatedFuelRecordsRoute
   '/note-categories': typeof AuthenticatedNoteCategoriesRoute
   '/tasks': typeof AuthenticatedTasksRoute
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
   '/_authenticated/fuel-records': typeof AuthenticatedFuelRecordsRoute
   '/_authenticated/note-categories': typeof AuthenticatedNoteCategoriesRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/calendar'
     | '/fuel-records'
     | '/note-categories'
     | '/tasks'
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
+    | '/calendar'
     | '/fuel-records'
     | '/note-categories'
     | '/tasks'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/calendar'
     | '/_authenticated/fuel-records'
     | '/_authenticated/note-categories'
     | '/_authenticated/tasks'
@@ -195,6 +207,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/calendar': {
+      id: '/_authenticated/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof AuthenticatedCalendarRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/fuel-records': {
@@ -264,6 +283,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
   AuthenticatedFuelRecordsRoute: typeof AuthenticatedFuelRecordsRoute
   AuthenticatedNoteCategoriesRoute: typeof AuthenticatedNoteCategoriesRoute
   AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
@@ -277,6 +297,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,
   AuthenticatedFuelRecordsRoute: AuthenticatedFuelRecordsRoute,
   AuthenticatedNoteCategoriesRoute: AuthenticatedNoteCategoriesRoute,
   AuthenticatedTasksRoute: AuthenticatedTasksRoute,
