@@ -45,6 +45,18 @@ class TestTaskListEndpoint:
         titles = [t["title"] for t in response.json()["data"]]
         assert titles == ["期日早い", "期日遅い", "期日なし"]
 
+    def test_get_tasks_filter_by_due_date_range(self, client: TestClient) -> None:
+        """due_from と due_to で期日範囲フィルタができる."""
+        client.post("/api/tasks", json={"title": "対象前", "due_date": "2026-10-01"})
+        client.post("/api/tasks", json={"title": "対象内1", "due_date": "2026-10-15"})
+        client.post("/api/tasks", json={"title": "対象内2", "due_date": "2026-10-20"})
+        client.post("/api/tasks", json={"title": "対象後", "due_date": "2026-11-05"})
+
+        response = client.get("/api/tasks?due_from=2026-10-10&due_to=2026-10-31")
+        assert response.status_code == 200
+        titles = [t["title"] for t in response.json()["data"]]
+        assert titles == ["対象内1", "対象内2"]
+
     def test_get_tasks_pagination_skip(self, client: TestClient) -> None:
         """skip クエリパラメータで最初の N 個をスキップ."""
         client.post("/api/tasks", json={"title": "タスクA", "due_date": "2025-01-01"})

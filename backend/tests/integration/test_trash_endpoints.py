@@ -42,6 +42,7 @@ class TestTrashEndpoints:
         assert data["note_categories"] == 0
         assert data["vehicles"] == 0
         assert data["fuel_records"] == 0
+        assert data["events"] == 0
         assert data["total"] == 0
 
     def test_task_soft_delete_list_and_restore(self, client: TestClient) -> None:
@@ -187,3 +188,51 @@ class TestTrashEndpoints:
 
         summary_res = client.get("/api/trash/summary")
         assert summary_res.json()["data"]["tasks"] == 0
+
+    def test_event_soft_delete_list_restore_and_purge(self, client: TestClient) -> None:
+        """予定の論理削除、ゴミ箱一覧、復元、完全削除のフロー."""
+        from datetime import datetime, timedelta, timezone
+
+        jst = timezone(timedelta(hours=9))
+        now = datetime.now(jst)
+        create_res = client.post(
+            "/api/events",
+            json={
+                "title": "ゴミ箱テスト用予定",
+                "start_at": now.isoformat(),
+                "end_at": (now + timedelta(hours=1)).isoformat(),
+            },
+        )
+        assert create_res.status_code == 201
+        event_id = create_res.json()["data"]["id"]
+
+        # 論理削除
+        del_res = client.delete(f"/api/events/{event_id}")
+        assert del_res.status_code == 204
+
+        # サマリー確認
+        summary_res = client.get("/api/trash/summary")
+        assert summary_res.json()["data"]["events"] == 1
+
+        # ゴミ箱一覧
+        trash_list_res = client.get("/api/trash/events")
+        assert trash_list_res.status_code == 200
+        assert len(trash_list_res.json()["data"]) == 1
+        assert trash_list_res.json()["data"][0]["id"] == event_id
+
+        # 復元
+        restore_res = client.post(f"/api/trash/events/{event_id}/restore")
+        assert restore_res.status_code == 200
+
+        # 通常エンドポイントで再取得可能
+        get_res = client.get(f"/api/events/{event_id}")
+        assert get_res.status_code == 200
+
+        # 再度論理削除して完全削除
+        client.delete(f"/api/events/{event_id}")
+        purge_res = client.delete(f"/api/trash/events/{event_id}")
+        assert purge_res.status_code == 204
+
+        # ゴミ箱サマリー 0件確認
+        summary_res2 = client.get("/api/trash/summary")
+        assert summary_res2.json()["data"]["events"] == 0

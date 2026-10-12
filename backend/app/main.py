@@ -7,7 +7,9 @@ from app.core.config import settings
 from app.middleware.logging import LoggingMiddleware
 from app.routers import (
     auth_router,
+    events_router,
     fuel_records_router,
+    members_router,
     note_categories_router,
     notes_router,
     tasks_router,
@@ -48,6 +50,8 @@ app.add_middleware(LoggingMiddleware)
 api_router = APIRouter(prefix="/api")
 api_router.include_router(auth_router)
 api_router.include_router(users_router)
+api_router.include_router(members_router)
+api_router.include_router(events_router)
 api_router.include_router(tasks_router)
 api_router.include_router(vehicles_router)
 api_router.include_router(fuel_records_router)

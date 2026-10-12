@@ -10,6 +10,7 @@ TrashResourceType = Literal[
     "note_categories",
     "vehicles",
     "fuel_records",
+    "events",
 ]
 
 
@@ -21,4 +22,5 @@ class TrashSummary(BaseModel):
     note_categories: int = Field(default=0, description="ノートカテゴリのゴミ箱件数")
     vehicles: int = Field(default=0, description="車両のゴミ箱件数")
     fuel_records: int = Field(default=0, description="燃費記録のゴミ箱件数")
+    events: int = Field(default=0, description="予定のゴミ箱件数")
     total: int = Field(default=0, description="合計件数")

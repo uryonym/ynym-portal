@@ -1,6 +1,6 @@
 """タスク管理サービス層."""
 
-from datetime import datetime
+from datetime import date, datetime
 from uuid import UUID
 
 from app.models.base import JST
@@ -22,8 +22,19 @@ class TaskService:
         skip: int = 0,
         limit: int = 100,
         is_completed: bool | None = None,
+        due_from: date | None = None,
+        due_to: date | None = None,
     ) -> list[Task]:
         """タスク一覧を取得（期日昇順、期日なしは末尾）."""
+        if due_from is not None or due_to is not None:
+            return self.task_repo.list_by_user(
+                user_id,
+                skip,
+                limit,
+                is_completed,
+                due_from=due_from,
+                due_to=due_to,
+            )
         return self.task_repo.list_by_user(user_id, skip, limit, is_completed)
 
     def get_task(self, task_id: UUID, user_id: UUID) -> Task:

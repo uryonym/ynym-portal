@@ -3,6 +3,7 @@
 from typing import Any
 from uuid import UUID
 
+from app.repositories.event_repository import EventRepository
 from app.repositories.fuel_record_repository import FuelRecordRepository
 from app.repositories.note_category_repository import NoteCategoryRepository
 from app.repositories.note_repository import NoteRepository
@@ -22,12 +23,14 @@ class TrashService:
         note_category_repo: NoteCategoryRepository,
         vehicle_repo: VehicleRepository,
         fuel_record_repo: FuelRecordRepository,
+        event_repo: EventRepository | None = None,
     ) -> None:
         self.task_repo = task_repo
         self.note_repo = note_repo
         self.note_category_repo = note_category_repo
         self.vehicle_repo = vehicle_repo
         self.fuel_record_repo = fuel_record_repo
+        self.event_repo = event_repo
 
     def get_summary(self, user_id: UUID) -> TrashSummary:
         """各リソースのゴミ箱件数と合計を取得."""
@@ -36,7 +39,10 @@ class TrashService:
         note_categories = self.note_category_repo.count_deleted_by_user(user_id)
         vehicles = self.vehicle_repo.count_deleted_by_user(user_id)
         fuel_records = self.fuel_record_repo.count_deleted_by_user(user_id)
-        total = tasks + notes + note_categories + vehicles + fuel_records
+        events = (
+            self.event_repo.count_deleted_by_user(user_id) if self.event_repo else 0
+        )
+        total = tasks + notes + note_categories + vehicles + fuel_records + events
 
         return TrashSummary(
             tasks=tasks,
@@ -44,6 +50,7 @@ class TrashService:
             note_categories=note_categories,
             vehicles=vehicles,
             fuel_records=fuel_records,
+            events=events,
             total=total,
         )
 
@@ -68,6 +75,10 @@ class TrashService:
                 return self.vehicle_repo.list_deleted_by_user(user_id, skip, limit)
             case "fuel_records":
                 return self.fuel_record_repo.list_deleted_by_user(user_id, skip, limit)
+            case "events":
+                if not self.event_repo:
+                    return []
+                return self.event_repo.list_deleted_by_user(user_id, skip, limit)
             case _:
                 raise NotFoundException(f"未知のリソース種別です: {resource_type}")
 
@@ -143,6 +154,19 @@ class TrashService:
                 record.deleted_at = None
                 return self.fuel_record_repo.save(record)
 
+            case "events":
+                if not self.event_repo:
+                    raise NotFoundException(
+                        f"ゴミ箱に予定 ID {item_id} が見つかりません"
+                    )
+                event = self.event_repo.get_deleted_by_id_and_user(item_id, user_id)
+                if not event:
+                    raise NotFoundException(
+                        f"ゴミ箱に予定 ID {item_id} が見つかりません"
+                    )
+                event.deleted_at = None
+                return self.event_repo.save(event)
+
             case _:
                 raise NotFoundException(f"未知のリソース種別です: {resource_type}")
 
@@ -209,6 +233,18 @@ class TrashService:
                         f"ゴミ箱に燃費記録 ID {item_id} が見つかりません"
                     )
                 self.fuel_record_repo.delete(record)
+
+            case "events":
+                if not self.event_repo:
+                    raise NotFoundException(
+                        f"ゴミ箱に予定 ID {item_id} が見つかりません"
+                    )
+                event = self.event_repo.get_deleted_by_id_and_user(item_id, user_id)
+                if not event:
+                    raise NotFoundException(
+                        f"ゴミ箱に予定 ID {item_id} が見つかりません"
+                    )
+                self.event_repo.delete(event)
 
             case _:
                 raise NotFoundException(f"未知のリソース種別です: {resource_type}")

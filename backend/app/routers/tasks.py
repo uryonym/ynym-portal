@@ -1,5 +1,6 @@
 """タスク関連エンドポイント."""
 
+from datetime import date
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, Response, status
@@ -24,11 +25,18 @@ def list_tasks(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     is_completed: bool | None = Query(None),
+    due_from: date | None = Query(None, description="期日開始フィルタ（YYYY-MM-DD）"),
+    due_to: date | None = Query(None, description="期日終了フィルタ（YYYY-MM-DD）"),
     service: TaskService = Depends(_get_task_service),
 ) -> dict:
     """タスク一覧を取得."""
     tasks = service.list_tasks(
-        user_id=current_user.id, skip=skip, limit=limit, is_completed=is_completed
+        user_id=current_user.id,
+        skip=skip,
+        limit=limit,
+        is_completed=is_completed,
+        due_from=due_from,
+        due_to=due_to,
     )
     return {
         "data": [TaskResponse.model_validate(t) for t in tasks],

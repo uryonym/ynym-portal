@@ -21,6 +21,15 @@ class UserRepository(BaseRepository[User]):
             stmt = stmt.where(User.deleted_at.is_(None))
         return self.session.execute(stmt).scalars().one_or_none()
 
+    def get_by_ids(self, ids: list[UUID], include_deleted: bool = False) -> list[User]:
+        """複数 ID で有効なユーザー一覧を取得."""
+        if not ids:
+            return []
+        stmt = select(User).where(User.id.in_(ids))
+        if not include_deleted:
+            stmt = stmt.where(User.deleted_at.is_(None))
+        return list(self.session.execute(stmt).scalars().all())
+
     def get_by_email(self, email: str, include_deleted: bool = False) -> User | None:
         """メールアドレスでユーザーを取得."""
         stmt = select(User).where(User.email == email)

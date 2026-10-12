@@ -68,6 +68,8 @@ def _format_not_found_message(detail: str) -> str:
         return "ノートが見つかりません"
     if "燃費記録" in detail:
         return "燃費記録が見つかりません"
+    if "予定" in detail:
+        return "予定が見つかりません"
     return detail
 
 

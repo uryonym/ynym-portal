@@ -6,12 +6,14 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Query, Response, status
 
 from app.core.db import SessionDep
+from app.repositories.event_repository import EventRepository
 from app.repositories.fuel_record_repository import FuelRecordRepository
 from app.repositories.note_category_repository import NoteCategoryRepository
 from app.repositories.note_repository import NoteRepository
 from app.repositories.task_repository import TaskRepository
 from app.repositories.vehicle_repository import VehicleRepository
 from app.schemas.base import SuccessResponse
+from app.schemas.event import EventResponse
 from app.schemas.fuel_record import FuelRecordResponse
 from app.schemas.note import NoteResponse
 from app.schemas.note_category import NoteCategoryResponse
@@ -29,6 +31,7 @@ _SCHEMA_MAP: dict[str, type] = {
     "note_categories": NoteCategoryResponse,
     "vehicles": VehicleResponse,
     "fuel_records": FuelRecordResponse,
+    "events": EventResponse,
 }
 
 _LABEL_MAP: dict[str, str] = {
@@ -37,6 +40,7 @@ _LABEL_MAP: dict[str, str] = {
     "note_categories": "ノートカテゴリ",
     "vehicles": "車両",
     "fuel_records": "燃費記録",
+    "events": "予定",
 }
 
 
@@ -47,6 +51,7 @@ def _get_trash_service(db: SessionDep) -> TrashService:
         note_category_repo=NoteCategoryRepository(db),
         vehicle_repo=VehicleRepository(db),
         fuel_record_repo=FuelRecordRepository(db),
+        event_repo=EventRepository(db),
     )
 
 
