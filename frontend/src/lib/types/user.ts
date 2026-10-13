@@ -6,6 +6,7 @@ export interface User {
   name: string
   avatar_url: string | null
   google_uid: string | null
+  color?: string | null
   is_admin: boolean
   created_at: string
   updated_at: string

@@ -14,17 +14,21 @@ import {
 } from 'date-fns'
 import { z } from 'zod'
 
+import { AgendaView } from '@/components/calendar/AgendaView'
 import { CalendarToolbar } from '@/components/calendar/CalendarToolbar'
 import { EventDeleteDialog } from '@/components/calendar/EventDeleteDialog'
 import { EventDetailDialog } from '@/components/calendar/EventDetailDialog'
 import { EventDialog } from '@/components/calendar/EventDialog'
+import { MemberFilter } from '@/components/calendar/MemberFilter'
 import { MonthView } from '@/components/calendar/MonthView'
+import { MyColorDialog } from '@/components/calendar/MyColorDialog'
 import {
   useCreateEventMutation,
   useDeleteEventMutation,
   useEventsQuery,
   useUpdateEventMutation,
 } from '@/hooks/queries/useEvents'
+import { useTasksQuery } from '@/hooks/queries/useTasks'
 
 import type {
   CalendarEvent,
@@ -35,6 +39,8 @@ import type {
 const calendarSearchSchema = z.object({
   view: z.enum(['month', 'agenda']).catch('month'),
   date: z.string().optional(),
+  members: z.array(z.string()).optional(),
+  showTasks: z.boolean().catch(true).optional(),
 })
 
 export const Route = createFileRoute('/_authenticated/calendar')({
@@ -49,6 +55,8 @@ function CalendarPage() {
   // 現在表示中の日付（基準日）
   const currentDate = search.date ? parseISO(search.date) : new Date()
   const view = search.view
+  const selectedMemberIds = search.members ?? []
+  const showTasks = search.showTasks ?? true
 
   // カレンダーグリッドの表示期間を計算（前後の週を含む）
   const monthStart = startOfMonth(currentDate)
@@ -63,7 +71,18 @@ function CalendarPage() {
   const { data: events = [] } = useEventsQuery({
     start: startParam,
     end: endParam,
+    member_ids: selectedMemberIds.length > 0 ? selectedMemberIds : undefined,
   })
+
+  // タスク取得クエリ（期日範囲で取得）
+  const { data: tasks = [] } = useTasksQuery(
+    showTasks
+      ? {
+          due_from: format(rangeStart, 'yyyy-MM-dd'),
+          due_to: format(rangeEnd, 'yyyy-MM-dd'),
+        }
+      : 'active',
+  )
 
   // ミューテーション
   const createMutation = useCreateEventMutation()
@@ -75,6 +94,7 @@ function CalendarPage() {
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null)
   const [deletingEvent, setDeletingEvent] = useState<CalendarEvent | null>(null)
   const [isCreateOpen, setIsCreateOpen] = useState(false)
+  const [isColorDialogOpen, setIsColorDialogOpen] = useState(false)
   const [createInitialDate, setCreateInitialDate] = useState<Date | undefined>(
     undefined,
   )
@@ -98,6 +118,18 @@ function CalendarPage() {
       search: (prev) => ({
         ...prev,
         view: newView,
+      }),
+    })
+  }
+
+  const handleToggleMember = (memberId: string) => {
+    const next = selectedMemberIds.includes(memberId)
+      ? selectedMemberIds.filter((id) => id !== memberId)
+      : [...selectedMemberIds, memberId]
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        members: next.length > 0 ? next : undefined,
       }),
     })
   }
@@ -153,20 +185,49 @@ function CalendarPage() {
         onNewEvent={handleNewEvent}
       />
 
+      {/* メンバー絞り込み & タスク表示トグルバー */}
+      <MemberFilter
+        selectedMemberIds={selectedMemberIds}
+        onToggleMember={handleToggleMember}
+        onClearFilter={() =>
+          navigate({
+            search: (prev) => ({
+              ...prev,
+              members: undefined,
+            }),
+          })
+        }
+        showTasks={showTasks}
+        onToggleShowTasks={(val) =>
+          navigate({
+            search: (prev) => ({
+              ...prev,
+              showTasks: val,
+            }),
+          })
+        }
+        onOpenColorDialog={() => setIsColorDialogOpen(true)}
+      />
+
       {/* ビュー切り替え */}
       {view === 'month' ? (
         <MonthView
           currentDate={currentDate}
           events={events}
+          tasks={tasks}
+          showTasks={showTasks}
           onSelectEvent={handleSelectEvent}
           onSelectDay={handleSelectDay}
         />
       ) : (
-        <div className="rounded-xl border border-border bg-card p-8 text-center text-muted-foreground">
-          <p className="text-sm">
-            リスト表示（アジェンダ表示）は Step 3 にて対応予定です。
-          </p>
-        </div>
+        <AgendaView
+          currentDate={currentDate}
+          events={events}
+          tasks={tasks}
+          showTasks={showTasks}
+          onSelectEvent={handleSelectEvent}
+          onSelectDay={handleSelectDay}
+        />
       )}
 
       {/* 予定詳細ダイアログ */}
@@ -201,6 +262,12 @@ function CalendarPage() {
         event={deletingEvent}
         onConfirm={handleConfirmDelete}
         isLoading={deleteMutation.isPending}
+      />
+
+      {/* マイカラー変更ダイアログ */}
+      <MyColorDialog
+        open={isColorDialogOpen}
+        onOpenChange={setIsColorDialogOpen}
       />
     </div>
   )

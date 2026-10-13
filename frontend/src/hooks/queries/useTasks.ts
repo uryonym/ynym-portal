@@ -15,13 +15,14 @@ import {
   deleteTask as deleteTaskAPI,
 } from '@/lib/api/tasks'
 
-import type { TaskFilter } from '@/lib/api/tasks'
+import type { FetchTasksOptions, TaskFilter } from '@/lib/api/tasks'
 import type { Task, CreateTaskInput, UpdateTaskInput } from '@/lib/types/task'
 
 export const taskKeys = {
   all: ['tasks'] as const,
   lists: () => [...taskKeys.all, 'list'] as const,
-  list: (filter: TaskFilter) => [...taskKeys.lists(), { filter }] as const,
+  list: (optionsOrFilter: TaskFilter | FetchTasksOptions) =>
+    [...taskKeys.lists(), optionsOrFilter] as const,
 }
 function sortTasks(tasks: Task[]): Task[] {
   return [...tasks].sort((a, b) => {
@@ -37,17 +38,19 @@ function sortTasks(tasks: Task[]): Task[] {
   })
 }
 export const taskQueries = {
-  list: (filter: TaskFilter) =>
+  list: (optionsOrFilter: TaskFilter | FetchTasksOptions = 'active') =>
     queryOptions({
-      queryKey: taskKeys.list(filter),
+      queryKey: taskKeys.list(optionsOrFilter),
       queryFn: async () => {
-        const response = await fetchTasks(filter)
+        const response = await fetchTasks(optionsOrFilter)
         return sortTasks(response.data)
       },
     }),
 }
-export function useTasksQuery(filter: TaskFilter = 'active') {
-  return useQuery(taskQueries.list(filter))
+export function useTasksQuery(
+  optionsOrFilter: TaskFilter | FetchTasksOptions = 'active',
+) {
+  return useQuery(taskQueries.list(optionsOrFilter))
 }
 export function useCreateTaskMutation() {
   const queryClient = useQueryClient()
@@ -75,6 +78,20 @@ export function useUpdateTaskMutation() {
     onError: (error) => {
       console.error('Failed to update task:', error)
       toast.error('タスクの更新に失敗しました')
+    },
+  })
+}
+export function useToggleTaskMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, isCompleted }: { id: string; isCompleted: boolean }) =>
+      updateTaskAPI(id, { is_completed: isCompleted }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: taskKeys.all })
+    },
+    onError: (error) => {
+      console.error('Failed to toggle task:', error)
+      toast.error('タスクの状態更新に失敗しました')
     },
   })
 }

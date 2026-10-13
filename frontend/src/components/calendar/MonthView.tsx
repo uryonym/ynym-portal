@@ -4,19 +4,23 @@ import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
 
 import { EventChip } from '@/components/calendar/EventChip'
+import { TaskChip } from '@/components/calendar/TaskChip'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { getEventsForDay, getMonthGrid } from '@/lib/calendar'
+import { getEventsForDay, getMonthGrid, getTasksForDay } from '@/lib/calendar'
 
 import type { CalendarEvent } from '@/lib/types/event'
+import type { Task } from '@/lib/types/task'
 
 interface MonthViewProps {
   currentDate: Date
   events: CalendarEvent[]
+  tasks?: Task[]
+  showTasks?: boolean
   onSelectEvent: (event: CalendarEvent) => void
   onSelectDay: (date: Date) => void
 }
@@ -26,6 +30,8 @@ const WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土']
 export function MonthView({
   currentDate,
   events,
+  tasks = [],
+  showTasks = false,
   onSelectEvent,
   onSelectDay,
 }: MonthViewProps) {
@@ -40,6 +46,8 @@ export function MonthView({
   const overflowEvents = overflowDate
     ? getEventsForDay(events, overflowDate)
     : []
+  const overflowTasks =
+    overflowDate && showTasks ? getTasksForDay(tasks, overflowDate) : []
 
   return (
     <div className="flex flex-col rounded-xl border border-border bg-card shadow-xs overflow-hidden">
@@ -69,9 +77,18 @@ export function MonthView({
       <div className="grid grid-cols-7 divide-x divide-y divide-border bg-border/20">
         {days.map((day) => {
           const dayEvents = getEventsForDay(events, day.date)
+          const dayTasks = showTasks ? getTasksForDay(tasks, day.date) : []
+          const totalCount = dayEvents.length + dayTasks.length
+
           const visibleEvents = dayEvents.slice(0, maxVisibleEvents)
-          const hasMore = dayEvents.length > maxVisibleEvents
-          const moreCount = dayEvents.length - maxVisibleEvents
+          const remainingSlots = Math.max(
+            0,
+            maxVisibleEvents - visibleEvents.length,
+          )
+          const visibleTasks = dayTasks.slice(0, remainingSlots)
+
+          const hasMore = totalCount > maxVisibleEvents
+          const moreCount = totalCount - maxVisibleEvents
 
           const isSunday = day.dayOfWeek === 0
           const isSaturday = day.dayOfWeek === 6
@@ -105,14 +122,14 @@ export function MonthView({
                 </span>
 
                 {/* スマホ等で件数のみ表示したい場合のヒント */}
-                {dayEvents.length > 0 && (
+                {totalCount > 0 && (
                   <span className="sm:hidden text-[10px] text-muted-foreground font-semibold">
-                    {dayEvents.length}件
+                    {totalCount}件
                   </span>
                 )}
               </div>
 
-              {/* 予定一覧（デスクトップ・タブレット向けにチップ表示） */}
+              {/* 予定およびタスク一覧 */}
               <div className="flex flex-col gap-1 overflow-hidden">
                 {visibleEvents.map((event) => (
                   <EventChip
@@ -120,6 +137,10 @@ export function MonthView({
                     event={event}
                     onClick={onSelectEvent}
                   />
+                ))}
+
+                {visibleTasks.map((task) => (
+                  <TaskChip key={task.id} task={task} />
                 ))}
 
                 {/* 超過分の「+N件」ボタン */}
@@ -141,7 +162,7 @@ export function MonthView({
         })}
       </div>
 
-      {/* 「+N件」クリック時の当日予定ダイアログ */}
+      {/* 「+N件」クリック時の当日予定・タスクダイアログ */}
       <Dialog
         open={Boolean(overflowDate)}
         onOpenChange={(open) => !open && setOverflowDate(null)}
@@ -150,21 +171,45 @@ export function MonthView({
           <DialogHeader className="text-left">
             <DialogTitle>
               {overflowDate &&
-                format(overflowDate, 'yyyy年M月d日(E) の予定', { locale: ja })}
+                format(overflowDate, 'yyyy年M月d日(E) の予定・タスク', {
+                  locale: ja,
+                })}
             </DialogTitle>
           </DialogHeader>
 
-          <div className="flex flex-col gap-1.5 max-h-[60vh] overflow-y-auto py-2">
-            {overflowEvents.map((event) => (
-              <EventChip
-                key={event.id}
-                event={event}
-                onClick={(e) => {
-                  setOverflowDate(null)
-                  onSelectEvent(e)
-                }}
-              />
-            ))}
+          <div className="flex flex-col gap-2 max-h-[60vh] overflow-y-auto py-2">
+            {overflowEvents.length > 0 && (
+              <div className="space-y-1">
+                <span className="text-xs font-semibold text-muted-foreground">
+                  予定
+                </span>
+                <div className="flex flex-col gap-1">
+                  {overflowEvents.map((event) => (
+                    <EventChip
+                      key={event.id}
+                      event={event}
+                      onClick={(e) => {
+                        setOverflowDate(null)
+                        onSelectEvent(e)
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {overflowTasks.length > 0 && (
+              <div className="space-y-1">
+                <span className="text-xs font-semibold text-muted-foreground">
+                  タスク期日
+                </span>
+                <div className="flex flex-col gap-1">
+                  {overflowTasks.map((task) => (
+                    <TaskChip key={task.id} task={task} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>

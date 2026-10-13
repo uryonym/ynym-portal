@@ -52,6 +52,28 @@ export function getEventColor(event: CalendarEvent): string {
   return SHARED_FAMILY_COLOR
 }
 
+/**
+ * 予定のカラー情報（背景色・境界線色・文字色）を取得
+ */
+export function getEventColorInfo(event: CalendarEvent) {
+  const border = getEventColor(event)
+  return {
+    bg: `${border}20`,
+    border,
+    text: border,
+  }
+}
+
+/**
+ * 予定の時間表示文字列を生成
+ */
+export function formatEventTime(event: CalendarEvent): string {
+  if (event.is_all_day) return '終日'
+  const start = format(new Date(event.start_at), 'HH:mm')
+  const end = format(new Date(event.end_at), 'HH:mm')
+  return `${start} - ${end}`
+}
+
 export interface CalendarDay {
   date: Date
   dateKey: string // YYYY-MM-DD
@@ -140,4 +162,15 @@ export function getEventsForDay(
     if (!aAllDay && bAllDay) return 1
     return new Date(a.start_at).getTime() - new Date(b.start_at).getTime()
   })
+}
+
+/**
+ * 指定日の期日タスク一覧を取得
+ */
+export function getTasksForDay<T extends { due_date?: string | null }>(
+  tasks: T[],
+  date: Date,
+): T[] {
+  const dateKey = format(date, 'yyyy-MM-dd')
+  return tasks.filter((t) => t.due_date === dateKey)
 }
