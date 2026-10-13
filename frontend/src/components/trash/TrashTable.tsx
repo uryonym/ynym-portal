@@ -22,6 +22,8 @@ export interface BaseTrashItem {
   description?: string | null
   body?: string | null
   due_date?: string | null
+  start_at?: string | null
+  end_at?: string | null
   maker?: string | null
   model?: string | null
   number?: string | null
@@ -71,6 +73,18 @@ export function TrashTable({
   // リソースに応じたアイテム情報の抽出
   const getItemDetails = (item: BaseTrashItem) => {
     switch (resourceType) {
+      case 'events':
+        return {
+          icon: Calendar,
+          name: item.title || '無題の予定',
+          subInfo: item.description
+            ? item.description.slice(0, 60) +
+              (item.description.length > 60 ? '...' : '')
+            : null,
+          badge: item.start_at
+            ? `日時: ${formatDisplayDateTime(item.start_at)}`
+            : '予定',
+        }
       case 'tasks':
         return {
           icon: CheckSquare,

@@ -23,6 +23,7 @@ const TABS: {
   id: TrashResourceType
   label: string
 }[] = [
+  { id: 'events', label: '予定' },
   { id: 'tasks', label: 'タスク' },
   { id: 'notes', label: 'ノート' },
   { id: 'note_categories', label: 'カテゴリ' },

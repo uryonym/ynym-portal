@@ -1,9 +1,10 @@
 import type { SuccessResponse } from './api'
 
 export type TrashResourceType =
-  'tasks' | 'notes' | 'note_categories' | 'vehicles' | 'fuel_records'
+  'events' | 'tasks' | 'notes' | 'note_categories' | 'vehicles' | 'fuel_records'
 
 export interface TrashSummary {
+  events: number
   tasks: number
   notes: number
   note_categories: number

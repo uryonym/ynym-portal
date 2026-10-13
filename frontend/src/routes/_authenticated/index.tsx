@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import {
+  Calendar,
   CheckSquare,
   Car,
   Fuel,
@@ -19,6 +20,14 @@ function DashboardHomePage() {
   const { data: user } = useAuthUserQuery()
 
   const quickLinks = [
+    {
+      title: 'カレンダー',
+      description: '家族の予定・スケジュール',
+      url: '/calendar',
+      icon: Calendar,
+      color:
+        'text-rose-600 bg-rose-50/80 border-rose-100/60 group-hover:bg-rose-600 group-hover:text-white',
+    },
     {
       title: 'タスク',
       description: '日々のやることリスト',
