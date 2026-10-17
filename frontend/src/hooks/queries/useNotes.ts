@@ -89,6 +89,7 @@ export function useDeleteNoteMutation() {
     mutationFn: (id: string) => deleteNoteAPI(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: noteKeys.all })
+      queryClient.invalidateQueries({ queryKey: ['trash'] })
       toast.success('ノートを削除しました')
     },
     onError: (error) => {

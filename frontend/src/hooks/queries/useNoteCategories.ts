@@ -73,6 +73,7 @@ export function useDeleteNoteCategoryMutation() {
     mutationFn: (id: string) => deleteCategoryAPI(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: noteCategoryKeys.all })
+      queryClient.invalidateQueries({ queryKey: ['trash'] })
       toast.success('カテゴリを削除しました')
     },
     onError: (error) => {

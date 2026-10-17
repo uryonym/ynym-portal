@@ -73,6 +73,7 @@ export function useDeleteVehicleMutation() {
     mutationFn: (id: string) => deleteVehicleAPI(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: vehicleKeys.all })
+      queryClient.invalidateQueries({ queryKey: ['trash'] })
       toast.success('車両を削除しました')
     },
     onError: (error) => {

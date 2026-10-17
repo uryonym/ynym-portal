@@ -101,6 +101,7 @@ export function useDeleteTaskMutation() {
     mutationFn: (id: string) => deleteTaskAPI(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: taskKeys.all })
+      queryClient.invalidateQueries({ queryKey: ['trash'] })
       toast.success('タスクを削除しました')
     },
     onError: (error) => {

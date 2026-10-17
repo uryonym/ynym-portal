@@ -64,6 +64,11 @@ const menuItems = [
     url: '/fuel-records',
     icon: Fuel,
   },
+  {
+    title: 'ゴミ箱',
+    url: '/trash',
+    icon: Trash2,
+  },
 ]
 
 const adminMenuItems = [
@@ -71,11 +76,6 @@ const adminMenuItems = [
     title: 'ユーザー管理',
     url: '/users',
     icon: Users,
-  },
-  {
-    title: 'ゴミ箱',
-    url: '/trash',
-    icon: Trash2,
   },
 ]
 

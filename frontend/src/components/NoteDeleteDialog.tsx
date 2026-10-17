@@ -38,7 +38,7 @@ export function NoteDeleteDialog({
             <span className="font-semibold text-slate-800">{note.title}</span>
             」を削除してもよろしいですか？
             <br />
-            この操作は取り消せません。
+            削除したノートはゴミ箱からいつでも復元できます。
           </DialogDescription>
         </DialogHeader>
 

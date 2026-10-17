@@ -6,8 +6,8 @@ from fastapi.testclient import TestClient
 class TestTrashEndpoints:
     """/api/trash 統合テスト."""
 
-    def test_non_admin_forbidden(self, client: TestClient) -> None:
-        """一般ユーザー（管理者権限なし）はゴミ箱 API にアクセスできない（403 Forbidden）."""
+    def test_non_admin_allowed(self, client: TestClient) -> None:
+        """一般ユーザー（管理者権限なし）でもゴミ箱 API にアクセスできる."""
         from uuid import UUID
 
         from app.main import app
@@ -27,8 +27,8 @@ class TestTrashEndpoints:
 
         try:
             res = client.get("/api/trash/summary")
-            assert res.status_code == 403
-            assert res.json()["detail"] == "管理者権限が必要です。"
+            assert res.status_code == 200
+            assert res.json()["data"]["total"] == 0
         finally:
             app.dependency_overrides.pop(get_current_user, None)
 

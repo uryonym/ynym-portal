@@ -85,6 +85,7 @@ export function useDeleteFuelRecordMutation() {
     mutationFn: (id: string) => deleteFuelRecordAPI(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: fuelRecordKeys.all })
+      queryClient.invalidateQueries({ queryKey: ['trash'] })
       toast.success('給油記録を削除しました')
     },
     onError: (error) => {

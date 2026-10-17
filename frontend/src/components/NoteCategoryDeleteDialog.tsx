@@ -40,7 +40,7 @@ export function NoteCategoryDeleteDialog({
             </span>
             」を削除してもよろしいですか？
             <br />
-            この操作は取り消せません。なお、ノートが紐付いているカテゴリは削除できません。
+            削除したカテゴリはゴミ箱から復元できます。なお、ノートが紐付いているカテゴリは削除できません。
           </DialogDescription>
         </DialogHeader>
 

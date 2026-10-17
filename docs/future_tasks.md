@@ -80,3 +80,26 @@ FastAPI が自動生成する `openapi.json` を活用し、フロントエン�
 
 > [!NOTE]
 > バックエンド（Trash サービス・サマリー・復元・完全削除・一括完全削除 API）およびフロントエンド（`/trash` 画面・各リソースタブ）の実装完了済み。
+
+---
+
+## Task 5: システム全体のリファクタリング・不整合解消・品質向上 [進行中]
+
+リファクタリングおよび潜在的なバグ・不整合の解消を、以下の 10 件の Issue に分割して順次対応中。
+
+### Phase 1: バグ修正 & デッドコード削除（安全・即効性大）
+- [#28: [Bug/Refactor] ゴミ箱（Trash）機能の権限・UI導線・キャッシュ無効化の不整合解消](https://github.com/uryonym/ynym-portal/issues/28)
+- [#29: [Bug] バックエンド更新処理における Nullable フィールドクリア不可バグの修正](https://github.com/uryonym/ynym-portal/issues/29)
+- [#30: [Bug/Security] 燃費記録作成時の車両存在・所有権バリデーション追加](https://github.com/uryonym/ynym-portal/issues/30)
+- [#31: [Bug/Refactor] ユーザー設定色（color）のスキーマ反映とダイアログ初期化不具合の修正](https://github.com/uryonym/ynym-portal/issues/31)
+- [#32: [Refactor] フロントエンドの未使用デッドコード・非推奨エイリアスの完全削除](https://github.com/uryonym/ynym-portal/issues/32)
+
+### Phase 2: UX・フロントエンド設計統一（UX向上・コード簡素化）
+- [#33: [UX/Refactor] エラー表示・ヘッダー・不要リクエスト等の細かなUX改善](https://github.com/uryonym/ynym-portal/issues/33)
+- [#34: [Refactor] 互換カスタムフック廃止と TanStack Query 直接呼び出しへの統一](https://github.com/uryonym/ynym-portal/issues/34)
+- [#35: [Refactor] コンポーネント配置整理とフォーム実装パターンの統一](https://github.com/uryonym/ynym-portal/issues/35)
+
+### Phase 3: バックエンド共通化 & 品質基盤（保守性向上）
+- [#36: [Refactor] バックエンド Repository / Service / Schema の共通化とボイラープレート削減](https://github.com/uryonym/ynym-portal/issues/36)
+- [#37: [Docs/Infra/Test] テスト基盤・Docker・ドキュメントの同期と改善](https://github.com/uryonym/ynym-portal/issues/37)
+

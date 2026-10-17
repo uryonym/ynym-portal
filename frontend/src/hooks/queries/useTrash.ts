@@ -47,6 +47,15 @@ export function useTrashSummaryQuery() {
 export function useTrashItemsQuery(resourceType: TrashResourceType) {
   return useQuery(trashQueries.items(resourceType))
 }
+const RESOURCE_QUERY_KEY_MAP: Record<TrashResourceType, readonly string[]> = {
+  tasks: ['tasks'],
+  notes: ['notes'],
+  note_categories: ['note-categories'],
+  vehicles: ['vehicles'],
+  fuel_records: ['fuel-records'],
+  events: ['events'],
+}
+
 export function useRestoreTrashMutation() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -57,8 +66,11 @@ export function useRestoreTrashMutation() {
       resourceType: TrashResourceType
       id: string
     }) => restoreTrashItemAPI(resourceType, id),
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: trashKeys.all })
+      queryClient.invalidateQueries({
+        queryKey: RESOURCE_QUERY_KEY_MAP[variables.resourceType],
+      })
       toast.success('復元しました')
     },
     onError: (error) => {
