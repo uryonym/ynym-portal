@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, Query, Response, status
 
 from app.core.db import SessionDep
 from app.repositories.fuel_record_repository import FuelRecordRepository
+from app.repositories.vehicle_repository import VehicleRepository
 from app.schemas.base import SuccessResponse
 from app.schemas.fuel_record import (
     FuelRecordCreate,
@@ -19,7 +20,10 @@ router = APIRouter(prefix="/fuel-records", tags=["fuel-records"])
 
 
 def _get_fuel_service(db: SessionDep) -> FuelRecordService:
-    return FuelRecordService(FuelRecordRepository(db))
+    return FuelRecordService(
+        fuel_record_repo=FuelRecordRepository(db),
+        vehicle_repo=VehicleRepository(db),
+    )
 
 
 def _to_fuel_record_response(item, is_detailed: bool = False) -> FuelRecordResponse:

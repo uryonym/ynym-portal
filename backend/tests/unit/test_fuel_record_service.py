@@ -41,6 +41,13 @@ def mock_repo():
     return repo
 
 
+@pytest.fixture
+def mock_vehicle_repo():
+    repo = MagicMock()
+    repo.get_by_id_and_user.return_value = MagicMock()
+    return repo
+
+
 class TestFuelRecordServiceListFuelRecords:
     """list_fuel_records tests."""
 
@@ -140,7 +147,7 @@ class TestFuelRecordServiceGetFuelRecord:
 class TestFuelRecordServiceCreateFuelRecord:
     """create_fuel_record tests."""
 
-    def test_create_success(self, mock_repo):
+    def test_create_success(self, mock_repo, mock_vehicle_repo):
         """Creates a fuel record."""
         now = datetime.now(JST)
         data = FuelRecordCreate(
@@ -153,13 +160,16 @@ class TestFuelRecordServiceCreateFuelRecord:
             is_full_tank=True,
             gas_station_name="ENEOS",
         )
-        service = FuelRecordService(mock_repo)
+        service = FuelRecordService(mock_repo, mock_vehicle_repo)
         result = service.create_fuel_record(data, USER_ID)
         assert result.user_id == USER_ID
         assert result.vehicle_id == VEHICLE_ID
+        mock_vehicle_repo.get_by_id_and_user.assert_called_once_with(
+            VEHICLE_ID, USER_ID
+        )
         mock_repo.save.assert_called_once()
 
-    def test_create_minimal(self, mock_repo):
+    def test_create_minimal(self, mock_repo, mock_vehicle_repo):
         """Minimal fields: is_full_tank defaults to False."""
         now = datetime.now(JST)
         data = FuelRecordCreate(
@@ -170,10 +180,29 @@ class TestFuelRecordServiceCreateFuelRecord:
             unit_price=165,
             total_cost=6600,
         )
-        service = FuelRecordService(mock_repo)
+        service = FuelRecordService(mock_repo, mock_vehicle_repo)
         result = service.create_fuel_record(data, USER_ID)
         assert result.is_full_tank is False
         assert result.gas_station_name is None
+
+    def test_create_vehicle_not_found_raises(self, mock_repo, mock_vehicle_repo):
+        """Raises NotFoundException when vehicle not found or does not belong to user."""
+        now = datetime.now(JST)
+        data = FuelRecordCreate(
+            vehicle_id=VEHICLE_ID,
+            refuel_datetime=now,
+            total_mileage=100,
+            fuel_type="regular",
+            unit_price=165,
+            total_cost=6600,
+        )
+        mock_vehicle_repo.get_by_id_and_user.return_value = None
+        service = FuelRecordService(mock_repo, mock_vehicle_repo)
+
+        with pytest.raises(NotFoundException) as exc_info:
+            service.create_fuel_record(data, USER_ID)
+
+        assert f"車両 ID {VEHICLE_ID} が見つかりません" in str(exc_info.value)
 
 
 class TestFuelRecordServiceUpdateFuelRecord:

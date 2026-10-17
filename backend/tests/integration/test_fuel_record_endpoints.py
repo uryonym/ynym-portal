@@ -55,6 +55,20 @@ class TestFuelRecordEndpoints:
         assert record["gas_station_name"] == "ENEOS"
         assert "id" in record
 
+    def test_post_fuel_record_vehicle_not_found(self, client: TestClient) -> None:
+        """存在しない車両 ID の場合は 404 エラーを返す."""
+        payload = {
+            "vehicle_id": NON_EXISTENT_UUID,
+            "refuel_datetime": "2025-06-01T10:00:00+09:00",
+            "total_mileage": 10500,
+            "fuel_type": "レギュラー",
+            "unit_price": 165,
+            "total_cost": 6600,
+        }
+        response = client.post("/api/fuel-records", json=payload)
+        assert response.status_code == 404
+        assert response.json()["message"] == "車が見つかりません"
+
     def test_get_fuel_record_by_id_success(self, client: TestClient) -> None:
         """燃費記録 ID で特定の燃費記録を取得できる."""
         vehicle_id = _create_test_vehicle(client)

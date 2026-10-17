@@ -7,6 +7,7 @@ from uuid import UUID
 from app.models.base import JST
 from app.models.fuel_record import FuelRecord
 from app.repositories.fuel_record_repository import FuelRecordRepository
+from app.repositories.vehicle_repository import VehicleRepository
 from app.schemas.fuel_record import FuelRecordCreate, FuelRecordUpdate
 from app.utils.exceptions import NotFoundException
 
@@ -24,8 +25,20 @@ class FuelRecordWithCalculation:
 class FuelRecordService:
     """燃費記録管理ビジネスロジック層."""
 
-    def __init__(self, fuel_record_repo: FuelRecordRepository) -> None:
+    def __init__(
+        self,
+        fuel_record_repo: FuelRecordRepository,
+        vehicle_repo: VehicleRepository | None = None,
+    ) -> None:
         self.fuel_record_repo = fuel_record_repo
+        self.vehicle_repo = vehicle_repo
+
+    def _validate_vehicle(self, vehicle_id: UUID, user_id: UUID) -> None:
+        """車両がユーザーに属して存在することを検証."""
+        if self.vehicle_repo is not None:
+            vehicle = self.vehicle_repo.get_by_id_and_user(vehicle_id, user_id)
+            if not vehicle:
+                raise NotFoundException(f"車両 ID {vehicle_id} が見つかりません")
 
     def list_fuel_records(
         self,
@@ -109,6 +122,7 @@ class FuelRecordService:
         self, fuel_record_create: FuelRecordCreate, user_id: UUID
     ) -> FuelRecord:
         """燃費記録を作成."""
+        self._validate_vehicle(fuel_record_create.vehicle_id, user_id)
         fuel_record = FuelRecord(
             user_id=user_id,
             vehicle_id=fuel_record_create.vehicle_id,
