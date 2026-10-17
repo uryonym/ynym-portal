@@ -96,21 +96,23 @@ class EventService:
         if new_end <= new_start:
             raise ValidationException("終了日時は開始日時より後である必要があります")
 
+        update_data = payload.model_dump(exclude_unset=True)
+
         # フィールド更新
-        if payload.title is not None:
-            event.title = payload.title
-        if payload.description is not None:
-            event.description = payload.description
-        if payload.location is not None:
-            event.location = payload.location
-        if payload.start_at is not None:
-            event.start_at = payload.start_at
-        if payload.end_at is not None:
-            event.end_at = payload.end_at
-        if payload.is_all_day is not None:
-            event.is_all_day = payload.is_all_day
-        if payload.is_private is not None:
-            event.is_private = payload.is_private
+        if "title" in update_data and update_data["title"] is not None:
+            event.title = update_data["title"]
+        if "description" in update_data:
+            event.description = update_data["description"]
+        if "location" in update_data:
+            event.location = update_data["location"]
+        if "start_at" in update_data and update_data["start_at"] is not None:
+            event.start_at = update_data["start_at"]
+        if "end_at" in update_data and update_data["end_at"] is not None:
+            event.end_at = update_data["end_at"]
+        if "is_all_day" in update_data and update_data["is_all_day"] is not None:
+            event.is_all_day = update_data["is_all_day"]
+        if "is_private" in update_data and update_data["is_private"] is not None:
+            event.is_private = update_data["is_private"]
 
         # 参加者更新
         if payload.participant_ids is not None:

@@ -167,6 +167,32 @@ class TestEventServiceUpdateEvent:
                 user_id=USER_ID_B,  # 別ユーザー
             )
 
+    def test_update_event_clear_nullable_fields(
+        self, service: EventService, mock_event_repo: MagicMock
+    ) -> None:
+        """description と location を None でクリアできる."""
+        now = datetime.now(JST)
+        existing = Event(
+            id=uuid4(),
+            created_by=USER_ID_A,
+            title="メモあり予定",
+            description="以前のメモ",
+            location="以前の場所",
+            start_at=now,
+            end_at=now + timedelta(hours=1),
+            is_private=False,
+        )
+        mock_event_repo.get_by_id.return_value = existing
+        mock_event_repo.save.side_effect = lambda e: e
+
+        updated = service.update_event(
+            existing.id,
+            EventUpdate(description=None, location=None),
+            user_id=USER_ID_A,
+        )
+        assert updated.description is None
+        assert updated.location is None
+
 
 class TestEventServiceDeleteEvent:
     """delete_event のテスト."""

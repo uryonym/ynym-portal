@@ -208,6 +208,29 @@ class TestFuelRecordServiceUpdateFuelRecord:
                 RECORD_ID, FuelRecordUpdate(total_mileage=200), USER_ID
             )
 
+    def test_update_clear_gas_station_name(self, mock_repo):
+        """gas_station_name を None でクリアできる."""
+        now = datetime.now(JST)
+        rec = FuelRecord(
+            vehicle_id=VEHICLE_ID,
+            user_id=USER_ID,
+            refuel_datetime=now,
+            total_mileage=100,
+            fuel_type="regular",
+            unit_price=165,
+            total_cost=6600,
+            gas_station_name="出光",
+        )
+        rec.id = RECORD_ID
+        mock_repo.get_by_id_and_user.return_value = rec
+        mock_repo.save.side_effect = lambda r: r
+        service = FuelRecordService(mock_repo)
+
+        result = service.update_fuel_record(
+            RECORD_ID, FuelRecordUpdate(gas_station_name=None), USER_ID
+        )
+        assert result.gas_station_name is None
+
 
 class TestFuelRecordServiceDeleteFuelRecord:
     """delete_fuel_record tests."""

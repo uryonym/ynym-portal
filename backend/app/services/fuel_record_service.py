@@ -131,8 +131,7 @@ class FuelRecordService:
         """燃費記録を部分更新."""
         fuel_record = self.get_fuel_record(fuel_record_id, user_id)
         for key, value in fuel_record_update.model_dump(exclude_unset=True).items():
-            if value is not None:
-                setattr(fuel_record, key, value)
+            setattr(fuel_record, key, value)
         return self.fuel_record_repo.save(fuel_record)
 
     def delete_fuel_record(self, fuel_record_id: UUID, user_id: UUID) -> None:
