@@ -165,12 +165,5 @@ export function useTasks(initialFilter: TaskFilter = 'active') {
     toggleComplete,
     filter,
     setFilter,
-    // 互換用エイリアス
-    todos: tasks,
-    editingTodo: editingTask,
-    setEditingTodo: setEditingTask,
-    addTodo: addTask,
-    updateTodo: updateTask,
-    deleteTodo: deleteTask,
   }
 }

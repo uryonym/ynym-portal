@@ -1,4 +1,4 @@
-import type { SuccessResponse, MessageResponse } from './api'
+import type { SuccessResponse } from './api'
 
 export interface User {
   id: string
@@ -37,9 +37,5 @@ export interface AuthState {
   error: string | null
 }
 
-export type LogoutResponse = MessageResponse
-export type { MessageResponse }
-export type UserResponse = SuccessResponse<User>
 export type UserSingleResponse = SuccessResponse<User>
 export type UserListResponse = SuccessResponse<User[]>
-export type UsersResponse = SuccessResponse<User[]>

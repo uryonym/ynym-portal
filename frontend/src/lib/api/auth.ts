@@ -1,7 +1,8 @@
 import { apiClient, ApiError } from '@/lib/api/client'
 import { AUTH_ME_URL, GOOGLE_AUTH_LOGIN_URL, LOGOUT_URL } from '@/lib/constants'
 
-import type { MessageResponse, User } from '@/lib/types/user'
+import type { MessageResponse } from '@/lib/types/api'
+import type { User } from '@/lib/types/user'
 
 /**
  * 現在ログイン中のユーザー情報を取得

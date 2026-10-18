@@ -24,11 +24,6 @@ export const taskFormSchema = z.object({
 
 export type TaskFormValues = z.infer<typeof taskFormSchema>
 
-/** @deprecated Use `taskFormSchema` instead. */
-export const todoFormSchema = taskFormSchema
-/** @deprecated Use `TaskFormValues` instead. */
-export type TodoFormValues = TaskFormValues
-
 export const vehicleFormSchema = z.object({
   name: z.string().trim().min(1, '車の名前を入力してください'),
   maker: z.string().trim().min(1, 'メーカーを入力してください'),
@@ -80,5 +75,3 @@ export {
   noteCategoryFormSchema,
   type NoteCategoryFormValues,
 } from './note-category'
-
-export { noteFormSchema, type NoteFormValues } from './note'
