@@ -45,6 +45,7 @@ def test_get_current_user_me(client: TestClient):
     data = response.json()
     assert data["email"] == "test@example.com"
     assert data["is_admin"] is True
+    assert "color" in data
 
 
 def test_admin_list_users(client: TestClient):

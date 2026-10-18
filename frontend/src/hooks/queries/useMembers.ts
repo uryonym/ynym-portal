@@ -8,6 +8,8 @@ import { toast } from 'sonner'
 
 import { fetchMembers, updateMyColor } from '@/lib/api/members'
 
+import { authQueryKeys } from './useAuth'
+
 import type { MemberColorUpdate } from '@/lib/types/member'
 
 export const memberKeys = {
@@ -38,6 +40,7 @@ export function useUpdateMyColorMutation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: memberKeys.all })
       queryClient.invalidateQueries({ queryKey: ['events'] })
+      queryClient.invalidateQueries({ queryKey: authQueryKeys.all })
       toast.success('メンバー色を更新しました')
     },
     onError: (error: Error) => {

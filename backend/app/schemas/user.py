@@ -8,6 +8,7 @@ class UserBase(BaseModel):
     email: EmailStr
     name: str
     avatar_url: str | None = None
+    color: str | None = None
     google_uid: str | None = None
     is_admin: bool = False
 
@@ -22,6 +23,8 @@ class UserCreate(BaseModel):
 class UserUpdate(BaseModel):
     name: str | None = None
     email: EmailStr | None = None
+    avatar_url: str | None = None
+    color: str | None = None
     google_uid: str | None = None
     is_admin: bool | None = None
 

@@ -14,6 +14,7 @@ def test_get_current_auth_user_me(client: TestClient):
     assert data["email"] == "test@example.com"
     assert data["name"] == "テストユーザー"
     assert data["is_admin"] is True
+    assert "color" in data
 
 
 def test_get_current_auth_user_me_unauthorized(client: TestClient):
