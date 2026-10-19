@@ -1,5 +1,3 @@
-import { useState, useCallback } from 'react'
-
 import {
   useQuery,
   useMutation,
@@ -17,7 +15,7 @@ import {
   restoreUser as restoreUserAPI,
 } from '@/lib/api/users'
 
-import type { User, UserCreate, UserUpdate } from '@/lib/types/user'
+import type { UserCreate, UserUpdate } from '@/lib/types/user'
 
 export const userKeys = {
   all: ['users'] as const,
@@ -104,94 +102,4 @@ export function useRestoreUserMutation() {
       toast.error(getApiErrorMessage(error, 'ユーザーの復元に失敗しました'))
     },
   })
-}
-/**
- * 既存コンポーネント向けの互換カスタムフック
- */
-export function useUsers(options?: { enabled?: boolean }) {
-  const [includeDeleted, setIncludeDeleted] = useState(true)
-  const [search, setSearch] = useState('')
-  const [editingUser, setEditingUser] = useState<User | null>(null)
-  const [deletingUser, setDeletingUser] = useState<User | null>(null)
-  const { data: users = [], isLoading } = useUsersQuery(
-    {
-      include_deleted: includeDeleted,
-      search: search || undefined,
-    },
-    options,
-  )
-  const { mutateAsync: createUserAsync, isPending: isCreatePending } =
-    useCreateUserMutation()
-  const { mutateAsync: updateUserAsync, isPending: isUpdatePending } =
-    useUpdateUserMutation()
-  const { mutateAsync: deleteUserAsync, isPending: isDeletePending } =
-    useDeleteUserMutation()
-  const { mutateAsync: restoreUserAsync, isPending: isRestorePending } =
-    useRestoreUserMutation()
-  const addUser = useCallback(
-    async (data: UserCreate) => {
-      try {
-        await createUserAsync(data)
-        return true
-      } catch {
-        return false
-      }
-    },
-    [createUserAsync],
-  )
-  const updateUser = useCallback(
-    async (id: string, data: UserUpdate) => {
-      try {
-        await updateUserAsync({ id, data })
-        return true
-      } catch {
-        return false
-      }
-    },
-    [updateUserAsync],
-  )
-  const deleteUser = useCallback(
-    async (id: string) => {
-      try {
-        await deleteUserAsync(id)
-        return true
-      } catch {
-        return false
-      }
-    },
-    [deleteUserAsync],
-  )
-  const restoreUser = useCallback(
-    async (id: string) => {
-      try {
-        await restoreUserAsync(id)
-        return true
-      } catch {
-        return false
-      }
-    },
-    [restoreUserAsync],
-  )
-  return {
-    users,
-    isLoading:
-      isLoading ||
-      isCreatePending ||
-      isUpdatePending ||
-      isDeletePending ||
-      isRestorePending,
-    includeDeleted,
-    setIncludeDeleted,
-    search,
-    setSearch,
-    editingUser,
-    setEditingUser,
-    deletingUser,
-    setDeletingUser,
-    addUser,
-    updateUser,
-    deleteUser,
-    restoreUser,
-    refreshUsers: async () => {},
-  }
 }

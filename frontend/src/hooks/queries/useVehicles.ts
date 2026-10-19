@@ -1,5 +1,3 @@
-import { useState, useCallback } from 'react'
-
 import {
   useQuery,
   useMutation,
@@ -17,7 +15,6 @@ import {
 } from '@/lib/api/vehicles'
 
 import type {
-  Vehicle,
   CreateVehicleInput,
   UpdateVehicleInput,
 } from '@/lib/types/vehicle'
@@ -82,61 +79,4 @@ export function useDeleteVehicleMutation() {
       toast.error(getApiErrorMessage(error, '車両の削除に失敗しました'))
     },
   })
-}
-/**
- * 既存コンポーネント向けの互換カスタムフック
- */
-export function useVehicles() {
-  const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null)
-  const { data: vehicles = [], isLoading } = useVehiclesQuery()
-  const { mutateAsync: createVehicleAsync, isPending: isCreatePending } =
-    useCreateVehicleMutation()
-  const { mutateAsync: updateVehicleAsync, isPending: isUpdatePending } =
-    useUpdateVehicleMutation()
-  const { mutateAsync: deleteVehicleAsync, isPending: isDeletePending } =
-    useDeleteVehicleMutation()
-  const addVehicle = useCallback(
-    async (data: CreateVehicleInput) => {
-      try {
-        await createVehicleAsync(data)
-        return true
-      } catch {
-        return false
-      }
-    },
-    [createVehicleAsync],
-  )
-  const updateVehicle = useCallback(
-    async (id: string, data: UpdateVehicleInput) => {
-      try {
-        await updateVehicleAsync({ id, data })
-        return true
-      } catch {
-        return false
-      }
-    },
-    [updateVehicleAsync],
-  )
-  const deleteVehicle = useCallback(
-    async (id: string) => {
-      try {
-        await deleteVehicleAsync(id)
-        return true
-      } catch {
-        return false
-      }
-    },
-    [deleteVehicleAsync],
-  )
-  return {
-    vehicles,
-    isLoading:
-      isLoading || isCreatePending || isUpdatePending || isDeletePending,
-    editingVehicle,
-    setEditingVehicle,
-    addVehicle,
-    updateVehicle,
-    deleteVehicle,
-    refreshVehicles: async () => {},
-  }
 }

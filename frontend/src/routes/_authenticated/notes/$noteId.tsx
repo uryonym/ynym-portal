@@ -9,7 +9,7 @@ import { NoteDeleteDialog } from '@/components/NoteDeleteDialog'
 import { NoteEditorHeader } from '@/components/NoteEditorHeader'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useNoteCategories } from '@/hooks/queries/useNoteCategories'
+import { useNoteCategoriesQuery } from '@/hooks/queries/useNoteCategories'
 import {
   useNoteQuery,
   useUpdateNoteMutation,
@@ -25,7 +25,8 @@ function NoteDetailPage() {
   const navigate = useNavigate()
 
   const { data: note, isLoading, isError } = useNoteQuery(noteId)
-  const { categories, isLoading: isCategoriesLoading } = useNoteCategories()
+  const { data: categories = [], isLoading: isCategoriesLoading } =
+    useNoteCategoriesQuery()
   const { mutateAsync: updateNoteAsync } = useUpdateNoteMutation()
   const { mutateAsync: deleteNoteAsync, isPending: isDeleting } =
     useDeleteNoteMutation()

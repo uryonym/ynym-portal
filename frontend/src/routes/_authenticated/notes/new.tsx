@@ -5,7 +5,7 @@ import { toast } from 'sonner'
 
 import { TipTapEditor } from '@/components/editor/TipTapEditor'
 import { NoteEditorHeader } from '@/components/NoteEditorHeader'
-import { useNoteCategories } from '@/hooks/queries/useNoteCategories'
+import { useNoteCategoriesQuery } from '@/hooks/queries/useNoteCategories'
 import { useCreateNoteMutation } from '@/hooks/queries/useNotes'
 
 export const Route = createFileRoute('/_authenticated/notes/new')({
@@ -14,7 +14,7 @@ export const Route = createFileRoute('/_authenticated/notes/new')({
 
 function NewNotePage() {
   const navigate = useNavigate()
-  const { categories } = useNoteCategories()
+  const { data: categories = [] } = useNoteCategoriesQuery()
   const { mutateAsync: createNoteAsync } = useCreateNoteMutation()
 
   const [title, setTitle] = useState('')

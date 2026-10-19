@@ -4,7 +4,12 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { VehicleDialog } from '@/components/VehicleDialog'
 import { VehicleList } from '@/components/VehicleList'
-import { useVehicles } from '@/hooks/queries/useVehicles'
+import {
+  useVehiclesQuery,
+  useCreateVehicleMutation,
+  useUpdateVehicleMutation,
+  useDeleteVehicleMutation,
+} from '@/hooks/queries/useVehicles'
 
 import type {
   Vehicle,
@@ -15,33 +20,50 @@ import type {
 export const Route = createFileRoute('/_authenticated/vehicles')({
   component: VehiclesPage,
 })
+
 function VehiclesPage() {
-  const {
-    vehicles,
-    isLoading,
-    editingVehicle,
-    setEditingVehicle,
-    addVehicle,
-    updateVehicle,
-    deleteVehicle,
-  } = useVehicles()
+  const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  const { data: vehicles = [] } = useVehiclesQuery()
+  const createMutation = useCreateVehicleMutation()
+  const updateMutation = useUpdateVehicleMutation()
+  const deleteMutation = useDeleteVehicleMutation()
+
+  const isMutating =
+    createMutation.isPending ||
+    updateMutation.isPending ||
+    deleteMutation.isPending
+
   const handleAddNew = () => {
     setEditingVehicle(null)
     setIsDialogOpen(true)
   }
+
   const handleEditVehicle = (vehicleToEdit: Vehicle) => {
     setEditingVehicle(vehicleToEdit)
     setIsDialogOpen(true)
   }
-  const handleSubmitForm = (data: CreateVehicleInput | UpdateVehicleInput) => {
-    if (editingVehicle) {
-      updateVehicle(editingVehicle.id, data)
-    } else {
-      addVehicle(data as CreateVehicleInput)
+
+  const handleSubmitForm = async (
+    data: CreateVehicleInput | UpdateVehicleInput,
+  ) => {
+    try {
+      if (editingVehicle) {
+        await updateMutation.mutateAsync({ id: editingVehicle.id, data })
+      } else {
+        await createMutation.mutateAsync(data as CreateVehicleInput)
+      }
+      setIsDialogOpen(false)
+    } catch {
+      // エラーは mutation 内の onError で処理
     }
-    setIsDialogOpen(false)
   }
+
+  const handleDeleteVehicle = (id: string) => {
+    deleteMutation.mutate(id)
+  }
+
   return (
     <>
       <div className="max-w-4xl mx-auto w-full">
@@ -57,8 +79,8 @@ function VehiclesPage() {
         onOpenChange={setIsDialogOpen}
         initialData={editingVehicle}
         onSubmit={handleSubmitForm}
-        onDelete={deleteVehicle}
-        isLoading={isLoading}
+        onDelete={handleDeleteVehicle}
+        isLoading={isMutating}
       />
     </>
   )

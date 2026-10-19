@@ -1,5 +1,3 @@
-import { useState, useCallback, useMemo } from 'react'
-
 import {
   useQuery,
   useMutation,
@@ -17,12 +15,7 @@ import {
   deleteNote as deleteNoteAPI,
 } from '@/lib/api/notes'
 
-import type {
-  Note,
-  CreateNoteInput,
-  UpdateNoteInput,
-  NoteCategoryFilter,
-} from '@/lib/types/note'
+import type { CreateNoteInput, UpdateNoteInput } from '@/lib/types/note'
 
 export const noteKeys = {
   all: ['notes'] as const,
@@ -98,76 +91,4 @@ export function useDeleteNoteMutation() {
       toast.error(getApiErrorMessage(error, 'ノートの削除に失敗しました'))
     },
   })
-}
-/**
- * 既存コンポーネント向けの互換カスタムフック
- */
-export function useNotes() {
-  const [editingNote, setEditingNote] = useState<Note | null>(null)
-  const [viewingNote, setViewingNote] = useState<Note | null>(null)
-  const [categoryFilter, setCategoryFilter] =
-    useState<NoteCategoryFilter>('all')
-  const { data: notes = [], isLoading } = useNotesQuery()
-  const { mutateAsync: createNoteAsync, isPending: isCreatePending } =
-    useCreateNoteMutation()
-  const { mutateAsync: updateNoteAsync, isPending: isUpdatePending } =
-    useUpdateNoteMutation()
-  const { mutateAsync: deleteNoteAsync, isPending: isDeletePending } =
-    useDeleteNoteMutation()
-  const filteredNotes = useMemo(() => {
-    if (categoryFilter === 'all') return notes
-    if (categoryFilter === 'uncategorized') {
-      return notes.filter((note) => note.category_id === null)
-    }
-    return notes.filter((note) => note.category_id === categoryFilter)
-  }, [notes, categoryFilter])
-  const addNote = useCallback(
-    async (data: CreateNoteInput) => {
-      try {
-        await createNoteAsync(data)
-        return true
-      } catch {
-        return false
-      }
-    },
-    [createNoteAsync],
-  )
-  const updateNote = useCallback(
-    async (id: string, data: UpdateNoteInput) => {
-      try {
-        await updateNoteAsync({ id, data })
-        return true
-      } catch {
-        return false
-      }
-    },
-    [updateNoteAsync],
-  )
-  const deleteNote = useCallback(
-    async (id: string) => {
-      try {
-        await deleteNoteAsync(id)
-        return true
-      } catch {
-        return false
-      }
-    },
-    [deleteNoteAsync],
-  )
-  return {
-    notes,
-    filteredNotes,
-    isLoading:
-      isLoading || isCreatePending || isUpdatePending || isDeletePending,
-    editingNote,
-    setEditingNote,
-    viewingNote,
-    setViewingNote,
-    categoryFilter,
-    setCategoryFilter,
-    addNote,
-    updateNote,
-    deleteNote,
-    refreshNotes: async () => {},
-  }
 }

@@ -12,8 +12,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useFuelRecords } from '@/hooks/queries/useFuelRecords'
-import { useVehicles } from '@/hooks/queries/useVehicles'
+import {
+  useFuelRecordsQuery,
+  useCreateFuelRecordMutation,
+  useUpdateFuelRecordMutation,
+  useDeleteFuelRecordMutation,
+} from '@/hooks/queries/useFuelRecords'
+import { useVehiclesQuery } from '@/hooks/queries/useVehicles'
 
 import type {
   CreateFuelRecordInput,
@@ -24,8 +29,10 @@ import type {
 export const Route = createFileRoute('/_authenticated/fuel-records')({
   component: FuelRecordsPage,
 })
+
 function FuelRecordsPage() {
-  const { vehicles, isLoading: vehiclesLoading } = useVehicles()
+  const { data: vehicles = [], isLoading: vehiclesLoading } = useVehiclesQuery()
+
   // seqが最大の車両IDを計算
   const defaultVehicleId = useMemo(() => {
     if (vehicles.length === 0) return null
@@ -34,44 +41,61 @@ function FuelRecordsPage() {
     )
     return vehicleWithMaxSeq.id
   }, [vehicles])
+
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(
     null,
   )
+
   // 選択中の車両ID（未選択の場合はデフォルトを使用）
   const activeVehicleId = selectedVehicleId ?? defaultVehicleId
+
   // 表示用の車両名マッピング（SelectValue で ID ではなく車両名を表示するため）
   const vehicleItems = useMemo(() => {
     return Object.fromEntries(
       vehicles.map((v) => [v.id, `${v.name} (${v.maker} ${v.model})`]),
     )
   }, [vehicles])
-  const {
-    records,
-    isLoading,
-    editingRecord,
-    setEditingRecord,
-    addRecord,
-    updateRecord,
-    deleteRecord,
-  } = useFuelRecords(activeVehicleId)
+
+  const { data: records = [] } = useFuelRecordsQuery(activeVehicleId)
+  const createMutation = useCreateFuelRecordMutation()
+  const updateMutation = useUpdateFuelRecordMutation()
+  const deleteMutation = useDeleteFuelRecordMutation()
+
+  const isMutating =
+    createMutation.isPending ||
+    updateMutation.isPending ||
+    deleteMutation.isPending
+
+  const [editingRecord, setEditingRecord] = useState<FuelRecord | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+
   const handleOpenDialog = () => {
     setEditingRecord(null)
     setIsDialogOpen(true)
   }
+
   const handleEditRecord = (recordToEdit: FuelRecord) => {
     setEditingRecord(recordToEdit)
     setIsDialogOpen(true)
   }
+
   const handleSubmitForm = async (
     data: CreateFuelRecordInput | UpdateFuelRecordInput,
   ) => {
-    const success = editingRecord
-      ? await updateRecord(editingRecord.id, data)
-      : await addRecord(data as CreateFuelRecordInput)
-    if (success) {
+    try {
+      if (editingRecord) {
+        await updateMutation.mutateAsync({ id: editingRecord.id, data })
+      } else {
+        await createMutation.mutateAsync(data as CreateFuelRecordInput)
+      }
       setIsDialogOpen(false)
+    } catch {
+      // エラーは mutation 内の onError で処理
     }
+  }
+
+  const handleDeleteRecord = (id: string) => {
+    deleteMutation.mutate(id)
   }
   if (vehiclesLoading) {
     return (
@@ -148,8 +172,8 @@ function FuelRecordsPage() {
         initialData={editingRecord}
         vehicleId={activeVehicleId ?? ''}
         onSubmit={handleSubmitForm}
-        onDelete={deleteRecord}
-        isLoading={isLoading}
+        onDelete={handleDeleteRecord}
+        isLoading={isMutating}
       />
     </>
   )

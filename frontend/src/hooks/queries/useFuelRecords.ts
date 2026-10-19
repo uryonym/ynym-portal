@@ -1,5 +1,3 @@
-import { useState, useCallback } from 'react'
-
 import {
   useQuery,
   useMutation,
@@ -94,61 +92,4 @@ export function useDeleteFuelRecordMutation() {
       toast.error(getApiErrorMessage(error, '給油記録の削除に失敗しました'))
     },
   })
-}
-/**
- * 既存コンポーネント向けの互換カスタムフック
- */
-export function useFuelRecords(vehicleId: string | null) {
-  const [editingRecord, setEditingRecord] = useState<FuelRecord | null>(null)
-  const { data: records = [], isLoading } = useFuelRecordsQuery(vehicleId)
-  const { mutateAsync: createFuelRecordAsync, isPending: isCreatePending } =
-    useCreateFuelRecordMutation()
-  const { mutateAsync: updateFuelRecordAsync, isPending: isUpdatePending } =
-    useUpdateFuelRecordMutation()
-  const { mutateAsync: deleteFuelRecordAsync, isPending: isDeletePending } =
-    useDeleteFuelRecordMutation()
-  const addRecord = useCallback(
-    async (data: CreateFuelRecordInput) => {
-      try {
-        await createFuelRecordAsync(data)
-        return true
-      } catch {
-        return false
-      }
-    },
-    [createFuelRecordAsync],
-  )
-  const updateRecord = useCallback(
-    async (id: string, data: UpdateFuelRecordInput) => {
-      try {
-        await updateFuelRecordAsync({ id, data })
-        return true
-      } catch {
-        return false
-      }
-    },
-    [updateFuelRecordAsync],
-  )
-  const deleteRecord = useCallback(
-    async (id: string) => {
-      try {
-        await deleteFuelRecordAsync(id)
-        return true
-      } catch {
-        return false
-      }
-    },
-    [deleteFuelRecordAsync],
-  )
-  return {
-    records,
-    isLoading:
-      isLoading || isCreatePending || isUpdatePending || isDeletePending,
-    editingRecord,
-    setEditingRecord,
-    addRecord,
-    updateRecord,
-    deleteRecord,
-    refreshRecords: async () => {},
-  }
 }

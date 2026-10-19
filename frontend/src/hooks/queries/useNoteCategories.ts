@@ -1,5 +1,3 @@
-import { useState, useCallback } from 'react'
-
 import {
   useQuery,
   useMutation,
@@ -17,7 +15,6 @@ import {
 } from '@/lib/api/note-categories'
 
 import type {
-  NoteCategory,
   CreateNoteCategoryInput,
   UpdateNoteCategoryInput,
 } from '@/lib/types/note-category'
@@ -82,63 +79,4 @@ export function useDeleteNoteCategoryMutation() {
       toast.error(getApiErrorMessage(error, 'カテゴリの削除に失敗しました'))
     },
   })
-}
-/**
- * 既存コンポーネント向けの互換カスタムフック
- */
-export function useNoteCategories() {
-  const [editingCategory, setEditingCategory] = useState<NoteCategory | null>(
-    null,
-  )
-  const { data: categories = [], isLoading } = useNoteCategoriesQuery()
-  const { mutateAsync: createCategoryAsync, isPending: isCreatePending } =
-    useCreateNoteCategoryMutation()
-  const { mutateAsync: updateCategoryAsync, isPending: isUpdatePending } =
-    useUpdateNoteCategoryMutation()
-  const { mutateAsync: deleteCategoryAsync, isPending: isDeletePending } =
-    useDeleteNoteCategoryMutation()
-  const addCategory = useCallback(
-    async (data: CreateNoteCategoryInput) => {
-      try {
-        await createCategoryAsync(data)
-        return true
-      } catch {
-        return false
-      }
-    },
-    [createCategoryAsync],
-  )
-  const updateCategory = useCallback(
-    async (id: string, data: UpdateNoteCategoryInput) => {
-      try {
-        await updateCategoryAsync({ id, data })
-        return true
-      } catch {
-        return false
-      }
-    },
-    [updateCategoryAsync],
-  )
-  const deleteCategory = useCallback(
-    async (id: string) => {
-      try {
-        await deleteCategoryAsync(id)
-        return true
-      } catch {
-        return false
-      }
-    },
-    [deleteCategoryAsync],
-  )
-  return {
-    categories,
-    isLoading:
-      isLoading || isCreatePending || isUpdatePending || isDeletePending,
-    editingCategory,
-    setEditingCategory,
-    addCategory,
-    updateCategory,
-    deleteCategory,
-    refreshCategories: async () => {},
-  }
 }

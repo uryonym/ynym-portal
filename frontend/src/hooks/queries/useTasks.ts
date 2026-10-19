@@ -1,5 +1,3 @@
-import { useState, useCallback } from 'react'
-
 import {
   useQuery,
   useMutation,
@@ -114,61 +112,4 @@ export function useDeleteTaskMutation() {
       toast.error(getApiErrorMessage(error, 'タスクの削除に失敗しました'))
     },
   })
-}
-/**
- * 既存コンポーネント向けの互換カスタムフック
- */
-export function useTasks(initialFilter: TaskFilter = 'active') {
-  const [filter, setFilter] = useState<TaskFilter>(initialFilter)
-  const [editingTask, setEditingTask] = useState<Task | null>(null)
-  const { data: tasks = [], isLoading } = useTasksQuery(filter)
-  const { mutateAsync: createTaskAsync, isPending: isCreatePending } =
-    useCreateTaskMutation()
-  const { mutateAsync: updateTaskAsync, isPending: isUpdatePending } =
-    useUpdateTaskMutation()
-  const { mutateAsync: deleteTaskAsync, isPending: isDeletePending } =
-    useDeleteTaskMutation()
-  const addTask = useCallback(
-    async (data: CreateTaskInput) => {
-      await createTaskAsync(data)
-    },
-    [createTaskAsync],
-  )
-  const updateTask = useCallback(
-    async (id: string, data: UpdateTaskInput) => {
-      await updateTaskAsync({ id, data })
-    },
-    [updateTaskAsync],
-  )
-  const deleteTask = useCallback(
-    async (id: string) => {
-      await deleteTaskAsync(id)
-    },
-    [deleteTaskAsync],
-  )
-  const toggleComplete = useCallback(
-    async (id: string) => {
-      const task = tasks.find((t) => t.id === id)
-      if (task) {
-        await updateTaskAsync({
-          id,
-          data: { is_completed: !task.is_completed },
-        })
-      }
-    },
-    [tasks, updateTaskAsync],
-  )
-  return {
-    tasks,
-    isLoading:
-      isLoading || isCreatePending || isUpdatePending || isDeletePending,
-    editingTask,
-    setEditingTask,
-    addTask,
-    updateTask,
-    deleteTask,
-    toggleComplete,
-    filter,
-    setFilter,
-  }
 }
