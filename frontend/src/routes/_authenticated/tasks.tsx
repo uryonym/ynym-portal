@@ -2,8 +2,8 @@ import { useState } from 'react'
 
 import { createFileRoute } from '@tanstack/react-router'
 
-import { TaskDialog } from '@/components/TaskDialog'
-import { TaskList } from '@/components/TaskList'
+import { TaskDialog } from '@/components/tasks/TaskDialog'
+import { TaskList } from '@/components/tasks/TaskList'
 import {
   useTasksQuery,
   useCreateTaskMutation,

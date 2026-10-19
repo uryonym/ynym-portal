@@ -2,8 +2,8 @@ import { useState, useMemo } from 'react'
 
 import { createFileRoute, Link } from '@tanstack/react-router'
 
-import { FuelRecordDialog } from '@/components/FuelRecordDialog'
-import { FuelRecordList } from '@/components/FuelRecordList'
+import { FuelRecordDialog } from '@/components/fuel-records/FuelRecordDialog'
+import { FuelRecordList } from '@/components/fuel-records/FuelRecordList'
 import { Button } from '@/components/ui/button'
 import {
   Select,

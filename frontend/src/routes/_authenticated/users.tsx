@@ -4,9 +4,9 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { ShieldAlert } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { UserDeleteDialog } from '@/components/UserDeleteDialog'
-import { UserDialog } from '@/components/UserDialog'
-import { UserList } from '@/components/UserList'
+import { UserDeleteDialog } from '@/components/users/UserDeleteDialog'
+import { UserDialog } from '@/components/users/UserDialog'
+import { UserList } from '@/components/users/UserList'
 import { useAuth } from '@/hooks/queries/useAuth'
 import {
   useUsersQuery,

@@ -2,8 +2,8 @@ import { useState, useMemo } from 'react'
 
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
-import { NoteDeleteDialog } from '@/components/NoteDeleteDialog'
-import { NoteList } from '@/components/NoteList'
+import { NoteDeleteDialog } from '@/components/notes/NoteDeleteDialog'
+import { NoteList } from '@/components/notes/NoteList'
 import { useNoteCategoriesQuery } from '@/hooks/queries/useNoteCategories'
 import {
   useNotesQuery,

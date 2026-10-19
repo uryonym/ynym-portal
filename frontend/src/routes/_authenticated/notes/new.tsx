@@ -4,7 +4,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 
 import { TipTapEditor } from '@/components/editor/TipTapEditor'
-import { NoteEditorHeader } from '@/components/NoteEditorHeader'
+import { NoteEditorHeader } from '@/components/notes/NoteEditorHeader'
 import { useNoteCategoriesQuery } from '@/hooks/queries/useNoteCategories'
 import { useCreateNoteMutation } from '@/hooks/queries/useNotes'
 

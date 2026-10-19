@@ -2,8 +2,8 @@ import { useState } from 'react'
 
 import { createFileRoute } from '@tanstack/react-router'
 
-import { VehicleDialog } from '@/components/VehicleDialog'
-import { VehicleList } from '@/components/VehicleList'
+import { VehicleDialog } from '@/components/vehicles/VehicleDialog'
+import { VehicleList } from '@/components/vehicles/VehicleList'
 import {
   useVehiclesQuery,
   useCreateVehicleMutation,
