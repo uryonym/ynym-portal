@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
+import { getApiErrorMessage } from '@/lib/api/client'
 import { fetchMembers, updateMyColor } from '@/lib/api/members'
 
 import { authQueryKeys } from './useAuth'
@@ -43,8 +44,8 @@ export function useUpdateMyColorMutation() {
       queryClient.invalidateQueries({ queryKey: authQueryKeys.all })
       toast.success('メンバー色を更新しました')
     },
-    onError: (error: Error) => {
-      toast.error(error.message || 'メンバー色の更新に失敗しました')
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, 'メンバー色の更新に失敗しました'))
     },
   })
 }

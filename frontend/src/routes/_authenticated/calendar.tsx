@@ -74,14 +74,13 @@ function CalendarPage() {
     member_ids: selectedMemberIds.length > 0 ? selectedMemberIds : undefined,
   })
 
-  // タスク取得クエリ（期日範囲で取得）
+  // タスク取得クエリ（期日範囲で取得、showTasks が false の時はフェッチを無効化）
   const { data: tasks = [] } = useTasksQuery(
-    showTasks
-      ? {
-          due_from: format(rangeStart, 'yyyy-MM-dd'),
-          due_to: format(rangeEnd, 'yyyy-MM-dd'),
-        }
-      : 'active',
+    {
+      due_from: format(rangeStart, 'yyyy-MM-dd'),
+      due_to: format(rangeEnd, 'yyyy-MM-dd'),
+    },
+    { enabled: showTasks },
   )
 
   // ミューテーション

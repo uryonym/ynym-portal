@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import { ApiError } from '@/lib/api/client'
+import { getApiErrorMessage } from '@/lib/api/client'
 import {
   listUsers,
   createUser as createUserAPI,
@@ -25,23 +25,7 @@ export const userKeys = {
   list: (params: { include_deleted: boolean; search?: string }) =>
     [...userKeys.lists(), params] as const,
 }
-function getErrorMessage(error: unknown, defaultMessage: string): string {
-  if (error instanceof ApiError) {
-    if (
-      typeof error.data === 'object' &&
-      error.data !== null &&
-      'detail' in error.data
-    ) {
-      const detail = error.data.detail
-      if (typeof detail === 'string') return detail
-    }
-    return error.message || defaultMessage
-  }
-  if (error instanceof Error) {
-    return error.message
-  }
-  return defaultMessage
-}
+
 export const userQueries = {
   list: (params: { include_deleted: boolean; search?: string }) =>
     queryOptions({
@@ -51,11 +35,18 @@ export const userQueries = {
       },
     }),
 }
-export function useUsersQuery(params: {
-  include_deleted: boolean
-  search?: string
-}) {
-  return useQuery(userQueries.list(params))
+
+export function useUsersQuery(
+  params: {
+    include_deleted: boolean
+    search?: string
+  },
+  options?: { enabled?: boolean },
+) {
+  return useQuery({
+    ...userQueries.list(params),
+    ...options,
+  })
 }
 export function useCreateUserMutation() {
   const queryClient = useQueryClient()
@@ -67,7 +58,7 @@ export function useCreateUserMutation() {
     },
     onError: (error) => {
       console.error('Failed to create user:', error)
-      toast.error(getErrorMessage(error, 'ユーザーの作成に失敗しました'))
+      toast.error(getApiErrorMessage(error, 'ユーザーの作成に失敗しました'))
     },
   })
 }
@@ -82,7 +73,7 @@ export function useUpdateUserMutation() {
     },
     onError: (error) => {
       console.error('Failed to update user:', error)
-      toast.error(getErrorMessage(error, 'ユーザー情報の更新に失敗しました'))
+      toast.error(getApiErrorMessage(error, 'ユーザー情報の更新に失敗しました'))
     },
   })
 }
@@ -96,7 +87,7 @@ export function useDeleteUserMutation() {
     },
     onError: (error) => {
       console.error('Failed to delete user:', error)
-      toast.error(getErrorMessage(error, 'ユーザーの無効化に失敗しました'))
+      toast.error(getApiErrorMessage(error, 'ユーザーの無効化に失敗しました'))
     },
   })
 }
@@ -110,22 +101,25 @@ export function useRestoreUserMutation() {
     },
     onError: (error) => {
       console.error('Failed to restore user:', error)
-      toast.error(getErrorMessage(error, 'ユーザーの復元に失敗しました'))
+      toast.error(getApiErrorMessage(error, 'ユーザーの復元に失敗しました'))
     },
   })
 }
 /**
  * 既存コンポーネント向けの互換カスタムフック
  */
-export function useUsers() {
+export function useUsers(options?: { enabled?: boolean }) {
   const [includeDeleted, setIncludeDeleted] = useState(true)
   const [search, setSearch] = useState('')
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [deletingUser, setDeletingUser] = useState<User | null>(null)
-  const { data: users = [], isLoading } = useUsersQuery({
-    include_deleted: includeDeleted,
-    search: search || undefined,
-  })
+  const { data: users = [], isLoading } = useUsersQuery(
+    {
+      include_deleted: includeDeleted,
+      search: search || undefined,
+    },
+    options,
+  )
   const { mutateAsync: createUserAsync, isPending: isCreatePending } =
     useCreateUserMutation()
   const { mutateAsync: updateUserAsync, isPending: isUpdatePending } =

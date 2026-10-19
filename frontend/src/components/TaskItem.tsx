@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { differenceInCalendarDays } from 'date-fns'
 import { Pencil, Calendar } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -23,11 +24,7 @@ function getDueDateBadge(
   const date = new Date(dueDateStr)
   if (isNaN(date.getTime())) return null
 
-  const now = new Date()
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-  const target = new Date(date.getFullYear(), date.getMonth(), date.getDate())
-  const diffTime = target.getTime() - today.getTime()
-  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24))
+  const diffDays = differenceInCalendarDays(date, new Date())
 
   if (isCompleted) {
     return {

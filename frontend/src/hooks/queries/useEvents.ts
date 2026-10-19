@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
+import { getApiErrorMessage } from '@/lib/api/client'
 import {
   createEvent as createEventAPI,
   deleteEvent as deleteEventAPI,
@@ -65,8 +66,8 @@ export function useCreateEventMutation() {
       queryClient.invalidateQueries({ queryKey: eventKeys.lists() })
       toast.success('予定を作成しました')
     },
-    onError: (error: Error) => {
-      toast.error(error.message || '予定の作成に失敗しました')
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, '予定の作成に失敗しました'))
     },
   })
 }
@@ -84,8 +85,8 @@ export function useUpdateEventMutation() {
       })
       toast.success('予定を更新しました')
     },
-    onError: (error: Error) => {
-      toast.error(error.message || '予定の更新に失敗しました')
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, '予定の更新に失敗しました'))
     },
   })
 }
@@ -100,8 +101,8 @@ export function useDeleteEventMutation() {
       queryClient.invalidateQueries({ queryKey: ['trash'] })
       toast.success('予定をゴミ箱に移動しました')
     },
-    onError: (error: Error) => {
-      toast.error(error.message || '予定の削除に失敗しました')
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, '予定の削除に失敗しました'))
     },
   })
 }

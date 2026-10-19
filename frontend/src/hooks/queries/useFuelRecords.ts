@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
+import { getApiErrorMessage } from '@/lib/api/client'
 import {
   fetchFuelRecords,
   createFuelRecord as createFuelRecordAPI,
@@ -60,7 +61,7 @@ export function useCreateFuelRecordMutation() {
     },
     onError: (error) => {
       console.error('Failed to create fuel record:', error)
-      toast.error('給油記録の登録に失敗しました')
+      toast.error(getApiErrorMessage(error, '給油記録の登録に失敗しました'))
     },
   })
 }
@@ -75,7 +76,7 @@ export function useUpdateFuelRecordMutation() {
     },
     onError: (error) => {
       console.error('Failed to update fuel record:', error)
-      toast.error('給油記録の更新に失敗しました')
+      toast.error(getApiErrorMessage(error, '給油記録の更新に失敗しました'))
     },
   })
 }
@@ -90,7 +91,7 @@ export function useDeleteFuelRecordMutation() {
     },
     onError: (error) => {
       console.error('Failed to delete fuel record:', error)
-      toast.error('給油記録の削除に失敗しました')
+      toast.error(getApiErrorMessage(error, '給油記録の削除に失敗しました'))
     },
   })
 }

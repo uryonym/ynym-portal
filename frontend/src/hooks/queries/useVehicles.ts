@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
+import { getApiErrorMessage } from '@/lib/api/client'
 import {
   fetchVehicles,
   createVehicle as createVehicleAPI,
@@ -48,7 +49,7 @@ export function useCreateVehicleMutation() {
     },
     onError: (error) => {
       console.error('Failed to create vehicle:', error)
-      toast.error('車両の登録に失敗しました')
+      toast.error(getApiErrorMessage(error, '車両の登録に失敗しました'))
     },
   })
 }
@@ -63,7 +64,7 @@ export function useUpdateVehicleMutation() {
     },
     onError: (error) => {
       console.error('Failed to update vehicle:', error)
-      toast.error('車両情報の更新に失敗しました')
+      toast.error(getApiErrorMessage(error, '車両情報の更新に失敗しました'))
     },
   })
 }
@@ -78,7 +79,7 @@ export function useDeleteVehicleMutation() {
     },
     onError: (error) => {
       console.error('Failed to delete vehicle:', error)
-      toast.error('車両の削除に失敗しました')
+      toast.error(getApiErrorMessage(error, '車両の削除に失敗しました'))
     },
   })
 }

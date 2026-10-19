@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
+import { getApiErrorMessage } from '@/lib/api/client'
 import {
   fetchCategories,
   createCategory as createCategoryAPI,
@@ -48,7 +49,7 @@ export function useCreateNoteCategoryMutation() {
     },
     onError: (error) => {
       console.error('Failed to create note category:', error)
-      toast.error('カテゴリの作成に失敗しました')
+      toast.error(getApiErrorMessage(error, 'カテゴリの作成に失敗しました'))
     },
   })
 }
@@ -63,7 +64,7 @@ export function useUpdateNoteCategoryMutation() {
     },
     onError: (error) => {
       console.error('Failed to update note category:', error)
-      toast.error('カテゴリの更新に失敗しました')
+      toast.error(getApiErrorMessage(error, 'カテゴリの更新に失敗しました'))
     },
   })
 }
@@ -78,7 +79,7 @@ export function useDeleteNoteCategoryMutation() {
     },
     onError: (error) => {
       console.error('Failed to delete note category:', error)
-      toast.error('カテゴリの削除に失敗しました')
+      toast.error(getApiErrorMessage(error, 'カテゴリの削除に失敗しました'))
     },
   })
 }

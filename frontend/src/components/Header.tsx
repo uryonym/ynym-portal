@@ -24,6 +24,7 @@ function getPageInfo(pathname: string): {
   if (pathname.startsWith('/fuel-records')) return { title: '燃費管理' }
   if (pathname.startsWith('/users')) return { title: 'ユーザー管理' }
   if (pathname.startsWith('/trash')) return { title: 'ゴミ箱' }
+  if (pathname.startsWith('/calendar')) return { title: 'カレンダー' }
   return { title: 'ホーム' }
 }
 

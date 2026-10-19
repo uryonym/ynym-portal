@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
+import { getApiErrorMessage } from '@/lib/api/client'
 import {
   fetchNotes,
   getNote as getNoteAPI,
@@ -64,7 +65,7 @@ export function useCreateNoteMutation() {
     },
     onError: (error) => {
       console.error('Failed to create note:', error)
-      toast.error('ノートの作成に失敗しました')
+      toast.error(getApiErrorMessage(error, 'ノートの作成に失敗しました'))
     },
   })
 }
@@ -79,7 +80,7 @@ export function useUpdateNoteMutation() {
     },
     onError: (error) => {
       console.error('Failed to update note:', error)
-      toast.error('ノートの更新に失敗しました')
+      toast.error(getApiErrorMessage(error, 'ノートの更新に失敗しました'))
     },
   })
 }
@@ -94,7 +95,7 @@ export function useDeleteNoteMutation() {
     },
     onError: (error) => {
       console.error('Failed to delete note:', error)
-      toast.error('ノートの削除に失敗しました')
+      toast.error(getApiErrorMessage(error, 'ノートの削除に失敗しました'))
     },
   })
 }

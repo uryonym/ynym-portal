@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
+import { getApiErrorMessage } from '@/lib/api/client'
 import {
   fetchTrashSummary,
   fetchTrashItems,
@@ -75,7 +76,7 @@ export function useRestoreTrashMutation() {
     },
     onError: (error) => {
       console.error('Failed to restore trash item:', error)
-      toast.error('復元に失敗しました')
+      toast.error(getApiErrorMessage(error, '復元に失敗しました'))
     },
   })
 }
@@ -95,7 +96,7 @@ export function usePurgeTrashMutation() {
     },
     onError: (error) => {
       console.error('Failed to purge trash item:', error)
-      toast.error('完全削除に失敗しました')
+      toast.error(getApiErrorMessage(error, '完全削除に失敗しました'))
     },
   })
 }
@@ -110,7 +111,7 @@ export function useEmptyTrashMutation() {
     },
     onError: (error) => {
       console.error('Failed to empty trash:', error)
-      toast.error('ゴミ箱を空にできませんでした')
+      toast.error(getApiErrorMessage(error, 'ゴミ箱を空にできませんでした'))
     },
   })
 }

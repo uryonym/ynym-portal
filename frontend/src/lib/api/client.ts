@@ -94,3 +94,28 @@ export const apiClient = {
     options?: Omit<RequestOptions, 'method'>,
   ) => request<T>(endpoint, { ...options, method: 'DELETE' }),
 }
+
+export function getApiErrorMessage(
+  error: unknown,
+  defaultMessage: string,
+): string {
+  if (error instanceof ApiError) {
+    if (typeof error.data === 'object' && error.data !== null) {
+      const data = error.data as Record<string, unknown>
+      if (typeof data.message === 'string' && data.message.trim()) {
+        return data.message
+      }
+      if (typeof data.detail === 'string' && data.detail.trim()) {
+        return data.detail
+      }
+      if (typeof data.error === 'string' && data.error.trim()) {
+        return data.error
+      }
+    }
+    return defaultMessage
+  }
+  if (error instanceof Error && error.message.trim()) {
+    return error.message
+  }
+  return defaultMessage
+}

@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
+import { getApiErrorMessage } from '@/lib/api/client'
 import {
   fetchTasks,
   createTask as createTaskAPI,
@@ -49,8 +50,12 @@ export const taskQueries = {
 }
 export function useTasksQuery(
   optionsOrFilter: TaskFilter | FetchTasksOptions = 'active',
+  options?: { enabled?: boolean },
 ) {
-  return useQuery(taskQueries.list(optionsOrFilter))
+  return useQuery({
+    ...taskQueries.list(optionsOrFilter),
+    ...options,
+  })
 }
 export function useCreateTaskMutation() {
   const queryClient = useQueryClient()
@@ -62,7 +67,7 @@ export function useCreateTaskMutation() {
     },
     onError: (error) => {
       console.error('Failed to create task:', error)
-      toast.error('タスクの作成に失敗しました')
+      toast.error(getApiErrorMessage(error, 'タスクの作成に失敗しました'))
     },
   })
 }
@@ -77,7 +82,7 @@ export function useUpdateTaskMutation() {
     },
     onError: (error) => {
       console.error('Failed to update task:', error)
-      toast.error('タスクの更新に失敗しました')
+      toast.error(getApiErrorMessage(error, 'タスクの更新に失敗しました'))
     },
   })
 }
@@ -91,7 +96,7 @@ export function useToggleTaskMutation() {
     },
     onError: (error) => {
       console.error('Failed to toggle task:', error)
-      toast.error('タスクの状態更新に失敗しました')
+      toast.error(getApiErrorMessage(error, 'タスクの状態更新に失敗しました'))
     },
   })
 }
@@ -106,7 +111,7 @@ export function useDeleteTaskMutation() {
     },
     onError: (error) => {
       console.error('Failed to delete task:', error)
-      toast.error('タスクの削除に失敗しました')
+      toast.error(getApiErrorMessage(error, 'タスクの削除に失敗しました'))
     },
   })
 }

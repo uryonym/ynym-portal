@@ -33,20 +33,20 @@ function UsersPage() {
     updateUser,
     deleteUser,
     restoreUser,
-  } = useUsers()
+  } = useUsers({ enabled: !!currentUser?.is_admin })
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   if (isAuthLoading) {
     return (
-      <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full flex items-center justify-center min-h-[50vh]">
+      <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full flex items-center justify-center min-h-[50vh]">
         <div className="text-slate-400 text-sm">認証情報を確認中...</div>
-      </main>
+      </div>
     )
   }
   // 管理者権限チェック
   if (!currentUser?.is_admin) {
     return (
-      <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-md mx-auto w-full flex flex-col items-center justify-center min-h-[50vh] text-center space-y-4">
+      <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-md mx-auto w-full flex flex-col items-center justify-center min-h-[50vh] text-center space-y-4">
         <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shadow-xs">
           <ShieldAlert className="h-6 w-6" />
         </div>
@@ -65,7 +65,7 @@ function UsersPage() {
         >
           ホームに戻る
         </Button>
-      </main>
+      </div>
     )
   }
   const handleAddNew = () => {
@@ -92,7 +92,7 @@ function UsersPage() {
   }
   return (
     <>
-      <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full">
+      <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full">
         <UserList
           users={users}
           currentUserId={currentUser.id}
@@ -106,7 +106,7 @@ function UsersPage() {
           onRestore={restoreUser}
           isLoading={isUsersLoading}
         />
-      </main>
+      </div>
 
       <UserDialog
         open={isDialogOpen}
