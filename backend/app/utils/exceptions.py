@@ -1,5 +1,7 @@
 """アプリケーション用のカスタム例外クラス."""
 
+from typing import ClassVar
+
 
 class ApplicationException(Exception):
     """アプリケーション用の基本例外クラス."""
@@ -15,25 +17,65 @@ class ApplicationException(Exception):
         self.status_code = status_code
         super().__init__(self.message)
 
+    @property
+    def detail(self) -> str:
+        """FastAPI HTTPException 互換プロパティ."""
+        return self.message
+
+
+class BadRequestException(ApplicationException):
+    """不正なリクエストの場合に発生 (400)."""
+
+    def __init__(self, message: str = "不正なリクエストです"):
+        """不正リクエスト例外を初期化."""
+        super().__init__(message, status_code=400)
+
 
 class ValidationException(ApplicationException):
-    """検証に失敗した場合に発生."""
+    """バリデーションに失敗した場合に発生 (422 または指定ステータスコード)."""
 
-    def __init__(self, message: str):
+    def __init__(self, message: str, status_code: int = 422):
         """検証例外を初期化."""
-        super().__init__(message, status_code=422)
+        super().__init__(message, status_code=status_code)
 
 
 class NotFoundException(ApplicationException):
-    """リソースが見つからない場合に発生."""
+    """リソースが見つからない場合に発生 (404)."""
 
-    def __init__(self, message: str = "リソースが見つかりません"):
+    RESOURCE_MESSAGES: ClassVar[dict[str, str]] = {
+        "タスク": "タスクが見つかりません",
+        "カテゴリ": "カテゴリが見つかりません",
+        "車": "車が見つかりません",
+        "車両": "車が見つかりません",
+        "ノート": "ノートが見つかりません",
+        "燃費記録": "燃費記録が見つかりません",
+        "予定": "予定が見つかりません",
+        "ユーザー": "ユーザーが見つかりません",
+    }
+
+    def __init__(
+        self,
+        message: str = "リソースが見つかりません",
+        resource_name: str | None = None,
+    ):
         """見つからない例外を初期化."""
+        self.resource_name = resource_name
+        if resource_name and resource_name in self.RESOURCE_MESSAGES:
+            self.formatted_message = self.RESOURCE_MESSAGES[resource_name]
+        else:
+            self.formatted_message = self._resolve_message(message)
         super().__init__(message, status_code=404)
+
+    @classmethod
+    def _resolve_message(cls, detail: str) -> str:
+        for key, val in cls.RESOURCE_MESSAGES.items():
+            if key in detail:
+                return val
+        return detail
 
 
 class ConflictException(ApplicationException):
-    """リソースの競合または関連データの制約により処理できない場合に発生."""
+    """リソースの競合または関連データの制約により処理できない場合に発生 (409)."""
 
     def __init__(self, message: str = "リソースが競合しています"):
         """競合例外を初期化."""
@@ -41,7 +83,7 @@ class ConflictException(ApplicationException):
 
 
 class AuthenticationException(ApplicationException):
-    """認証に失敗した場合に発生."""
+    """認証に失敗した場合に発生 (401)."""
 
     def __init__(self, message: str = "認証に失敗しました"):
         """認証例外を初期化."""
@@ -49,28 +91,11 @@ class AuthenticationException(ApplicationException):
 
 
 class AuthorizationException(ApplicationException):
-    """認可に失敗した場合に発生."""
+    """認可に失敗した場合に発生 (403)."""
 
     def __init__(self, message: str = "アクセス権限が不足しています"):
         """認可例外を初期化."""
         super().__init__(message, status_code=403)
-
-
-def _format_not_found_message(detail: str) -> str:
-    """リソース固有の見つからないメッセージを生成."""
-    if "タスク" in detail:
-        return "タスクが見つかりません"
-    if "カテゴリ" in detail:
-        return "カテゴリが見つかりません"
-    if "車" in detail or "車両" in detail:
-        return "車が見つかりません"
-    if "ノート" in detail:
-        return "ノートが見つかりません"
-    if "燃費記録" in detail:
-        return "燃費記録が見つかりません"
-    if "予定" in detail:
-        return "予定が見つかりません"
-    return detail
 
 
 def register_exception_handlers(app) -> None:
@@ -87,7 +112,7 @@ def register_exception_handlers(app) -> None:
             status_code=status.HTTP_404_NOT_FOUND,
             content={
                 "error": exc.message,
-                "message": _format_not_found_message(exc.message),
+                "message": exc.formatted_message,
             },
         )
 

@@ -5,12 +5,11 @@ from __future__ import annotations
 from datetime import datetime
 from uuid import UUID
 
-from fastapi import HTTPException, status
-
 from app.models.base import JST
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import UserCreate, UserUpdate
+from app.utils.exceptions import BadRequestException, NotFoundException
 
 
 class UserService:
@@ -48,11 +47,9 @@ class UserService:
         )
 
     def count_users(
-        self,
-        include_deleted: bool = False,
-        search: str | None = None,
+        self, include_deleted: bool = False, search: str | None = None
     ) -> int:
-        """ユーザー総数を取得."""
+        """ユーザー件数を取得."""
         return self.user_repo.count_users(
             include_deleted=include_deleted, search=search
         )
@@ -63,19 +60,13 @@ class UserService:
             user_in.google_uid, include_deleted=True
         )
         if existing_uid:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="このGoogle UIDは既に登録されています。",
-            )
+            raise BadRequestException("このGoogle UIDは既に登録されています。")
 
         existing_email = self.user_repo.get_by_email(
             user_in.email, include_deleted=True
         )
         if existing_email:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="このメールアドレスは既に登録されています。",
-            )
+            raise BadRequestException("このメールアドレスは既に登録されています。")
 
         user = User(
             google_uid=user_in.google_uid,
@@ -89,9 +80,8 @@ class UserService:
         """ユーザー情報を更新."""
         user = self.user_repo.get_by_id(user_id, include_deleted=True)
         if not user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="ユーザーが見つかりません。",
+            raise NotFoundException(
+                "ユーザーが見つかりません。", resource_name="ユーザー"
             )
 
         if user_in.google_uid and user_in.google_uid != user.google_uid:
@@ -99,10 +89,7 @@ class UserService:
                 user_in.google_uid, include_deleted=True
             )
             if existing_uid and existing_uid.id != user.id:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="このGoogle UIDは既に使用されています。",
-                )
+                raise BadRequestException("このGoogle UIDは既に使用されています。")
             user.google_uid = user_in.google_uid
 
         if user_in.email and user_in.email != user.email:
@@ -110,10 +97,7 @@ class UserService:
                 user_in.email, include_deleted=True
             )
             if existing_email and existing_email.id != user.id:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="このメールアドレスは既に使用されています。",
-                )
+                raise BadRequestException("このメールアドレスは既に使用されています。")
             user.email = user_in.email
 
         if user_in.name is not None:
@@ -128,15 +112,11 @@ class UserService:
         """ユーザーを論理削除（退会扱い）."""
         user = self.user_repo.get_by_id(user_id, include_deleted=True)
         if not user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="ユーザーが見つかりません。",
+            raise NotFoundException(
+                "ユーザーが見つかりません。", resource_name="ユーザー"
             )
         if user.deleted_at is not None:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="ユーザーは既に削除されています。",
-            )
+            raise BadRequestException("ユーザーは既に削除されています。")
 
         user.deleted_at = datetime.now(JST)
         return self.user_repo.save(user)
@@ -145,15 +125,11 @@ class UserService:
         """論理削除されたユーザーを復元（再有効化）."""
         user = self.user_repo.get_by_id(user_id, include_deleted=True)
         if not user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="ユーザーが見つかりません。",
+            raise NotFoundException(
+                "ユーザーが見つかりません。", resource_name="ユーザー"
             )
         if user.deleted_at is None:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="ユーザーは削除されていません。",
-            )
+            raise BadRequestException("ユーザーは削除されていません。")
 
         user.deleted_at = None
         return self.user_repo.save(user)
@@ -163,9 +139,9 @@ class UserService:
         user: User,
         name: str,
         email: str,
-        avatar_url: str | None,
+        avatar_url: str | None = None,
     ) -> User:
-        """Google OAuth 認証時のプロファイル同期."""
+        """Google から取得した最新情報で既存ユーザーを同期."""
         user.name = name
         user.email = email
         if avatar_url:

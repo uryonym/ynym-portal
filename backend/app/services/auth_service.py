@@ -1,11 +1,11 @@
 """認証サービス."""
 
 import httpx
-from fastapi import HTTPException, status
 
 from app.core.config import settings
 from app.security.jwt import create_access_token
 from app.services.user_service import UserService
+from app.utils.exceptions import AuthorizationException, BadRequestException
 
 
 class AuthService:
@@ -19,10 +19,7 @@ class AuthService:
         token_data = self._exchange_code_for_token(code)
         access_token = token_data.get("access_token")
         if not access_token:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Failed to retrieve access token from Google",
-            )
+            raise BadRequestException("Failed to retrieve access token from Google")
 
         user_info = self._fetch_user_info(access_token)
         email = user_info.get("email")
@@ -30,35 +27,24 @@ class AuthService:
         picture = user_info.get("picture")
 
         if not email:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Google did not return an email address.",
-            )
+            raise BadRequestException("Google did not return an email address.")
         if not user_info.get("email_verified", False):
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Google account email is not verified.",
-            )
+            raise BadRequestException("Google account email is not verified.")
 
         google_uid = user_info.get("sub")
         if not google_uid:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Google did not return a user identifier (sub).",
-            )
+            raise BadRequestException("Google did not return a user identifier (sub).")
 
         # 事前登録されているか確認
         user = user_service.get_by_google_uid(google_uid, include_deleted=True)
         if not user:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="このアカウントは事前登録されていません。管理者に問い合わせてください。",
+            raise AuthorizationException(
+                "このアカウントは事前登録されていません。管理者に問い合わせてください。"
             )
 
         if user.deleted_at is not None:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="このアカウントは利用が停止（退会）されています。",
+            raise AuthorizationException(
+                "このアカウントは利用が停止（退会）されています。"
             )
 
         # Googleの最新情報を反映
@@ -86,10 +72,7 @@ class AuthService:
                 headers={"Accept": "application/json"},
             )
         if response.status_code != 200:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Google token exchange failed: {response.text}",
-            )
+            raise BadRequestException(f"Google token exchange failed: {response.text}")
         return response.json()
 
     def _fetch_user_info(self, access_token: str) -> dict:
@@ -100,10 +83,7 @@ class AuthService:
                 headers={"Authorization": f"Bearer {access_token}"},
             )
         if response.status_code != 200:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Failed to fetch user info from Google.",
-            )
+            raise BadRequestException("Failed to fetch user info from Google.")
         return response.json()
 
 

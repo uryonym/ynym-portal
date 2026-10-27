@@ -1,11 +1,11 @@
 """UserService 単体テスト."""
 
 import pytest
-from fastapi import HTTPException
 
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import UserCreate, UserUpdate
 from app.services.user_service import UserService
+from app.utils.exceptions import BadRequestException
 
 
 @pytest.fixture
@@ -37,7 +37,7 @@ def test_create_user_duplicate_google_uid(user_service):
     )
     user_service.create_user(user_in)
 
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(BadRequestException) as exc_info:
         user_service.create_user(
             UserCreate(
                 google_uid="google_uid_dup",
@@ -57,7 +57,7 @@ def test_create_user_duplicate_email(user_service):
     )
     user_service.create_user(user_in)
 
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(BadRequestException) as exc_info:
         user_service.create_user(
             UserCreate(
                 google_uid="google_uid_email_2",
@@ -102,7 +102,7 @@ def test_delete_user_soft_delete(user_service):
     assert user_service.get_by_id(user.id, include_deleted=True) is not None
 
     # 二重削除はエラー
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(BadRequestException) as exc_info:
         user_service.delete_user(user.id)
     assert exc_info.value.status_code == 400
 

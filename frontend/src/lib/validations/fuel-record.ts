@@ -29,3 +29,4 @@ export const fuelRecordFormSchema = z.object({
 })
 
 export type FuelRecordFormValues = z.infer<typeof fuelRecordFormSchema>
+

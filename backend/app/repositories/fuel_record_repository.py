@@ -5,10 +5,10 @@ from uuid import UUID
 from sqlalchemy import asc, desc, func, select
 
 from app.models.fuel_record import FuelRecord
-from app.repositories.base import BaseRepository
+from app.repositories.base import UserOwnedSoftDeleteRepository
 
 
-class FuelRecordRepository(BaseRepository[FuelRecord]):
+class FuelRecordRepository(UserOwnedSoftDeleteRepository[FuelRecord]):
     """燃費記録に関するデータアクセスを担う."""
 
     def __init__(self, session) -> None:
@@ -48,15 +48,6 @@ class FuelRecordRepository(BaseRepository[FuelRecord]):
         )
         return list(self.session.execute(stmt).scalars().all())
 
-    def get_by_id_and_user(self, record_id: UUID, user_id: UUID) -> FuelRecord | None:
-        """record_id と user_id で燃費記録を取得（所有権確認）."""
-        stmt = select(FuelRecord).where(
-            FuelRecord.id == record_id,
-            FuelRecord.user_id == user_id,
-            FuelRecord.deleted_at.is_(None),
-        )
-        return self.session.execute(stmt).scalars().one_or_none()
-
     def count_by_vehicle(self, user_id: UUID, vehicle_id: UUID) -> int:
         """指定車両の有効な燃費記録件数を取得."""
         stmt = (
@@ -83,45 +74,3 @@ class FuelRecordRepository(BaseRepository[FuelRecord]):
             )
         )
         return self.session.execute(stmt).scalar() or 0
-
-    def list_deleted_by_user(
-        self,
-        user_id: UUID,
-        skip: int = 0,
-        limit: int = 100,
-    ) -> list[FuelRecord]:
-        """論理削除された燃費記録一覧を取得（削除日時降順）."""
-        stmt = (
-            select(FuelRecord)
-            .where(
-                FuelRecord.user_id == user_id,
-                FuelRecord.deleted_at.is_not(None),
-            )
-            .order_by(FuelRecord.deleted_at.desc())
-            .offset(skip)
-            .limit(limit)
-        )
-        return list(self.session.execute(stmt).scalars().all())
-
-    def count_deleted_by_user(self, user_id: UUID) -> int:
-        """論理削除された燃費記録の総件数を取得."""
-        stmt = (
-            select(func.count())
-            .select_from(FuelRecord)
-            .where(
-                FuelRecord.user_id == user_id,
-                FuelRecord.deleted_at.is_not(None),
-            )
-        )
-        return self.session.execute(stmt).scalar() or 0
-
-    def get_deleted_by_id_and_user(
-        self, record_id: UUID, user_id: UUID
-    ) -> FuelRecord | None:
-        """record_id と user_id で論理削除された燃費記録を取得."""
-        stmt = select(FuelRecord).where(
-            FuelRecord.id == record_id,
-            FuelRecord.user_id == user_id,
-            FuelRecord.deleted_at.is_not(None),
-        )
-        return self.session.execute(stmt).scalars().one_or_none()

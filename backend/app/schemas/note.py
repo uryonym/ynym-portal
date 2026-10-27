@@ -1,9 +1,10 @@
 """ノート関連の Pydantic スキーマ."""
 
-from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, Field, field_validator
+
+from app.schemas.base import SoftDeleteEntityResponseBase
 
 
 class NoteCreate(BaseModel):
@@ -68,17 +69,11 @@ class NoteUpdate(BaseModel):
         return v
 
 
-class NoteResponse(BaseModel):
+class NoteResponse(SoftDeleteEntityResponseBase):
     """ノートレスポンススキーマ."""
 
-    model_config = ConfigDict(from_attributes=True)
-
-    id: UUID = Field(description="ノート ID（UUID）")
     user_id: UUID = Field(description="所有者ユーザー ID（UUID）")
     category_id: UUID | None = Field(description="カテゴリ ID（任意）")
     title: str = Field(description="タイトル")
     body: str = Field(description="本文")
     is_pinned: bool = Field(default=False, description="ピン留めフラグ")
-    created_at: datetime = Field(description="作成日時（JST）")
-    updated_at: datetime = Field(description="更新日時（JST）")
-    deleted_at: datetime | None = Field(default=None, description="削除日時（JST）")

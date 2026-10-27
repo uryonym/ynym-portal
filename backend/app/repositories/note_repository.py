@@ -7,10 +7,10 @@ from sqlalchemy.sql import nulls_last
 
 from app.models.note import Note
 from app.models.note_category import NoteCategory
-from app.repositories.base import BaseRepository
+from app.repositories.base import UserOwnedSoftDeleteRepository
 
 
-class NoteRepository(BaseRepository[Note]):
+class NoteRepository(UserOwnedSoftDeleteRepository[Note]):
     """ノートに関するデータアクセスを担う."""
 
     def __init__(self, session) -> None:
@@ -40,15 +40,6 @@ class NoteRepository(BaseRepository[Note]):
         )
         return list(self.session.execute(stmt).scalars().all())
 
-    def get_by_id_and_user(self, note_id: UUID, user_id: UUID) -> Note | None:
-        """note_id と user_id でノートを取得（所有権確認）."""
-        stmt = select(Note).where(
-            Note.id == note_id,
-            Note.user_id == user_id,
-            Note.deleted_at.is_(None),
-        )
-        return self.session.execute(stmt).scalars().one_or_none()
-
     def nullify_category(self, user_id: UUID, category_id: UUID) -> None:
         """指定カテゴリに属するノートのカテゴリを NULL に更新（コミットなし）."""
         stmt = (
@@ -71,43 +62,3 @@ class NoteRepository(BaseRepository[Note]):
             )
         )
         return self.session.execute(stmt).scalar() or 0
-
-    def list_deleted_by_user(
-        self,
-        user_id: UUID,
-        skip: int = 0,
-        limit: int = 100,
-    ) -> list[Note]:
-        """論理削除されたノート一覧を取得（削除日時降順）."""
-        stmt = (
-            select(Note)
-            .where(
-                Note.user_id == user_id,
-                Note.deleted_at.is_not(None),
-            )
-            .order_by(Note.deleted_at.desc())
-            .offset(skip)
-            .limit(limit)
-        )
-        return list(self.session.execute(stmt).scalars().all())
-
-    def count_deleted_by_user(self, user_id: UUID) -> int:
-        """論理削除されたノートの総件数を取得."""
-        stmt = (
-            select(func.count())
-            .select_from(Note)
-            .where(
-                Note.user_id == user_id,
-                Note.deleted_at.is_not(None),
-            )
-        )
-        return self.session.execute(stmt).scalar() or 0
-
-    def get_deleted_by_id_and_user(self, note_id: UUID, user_id: UUID) -> Note | None:
-        """note_id と user_id で論理削除されたノートを取得."""
-        stmt = select(Note).where(
-            Note.id == note_id,
-            Note.user_id == user_id,
-            Note.deleted_at.is_not(None),
-        )
-        return self.session.execute(stmt).scalars().one_or_none()

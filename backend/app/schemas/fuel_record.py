@@ -3,7 +3,9 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, Field, field_validator
+
+from app.schemas.base import SoftDeleteEntityResponseBase
 
 
 class FuelRecordCreate(BaseModel):
@@ -138,13 +140,12 @@ class FuelRecordUpdate(BaseModel):
         return v
 
 
-class FuelRecordResponse(BaseModel):
+class FuelRecordResponse(SoftDeleteEntityResponseBase):
     """燃費記録レスポンススキーマ.
 
     API から返されるフォーマット.
     """
 
-    id: UUID = Field(description="燃費記録 ID（UUID）")
     vehicle_id: UUID = Field(description="車 ID（UUID）")
     user_id: UUID = Field(description="ユーザー ID（UUID）")
     refuel_datetime: datetime = Field(description="給油日時")
@@ -166,8 +167,3 @@ class FuelRecordResponse(BaseModel):
         default=None,
         description="燃費（km/L）: 走行距離 / 給油量（小数点2桁）",
     )
-    created_at: datetime = Field(description="作成日時（JST）")
-    updated_at: datetime = Field(description="更新日時（JST）")
-    deleted_at: datetime | None = Field(default=None, description="削除日時（JST）")
-
-    model_config = ConfigDict(from_attributes=True)

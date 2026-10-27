@@ -9,6 +9,7 @@ from app.routers import (
     auth_router,
     events_router,
     fuel_records_router,
+    health_router,
     members_router,
     note_categories_router,
     notes_router,
@@ -48,6 +49,7 @@ app.add_middleware(LoggingMiddleware)
 
 # API ルータをまとめてマウント
 api_router = APIRouter(prefix="/api")
+api_router.include_router(health_router)
 api_router.include_router(auth_router)
 api_router.include_router(users_router)
 api_router.include_router(members_router)

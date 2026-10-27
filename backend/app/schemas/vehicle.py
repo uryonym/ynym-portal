@@ -1,9 +1,10 @@
 """Vehicle（車）スキーマ."""
 
-from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, field_validator
+
+from app.schemas.base import SoftDeleteEntityResponseBase
 
 
 class VehicleCreate(BaseModel):
@@ -160,7 +161,7 @@ class VehicleUpdate(BaseModel):
         return v
 
 
-class VehicleResponse(BaseModel):
+class VehicleResponse(SoftDeleteEntityResponseBase):
     """車レスポンススキーマ.
 
     Attributes:
@@ -177,7 +178,6 @@ class VehicleResponse(BaseModel):
         updated_at: 更新日時（ISO 8601）
     """
 
-    id: UUID
     user_id: UUID
     name: str
     seq: int
@@ -186,8 +186,3 @@ class VehicleResponse(BaseModel):
     year: int | None = None
     number: str | None = None
     tank_capacity: float | None = None
-    created_at: datetime
-    updated_at: datetime
-    deleted_at: datetime | None = None
-
-    model_config = ConfigDict(from_attributes=True)

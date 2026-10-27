@@ -3,7 +3,9 @@
 from datetime import date, datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, Field, field_validator
+
+from app.schemas.base import SoftDeleteEntityResponseBase
 
 
 class TaskCreate(BaseModel):
@@ -105,16 +107,13 @@ class TaskUpdate(BaseModel):
         return v
 
 
-class TaskResponse(BaseModel):
+class TaskResponse(SoftDeleteEntityResponseBase):
     """
     タスクレスポンススキーマ.
 
     GET /tasks, POST /tasks, PUT /tasks/{task_id} のレスポンスで使用される。
     """
 
-    model_config = ConfigDict(from_attributes=True)
-
-    id: UUID = Field(description="タスク ID（UUID）")
     user_id: UUID = Field(description="所有者ユーザー ID（UUID）")
     title: str = Field(description="タスクタイトル")
     description: str | None = Field(description="タスク詳細")
@@ -122,8 +121,3 @@ class TaskResponse(BaseModel):
     completed_at: datetime | None = Field(description="完了日時（ISO 8601 形式、JST）")
     due_date: date | None = Field(description="期日（YYYY-MM-DD 形式）")
     order: int = Field(description="表示順序")
-    created_at: datetime = Field(description="作成日時（ISO 8601 形式、JST）")
-    updated_at: datetime = Field(description="更新日時（ISO 8601 形式、JST）")
-    deleted_at: datetime | None = Field(
-        default=None, description="削除日時（ISO 8601 形式、JST）"
-    )

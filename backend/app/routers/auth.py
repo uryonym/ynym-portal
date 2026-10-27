@@ -14,6 +14,7 @@ from app.schemas.user import UserResponse
 from app.security.deps import CurrentUser
 from app.services.auth_service import auth_service
 from app.services.user_service import UserService
+from app.utils.exceptions import AuthorizationException
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -97,8 +98,9 @@ def google_callback(
         jwt_token = auth_service.authenticate_google_user(
             code=code, user_service=user_service
         )
-    except HTTPException as e:
-        if e.status_code == 403:
+    except (HTTPException, AuthorizationException) as e:
+        status_code = getattr(e, "status_code", None)
+        if status_code == 403:
             return RedirectResponse(
                 url=f"{settings.FRONTEND_URL}/auth?error=unauthorized"
             )

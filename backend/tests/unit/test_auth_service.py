@@ -3,12 +3,12 @@
 from unittest.mock import patch
 
 import pytest
-from fastapi import HTTPException
 
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import UserCreate
 from app.services.auth_service import AuthService
 from app.services.user_service import UserService
+from app.utils.exceptions import AuthorizationException
 
 
 @pytest.fixture
@@ -78,7 +78,7 @@ def test_authenticate_google_user_not_registered(auth_service, user_service):
             },
         ),
     ):
-        with pytest.raises(HTTPException) as exc_info:
+        with pytest.raises(AuthorizationException) as exc_info:
             auth_service.authenticate_google_user("dummy_code", user_service)
         assert exc_info.value.status_code == 403
         assert "事前登録" in exc_info.value.detail
@@ -112,7 +112,7 @@ def test_authenticate_google_user_soft_deleted(auth_service, user_service):
             },
         ),
     ):
-        with pytest.raises(HTTPException) as exc_info:
+        with pytest.raises(AuthorizationException) as exc_info:
             auth_service.authenticate_google_user("dummy_code", user_service)
         assert exc_info.value.status_code == 403
         assert "利用が停止" in exc_info.value.detail

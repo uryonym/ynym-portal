@@ -5,6 +5,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from app.schemas.base import SoftDeleteEntityResponseBase
+
 
 class EventParticipantResponse(BaseModel):
     """予定参加者スキーマ."""
@@ -75,10 +77,9 @@ class EventUpdate(BaseModel):
         return self
 
 
-class EventResponse(BaseModel):
+class EventResponse(SoftDeleteEntityResponseBase):
     """予定レスポンススキーマ."""
 
-    id: UUID
     created_by: UUID
     title: str
     description: str | None = None
@@ -88,8 +89,3 @@ class EventResponse(BaseModel):
     is_all_day: bool
     is_private: bool
     participants: list[EventParticipantResponse] = Field(default_factory=list)
-    created_at: datetime
-    updated_at: datetime
-    deleted_at: datetime | None = None
-
-    model_config = ConfigDict(from_attributes=True)

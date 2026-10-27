@@ -1,7 +1,6 @@
-import uuid
-from datetime import datetime
+from pydantic import BaseModel, EmailStr
 
-from pydantic import BaseModel, ConfigDict, EmailStr
+from app.schemas.base import SoftDeleteEntityResponseBase
 
 
 class UserBase(BaseModel):
@@ -29,13 +28,8 @@ class UserUpdate(BaseModel):
     is_admin: bool | None = None
 
 
-class UserInDB(UserBase):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: uuid.UUID
-    created_at: datetime
-    updated_at: datetime
-    deleted_at: datetime | None = None
+class UserInDB(UserBase, SoftDeleteEntityResponseBase):
+    pass
 
 
 class UserResponse(UserInDB):
