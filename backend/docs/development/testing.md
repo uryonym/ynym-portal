@@ -4,33 +4,41 @@
 
 Tests are organized into two categories:
 
-- **Unit Tests** (`tests/unit/`): Test individual functions and services
-- **Integration Tests** (`tests/integration/`): Test API endpoints and database interactions
+- **Unit Tests** (`tests/unit/`): Test domain services, repositories, and business logic
+- **Integration Tests** (`tests/integration/`): Test API endpoints and database operations using `TestClient`
+
+Test markers (`unit` / `integration`) are automatically applied based on test file locations.
 
 ## Running Tests
 
 ### Run all tests
 
 ```bash
-pytest
+uv run pytest
+```
+
+### Run only unit tests
+
+```bash
+uv run pytest -m unit
+```
+
+### Run only integration tests
+
+```bash
+uv run pytest -m integration
 ```
 
 ### Run specific test file
 
 ```bash
-pytest tests/unit/test_user_service.py
+uv run pytest tests/unit/test_user_service.py
 ```
 
 ### Run with coverage
 
 ```bash
-pytest --cov=app --cov-report=html
-```
-
-### Run in watch mode
-
-```bash
-pytest-watch
+uv run pytest --cov=app --cov-report=html
 ```
 
 ## Writing Tests
@@ -39,42 +47,32 @@ pytest-watch
 
 ```python
 import pytest
+from app.repositories.user_repository import UserRepository
+from app.schemas.user import UserCreate
 from app.services.user_service import UserService
 
 
-@pytest.mark.asyncio
-async def test_create_user():
-    """Test user creation."""
-    service = UserService()
-    user = await service.create({"name": "John", "email": "john@example.com"})
-    assert user.name == "John"
+def test_create_user(db_session):
+    """ユーザー作成テスト."""
+    service = UserService(UserRepository(db_session))
+    user = service.create_user(
+        UserCreate(
+            google_uid="uid_123",
+            email="test@example.com",
+            name="Test User",
+        )
+    )
+    assert user.name == "Test User"
+    assert user.email == "test@example.com"
 ```
 
 ### Integration Test Example
 
 ```python
-@pytest.mark.asyncio
-async def test_create_user_endpoint(async_client):
-    """Test user creation endpoint."""
-    response = await async_client.post(
-        "/api/users", json={"name": "John", "email": "john@example.com"}
-    )
-    assert response.status_code == 201
-    assert response.json()["name"] == "John"
+def test_get_users(client):
+    """GET /api/users エンドポイントテスト."""
+    response = client.get("/api/users")
+    assert response.status_code == 200
+    data = response.json()
+    assert isinstance(data, list)
 ```
-
-## Fixtures
-
-Common fixtures are defined in `tests/conftest.py`:
-
-- `client`: Synchronous FastAPI test client
-- `async_client`: Asynchronous FastAPI test client
-
-## Best Practices
-
-1. One test per function/scenario
-2. Use descriptive test names
-3. Arrange-Act-Assert pattern
-4. Use fixtures for setup/teardown
-5. Mock external dependencies
-6. Aim for >80% code coverage

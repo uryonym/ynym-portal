@@ -30,4 +30,3 @@ export const vehicleFormSchema = z.object({
 })
 
 export type VehicleFormValues = z.infer<typeof vehicleFormSchema>
-

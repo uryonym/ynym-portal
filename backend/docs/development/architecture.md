@@ -2,27 +2,32 @@
 
 ## Overview
 
-The application follows a layered architecture:
+The backend application follows a layered clean architecture:
 
 ```
 ┌─────────────────────────────────────┐
 │        FastAPI Application          │
-│    (app/main.py, app/api/...)       │
+│            (app/main.py)            │
 └──────────────┬──────────────────────┘
                │
 ┌──────────────▼──────────────────────┐
-│      API Layer (Endpoints)          │
-│    (app/api/endpoints/...)          │
+│       Router Layer (Endpoints)      │
+│          (app/routers/...)          │
 └──────────────┬──────────────────────┘
                │
 ┌──────────────▼──────────────────────┐
-│      Service Layer                  │
-│    (app/services/...)               │
+│            Service Layer            │
+│          (app/services/...)         │
 └──────────────┬──────────────────────┘
                │
 ┌──────────────▼──────────────────────┐
-│      Data Layer (Models)            │
-│    (app/models/..., SQLModel)       │
+│          Repository Layer           │
+│        (app/repositories/...)       │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│       Data Layer (SQLAlchemy)       │
+│          (app/models/...)           │
 └──────────────┬──────────────────────┘
                │
 ┌──────────────▼──────────────────────┐
@@ -32,61 +37,57 @@ The application follows a layered architecture:
 
 ## Key Components
 
-### API Layer (`app/api/`)
+### Router Layer (`app/routers/`)
 
 - Handles HTTP requests and responses
-- Manages request validation and response serialization
-- Uses Pydantic v2 schemas for validation
-- Located in `app/api/endpoints/`
+- Request validation and response serialization via Pydantic v2 schemas (`app/schemas/`)
+- Mounted under the `/api` prefix
 
 ### Service Layer (`app/services/`)
 
 - Contains business logic
-- Orchestrates data operations
-- Handles error handling and data transformations
+- Orchestrates multi-entity operations and validates domain rules
+- Raises standard application exceptions (`app/utils/exceptions.py`)
+
+### Repository Layer (`app/repositories/`)
+
+- Encapsulates database queries and data persistence
+- Inherits from `BaseRepository` or `UserOwnedSoftDeleteRepository`
+- Decouples SQLAlchemy query building from business logic
 
 ### Data Layer (`app/models/`)
 
-- Defines SQLModel models
-- Represents database schema
-- Handles database operations
+- Defines SQLAlchemy 2.0 ORM models inheriting from `Base` (`app/models/base.py`)
+- Represents PostgreSQL schema with soft-delete (`deleted_at`) and JST timezone helpers
+
+### Schemas (`app/schemas/`)
+
+- Pydantic v2 models for request validation and response formatting
+- Base schemas in `app/schemas/base.py` (`EntityResponseBase`, `SoftDeleteEntityResponseBase`)
 
 ### Security (`app/security/`)
 
-- JWT token management
-- Password hashing and verification
-- Authentication and authorization logic
+- BFF pattern with Google OAuth2 flow
+- JWT token management and HttpOnly cookie session handling (`app/security/deps.py`)
+
+### Core & Database (`app/core/`)
+
+- `app/core/config.py`: Environment-based settings via Pydantic Settings
+- `app/core/db.py`: PostgreSQL connection and session management via SQLAlchemy 2.0 and `psycopg`
 
 ### Utils (`app/utils/`)
 
-- Shared utilities
-- Custom exceptions
+- Custom application exceptions (`app/utils/exceptions.py`)
+- Centralized exception handlers for FastAPI
 - Logging configuration
-
-### Configuration (`app/core/config.py`)
-
-- Environment-based settings
-- Uses Pydantic Settings
-- Loads from `.env` file
-
-### Database (`app/database.py`)
-
-- Async PostgreSQL connection
-- Session management
-- Uses SQLModel and asyncpg
 
 ## Data Flow
 
-1. **Request** → FastAPI receives HTTP request
-2. **Validation** → Pydantic schema validates input
-3. **Endpoint** → Handler processes request
-4. **Service** → Business logic execution
-5. **Database** → SQLModel/asyncpg executes queries
-6. **Response** → Response schema serializes data
-7. **Output** → FastAPI returns JSON response
-
-## Error Handling
-
-- Custom exceptions in `app/utils/exceptions.py`
-- Global error handlers (to be implemented)
-- Standard error response format
+1. **Request** → FastAPI receives HTTP request at `/api/...`
+2. **Authentication / Dependency** → Current user verified from HttpOnly cookie session (`CurrentUser`)
+3. **Validation** → Pydantic schema validates input
+4. **Router** → Endpoint delegates to corresponding Service
+5. **Service** → Business logic and domain validations
+6. **Repository** → Executes SQLAlchemy 2.0 queries on PostgreSQL
+7. **Response** → Serialized with Pydantic response models
+8. **Output** → FastAPI returns JSON response

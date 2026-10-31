@@ -1,5 +1,5 @@
 -- Test Data for Task Management
--- ファイル: migrations/seed_001_task_test_data.sql
+-- ファイル: migrations/001_seed_task_test_data.sql
 -- 説明: テスト用タスクデータを挿入（開発/テスト環境用）
 -- 注意: 本番環境では実行しないでください
 

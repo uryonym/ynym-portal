@@ -1,17 +1,17 @@
--- Task Table Schema Verification
--- ファイル: migrations/verify_schema.sql
--- 説明: Task テーブルのスキーマを検証
+-- Tasks Table Schema Verification
+-- ファイル: migrations/001_verify_create_task_table.sql
+-- 説明: Tasks テーブルのスキーマを検証
 
 -- 1. テーブル存在確認
 SELECT
     CASE
-        WHEN EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'task')
-        THEN '✓ Task テーブルが存在します'
-        ELSE '✗ Task テーブルが見つかりません'
+        WHEN EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'tasks')
+        THEN '✓ Tasks テーブルが存在します'
+        ELSE '✗ Tasks テーブルが見つかりません'
     END AS table_check;
 
 -- 2. カラム定義確認
-\echo '\n--- Task テーブルのカラム定義 ---'
+\echo '\n--- Tasks テーブルのカラム定義 ---'
 SELECT
     column_name,
     data_type,
@@ -20,7 +20,7 @@ SELECT
 FROM
     information_schema.columns
 WHERE
-    table_name = 'task'
+    table_name = 'tasks'
 ORDER BY
     ordinal_position;
 
@@ -34,7 +34,7 @@ FROM
     JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)
     JOIN pg_type t ON a.atttypid = t.oid
 WHERE
-    i.indrelid = 'task'::regclass
+    i.indrelid = 'tasks'::regclass
     AND i.indisprimary;
 
 -- 4. インデックス一覧
@@ -45,7 +45,7 @@ SELECT
 FROM
     pg_indexes
 WHERE
-    tablename = 'task'
+    tablename = 'tasks'
 ORDER BY
     indexname;
 
@@ -59,16 +59,16 @@ FROM
     information_schema.table_constraints
     LEFT JOIN information_schema.check_constraints USING (constraint_name)
 WHERE
-    table_name = 'task'
+    table_name = 'tasks'
 ORDER BY
     constraint_name;
 
 -- 6. テーブルサイズ
 \echo '\n--- テーブルサイズ ---'
 SELECT
-    pg_size_pretty(pg_total_relation_size('task')) AS total_size,
-    pg_size_pretty(pg_relation_size('task')) AS table_size,
-    pg_size_pretty(pg_total_relation_size('task') - pg_relation_size('task')) AS indexes_size;
+    pg_size_pretty(pg_total_relation_size('tasks')) AS total_size,
+    pg_size_pretty(pg_relation_size('tasks')) AS table_size,
+    pg_size_pretty(pg_total_relation_size('tasks') - pg_relation_size('tasks')) AS indexes_size;
 
 -- 7. レコード数
 \echo '\n--- レコード数 ---'
@@ -78,6 +78,6 @@ SELECT
     SUM(CASE WHEN is_completed = FALSE THEN 1 ELSE 0 END) AS incomplete_count,
     SUM(CASE WHEN due_date IS NOT NULL THEN 1 ELSE 0 END) AS with_due_date_count,
     SUM(CASE WHEN deleted_at IS NOT NULL THEN 1 ELSE 0 END) AS deleted_count
-FROM "task";
+FROM "tasks";
 
 \echo '\n✓ スキーマ検証完了'

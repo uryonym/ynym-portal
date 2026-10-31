@@ -109,3 +109,13 @@ def override_current_user_dependency():
     app.dependency_overrides[get_current_user] = _override_current_user
     yield
     app.dependency_overrides.pop(get_current_user, None)
+
+
+def pytest_collection_modifyitems(items):
+    """ディレクトリ構造に応じて unit / integration マーカーを自動付与."""
+    for item in items:
+        fspath_str = str(item.fspath)
+        if "tests/unit" in fspath_str:
+            item.add_marker(pytest.mark.unit)
+        elif "tests/integration" in fspath_str:
+            item.add_marker(pytest.mark.integration)

@@ -24,8 +24,8 @@ test: test-backend test-frontend ## すべてのテストを実行
 test-backend: ## バックエンドの pytest を実行
 	cd backend && uv run pytest
 
-test-frontend: ## フロントエンドのビルド・型チェックを実行
-	cd frontend && npm run build
+test-frontend: ## フロントエンドの単体テストとビルド・型チェックを実行
+	cd frontend && npm run test && npm run build
 
 lint: lint-backend lint-frontend ## すべてのリントを実行
 

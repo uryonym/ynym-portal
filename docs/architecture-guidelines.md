@@ -296,7 +296,7 @@ ynym-portal/
 │   └── .env                      # バックエンド環境変数
 ├── frontend/                     # Vite フロントエンド
 │   ├── src/
-│   │   ├── components/           # UI コンポーネント (ui/, features/)
+│   │   ├── components/           # ドメイン別UIコンポーネント (layout/, auth/, tasks/, notes/, note-categories/, vehicles/, fuel-records/, users/, calendar/, editor/, trash/, common/, ui/)
 │   │   ├── hooks/                # TanStack Query & カスタムフック
 │   │   ├── lib/                  # API クライアント, 型定義, ユーティリティ
 │   │   ├── routes/               # TanStack Router ルートファイル
@@ -330,7 +330,7 @@ Makefile によりコマンドが統一されています。CI でも同一の�
 | :--- | :--- | :--- | :--- | :--- |
 | **全体** | `make lint` | `make format-check` | `make format` | `make test` |
 | **バックエンド** | `make lint-backend` (ruff) | `make format-check-backend` | `make format-backend` | `make test-backend` (pytest) |
-| **フロントエンド** | `make lint-frontend` (eslint) | `make format-check-frontend` | `make format-frontend` | `make test-frontend` (tsc & build) |
+| **フロントエンド** | `make lint-frontend` (eslint) | `make format-check-frontend` | `make format-frontend` | `make test-frontend` (vitest & build) |
 
 ---
 
@@ -339,6 +339,32 @@ Makefile によりコマンドが統一されています。CI でも同一の�
 ### 4.1 ビルド & コンテナ化
 
 フロントエンドは SPA であるため、ビルド成果物は純粋な静的ファイル（HTML, JS, CSS, 画像）となります。
+
+#### バックエンド Dockerfile (キャッシュ最適化 & 本番最小構成)
+
+```dockerfile
+FROM python:3.12-slim-bookworm
+
+# uv パッケージマネージャーをインストール
+COPY --from=ghcr.io/astral-sh/uv:0.10.11 /uv /uvx /bin/
+
+# uv の環境変数を設定
+ENV PATH="/app/.venv/bin:$PATH" \
+  UV_COMPILE_BYTECODE=1
+
+WORKDIR /app
+
+# 依存関係定義のみ先にコピーしてビルドキャッシュを活用
+COPY pyproject.toml uv.lock ./
+RUN uv sync --locked --no-dev --no-install-project
+
+# アプリケーションコードをコピーしてインストール
+COPY . .
+RUN uv sync --locked --no-dev
+
+# アプリケーションを起動
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
 
 #### フロントエンド Dockerfile (マルチステージビルド)
 

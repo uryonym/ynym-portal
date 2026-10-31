@@ -1,5 +1,5 @@
 -- Rollback Migration: Drop Task Table
--- ファイル: migrations/rollback_001_create_task_table.sql
+-- ファイル: migrations/001_rollback_create_task_table.sql
 -- 説明: Task テーブルの削除（T013 ロールバック用）
 -- 警告: このスクリプトはすべてのデータを削除します
 
