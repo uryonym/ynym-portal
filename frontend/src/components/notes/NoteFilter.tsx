@@ -21,10 +21,10 @@ export function NoteFilter({
         type="button"
         onClick={() => onFilterChange('all')}
         disabled={disabled}
-        className={`px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-all cursor-pointer shrink-0 ${
+        className={`px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-colors cursor-pointer shrink-0 ${
           selectedFilter === 'all'
-            ? 'bg-slate-900 text-white shadow-xs'
-            : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80'
+            ? 'bg-secondary text-secondary-foreground font-semibold'
+            : 'bg-card text-muted-foreground hover:bg-muted/70 hover:text-foreground border border-border/80'
         }`}
       >
         すべて
@@ -34,10 +34,10 @@ export function NoteFilter({
         type="button"
         onClick={() => onFilterChange('uncategorized')}
         disabled={disabled}
-        className={`px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-all cursor-pointer shrink-0 ${
+        className={`px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-colors cursor-pointer shrink-0 ${
           selectedFilter === 'uncategorized'
-            ? 'bg-slate-900 text-white shadow-xs'
-            : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80'
+            ? 'bg-secondary text-secondary-foreground font-semibold'
+            : 'bg-card text-muted-foreground hover:bg-muted/70 hover:text-foreground border border-border/80'
         }`}
       >
         未分類
@@ -51,10 +51,10 @@ export function NoteFilter({
             type="button"
             onClick={() => onFilterChange(category.id)}
             disabled={disabled}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-all cursor-pointer shrink-0 ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-colors cursor-pointer shrink-0 ${
               isSelected
-                ? 'bg-slate-900 text-white shadow-xs'
-                : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80'
+                ? 'bg-secondary text-secondary-foreground font-semibold'
+                : 'bg-card text-muted-foreground hover:bg-muted/70 hover:text-foreground border border-border/80'
             }`}
           >
             <Folder className="h-3.5 w-3.5 shrink-0" />

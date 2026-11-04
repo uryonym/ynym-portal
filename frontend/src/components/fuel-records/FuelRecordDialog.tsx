@@ -31,7 +31,7 @@ export function FuelRecordDialog({
   onDelete,
   isLoading = false,
 }: FuelRecordDialogProps) {
-  const title = initialData ? '記録を編集' : '新しい記録を作成'
+  const title = initialData ? '記録を編集' : '給油を記録'
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-md mx-auto">

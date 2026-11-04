@@ -189,16 +189,16 @@ export const SlashCommandMenu = forwardRef<
 
   if (items.length === 0) {
     return (
-      <div className="z-50 min-w-48 overflow-hidden rounded-xl border border-slate-200/90 bg-white p-2 text-sm text-slate-500 shadow-xl">
-        一致するコマンドがありません
+      <div className="z-50 min-w-48 overflow-hidden rounded-xl border border-border bg-card p-2 text-sm text-muted-foreground shadow-lg">
+        一致する項目がありません
       </div>
     )
   }
 
   return (
-    <div className="z-50 min-w-60 max-h-72 overflow-y-auto rounded-xl border border-slate-200/90 bg-white/95 backdrop-blur-xs p-1 shadow-xl">
-      <div className="px-2 py-1 text-[11px] font-semibold text-slate-400">
-        基本ブロック
+    <div className="z-50 min-w-60 max-h-72 overflow-y-auto rounded-xl border border-border bg-card/95 backdrop-blur-xs p-1 shadow-lg">
+      <div className="px-2 py-1 text-[11px] font-medium text-muted-foreground">
+        ブロック
       </div>
       {items.map((item, index) => {
         const Icon = item.icon
@@ -210,15 +210,15 @@ export const SlashCommandMenu = forwardRef<
             onClick={() => selectItem(index)}
             className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-left text-sm transition-colors cursor-pointer ${
               isSelected
-                ? 'bg-slate-900 text-white'
-                : 'text-slate-700 hover:bg-slate-100'
+                ? 'bg-secondary text-secondary-foreground'
+                : 'text-foreground hover:bg-muted/70'
             }`}
           >
             <div
               className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md border ${
                 isSelected
-                  ? 'border-slate-800 bg-slate-800 text-white'
-                  : 'border-slate-200 bg-slate-50 text-slate-700'
+                  ? 'border-primary/25 bg-card text-secondary-foreground'
+                  : 'border-border bg-muted/50 text-muted-foreground'
               }`}
             >
               <Icon className="h-4 w-4" />
@@ -229,7 +229,9 @@ export const SlashCommandMenu = forwardRef<
               </span>
               <span
                 className={`text-[11px] truncate mt-0.5 ${
-                  isSelected ? 'text-slate-300' : 'text-slate-400'
+                  isSelected
+                    ? 'text-secondary-foreground/80'
+                    : 'text-muted-foreground'
                 }`}
               >
                 {item.description}

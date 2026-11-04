@@ -29,8 +29,8 @@ function getDueDateBadge(
   if (isCompleted) {
     return {
       label: formatDisplayDate(date, 'M月d日'),
-      className: 'text-slate-400 bg-slate-50 border-slate-200/50',
-      iconColor: 'text-slate-300',
+      className: 'text-muted-foreground bg-muted/50 border-border/60',
+      iconColor: 'text-muted-foreground/60',
     }
   }
 
@@ -45,22 +45,23 @@ function getDueDateBadge(
     return {
       label: '今日',
       className:
-        'text-amber-700 bg-amber-50/90 border-amber-200/70 font-medium',
-      iconColor: 'text-amber-600',
+        'text-secondary-foreground bg-secondary border-primary/25 font-medium',
+      iconColor: 'text-primary',
     }
   }
   if (diffDays === 1) {
     return {
       label: '明日',
-      className: 'text-blue-700 bg-blue-50/80 border-blue-200/60 font-medium',
-      iconColor: 'text-blue-500',
+      className:
+        'text-amber-700 bg-amber-50/80 border-amber-200/60 font-medium',
+      iconColor: 'text-amber-600',
     }
   }
 
   return {
     label: formatDisplayDate(date, 'M月d日(E)'),
-    className: 'text-slate-600 bg-slate-50/80 border-slate-200/60',
-    iconColor: 'text-slate-400',
+    className: 'text-muted-foreground bg-muted/50 border-border/70',
+    iconColor: 'text-muted-foreground',
   }
 }
 
@@ -94,8 +95,8 @@ export function TaskItem({ task, onToggleComplete, onEdit }: TaskItemProps) {
       }}
       className={`group relative flex items-start gap-3.5 px-4 py-3 sm:px-5 sm:py-3.5 transition-colors cursor-pointer select-none ${
         task.is_completed
-          ? 'bg-slate-50/40 hover:bg-slate-50/80 text-slate-400'
-          : 'bg-white hover:bg-slate-50/70 text-slate-800'
+          ? 'bg-muted/30 hover:bg-muted/50 text-muted-foreground'
+          : 'bg-card hover:bg-accent/20 text-foreground'
       }`}
     >
       {/* チェックボックス */}
@@ -108,7 +109,7 @@ export function TaskItem({ task, onToggleComplete, onEdit }: TaskItemProps) {
           checked={task.is_completed}
           onCheckedChange={() => onToggleComplete(task.id)}
           className="cursor-pointer"
-          aria-label="タスク完了状態"
+          aria-label="完了にする"
         />
       </div>
 
@@ -116,19 +117,19 @@ export function TaskItem({ task, onToggleComplete, onEdit }: TaskItemProps) {
       <div className="flex-1 min-w-0 pr-1">
         <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-4">
           <span
-            className={`text-[14px] sm:text-[15px] font-medium leading-relaxed tracking-wide wrap-break-word ${
+            className={`text-[14px] sm:text-[15px] font-medium leading-relaxed wrap-break-word ${
               task.is_completed
-                ? 'line-through text-slate-400 font-normal'
-                : 'text-slate-900 group-hover:text-slate-950'
+                ? 'line-through text-muted-foreground font-normal'
+                : 'text-foreground'
             }`}
           >
             {task.title}
           </span>
 
-          {/* 期日バッジ（デスクトップではタイトル右側にインライン配置） */}
+          {/* 期日バッジ */}
           {badge && (
             <div
-              className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs border shrink-0 sm:self-center transition-colors tracking-wide ${badge.className}`}
+              className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs border shrink-0 sm:self-center transition-colors ${badge.className}`}
             >
               <Calendar className={`h-3 w-3 shrink-0 ${badge.iconColor}`} />
               <span className="leading-none">{badge.label}</span>
@@ -139,8 +140,10 @@ export function TaskItem({ task, onToggleComplete, onEdit }: TaskItemProps) {
         {/* 説明文・メモ */}
         {task.description && (
           <p
-            className={`text-xs sm:text-[13px] mt-1 whitespace-pre-wrap leading-relaxed tracking-wide line-clamp-2 ${
-              task.is_completed ? 'text-slate-400' : 'text-slate-500'
+            className={`text-xs sm:text-[13px] mt-1 whitespace-pre-wrap leading-relaxed line-clamp-2 ${
+              task.is_completed
+                ? 'text-muted-foreground/70'
+                : 'text-muted-foreground'
             }`}
           >
             {task.description}
@@ -154,8 +157,8 @@ export function TaskItem({ task, onToggleComplete, onEdit }: TaskItemProps) {
           variant="ghost"
           size="sm"
           onClick={handleEditClick}
-          className="h-7 w-7 p-0 text-slate-400 hover:text-slate-800 hover:bg-slate-200/60 rounded-md transition-colors cursor-pointer opacity-70 group-hover:opacity-100"
-          aria-label="タスクを編集"
+          className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors cursor-pointer opacity-70 group-hover:opacity-100"
+          aria-label="編集"
         >
           <Pencil className="h-3.5 w-3.5" />
         </Button>

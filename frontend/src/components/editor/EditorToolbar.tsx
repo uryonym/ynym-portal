@@ -69,7 +69,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-0.5 p-1.5 border-b border-slate-200/80 bg-slate-50/70 rounded-t-xl text-slate-700">
+    <div className="flex flex-wrap items-center gap-0.5 p-1.5 border-b border-border/80 bg-muted/40 rounded-t-xl text-foreground/80">
       {/* Hidden File Input for Image Upload */}
       <input
         type="file"
@@ -84,7 +84,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         type="button"
         onClick={() => editor.chain().focus().undo().run()}
         disabled={!editor.can().undo()}
-        className="p-1.5 rounded-md hover:bg-slate-200/70 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer transition-colors"
+        className="p-1.5 rounded-md hover:bg-muted disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer transition-colors"
         title="元に戻す (Ctrl+Z)"
       >
         <Undo2 className="h-4 w-4" />
@@ -93,13 +93,13 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         type="button"
         onClick={() => editor.chain().focus().redo().run()}
         disabled={!editor.can().redo()}
-        className="p-1.5 rounded-md hover:bg-slate-200/70 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer transition-colors"
+        className="p-1.5 rounded-md hover:bg-muted disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer transition-colors"
         title="やり直す (Ctrl+Shift+Z)"
       >
         <Redo2 className="h-4 w-4" />
       </button>
 
-      <div className="w-[1px] h-4 bg-slate-200 mx-1" />
+      <div className="w-[1px] h-4 bg-border mx-1" />
 
       {/* Headings */}
       <button
@@ -107,8 +107,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('heading', { level: 1 })
-            ? 'bg-slate-900 text-white shadow-xs'
-            : 'hover:bg-slate-200/70'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="見出し 1"
       >
@@ -119,8 +119,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('heading', { level: 2 })
-            ? 'bg-slate-900 text-white shadow-xs'
-            : 'hover:bg-slate-200/70'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="見出し 2"
       >
@@ -131,15 +131,15 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('heading', { level: 3 })
-            ? 'bg-slate-900 text-white shadow-xs'
-            : 'hover:bg-slate-200/70'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="見出し 3"
       >
         <Heading3 className="h-4 w-4" />
       </button>
 
-      <div className="w-[1px] h-4 bg-slate-200 mx-1" />
+      <div className="w-[1px] h-4 bg-border mx-1" />
 
       {/* Basic Marks */}
       <button
@@ -147,8 +147,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('bold')
-            ? 'bg-slate-900 text-white shadow-xs'
-            : 'hover:bg-slate-200/70'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="太字 (Ctrl+B)"
       >
@@ -159,8 +159,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('italic')
-            ? 'bg-slate-900 text-white shadow-xs'
-            : 'hover:bg-slate-200/70'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="斜体 (Ctrl+I)"
       >
@@ -171,8 +171,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         onClick={() => editor.chain().focus().toggleStrike().run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('strike')
-            ? 'bg-slate-900 text-white shadow-xs'
-            : 'hover:bg-slate-200/70'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="取り消し線"
       >
@@ -183,8 +183,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         onClick={() => editor.chain().focus().toggleCode().run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('code')
-            ? 'bg-slate-900 text-white shadow-xs'
-            : 'hover:bg-slate-200/70'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="インラインコード"
       >
@@ -195,15 +195,15 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         onClick={setLink}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('link')
-            ? 'bg-slate-900 text-white shadow-xs'
-            : 'hover:bg-slate-200/70'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="リンク設定"
       >
         <LinkIcon className="h-4 w-4" />
       </button>
 
-      <div className="w-[1px] h-4 bg-slate-200 mx-1" />
+      <div className="w-[1px] h-4 bg-border mx-1" />
 
       {/* Lists */}
       <button
@@ -211,8 +211,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('bulletList')
-            ? 'bg-slate-900 text-white shadow-xs'
-            : 'hover:bg-slate-200/70'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="箇条書きリスト"
       >
@@ -223,8 +223,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('orderedList')
-            ? 'bg-slate-900 text-white shadow-xs'
-            : 'hover:bg-slate-200/70'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="番号付きリスト"
       >
@@ -235,15 +235,15 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         onClick={() => editor.chain().focus().toggleTaskList().run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('taskList')
-            ? 'bg-slate-900 text-white shadow-xs'
-            : 'hover:bg-slate-200/70'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
-        title="ToDo チェックリスト"
+        title="チェックリスト"
       >
         <CheckSquare className="h-4 w-4" />
       </button>
 
-      <div className="w-[1px] h-4 bg-slate-200 mx-1" />
+      <div className="w-[1px] h-4 bg-border mx-1" />
 
       {/* Blocks */}
       <button
@@ -251,8 +251,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('blockquote')
-            ? 'bg-slate-900 text-white shadow-xs'
-            : 'hover:bg-slate-200/70'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="引用"
       >
@@ -261,7 +261,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
       <button
         type="button"
         onClick={handleInsertImage}
-        className="p-1.5 rounded-md hover:bg-slate-200/70 transition-colors cursor-pointer"
+        className="p-1.5 rounded-md hover:bg-muted transition-colors cursor-pointer"
         title="画像を挿入"
       >
         <ImageIcon className="h-4 w-4" />
@@ -269,7 +269,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
       <button
         type="button"
         onClick={insertTable}
-        className="p-1.5 rounded-md hover:bg-slate-200/70 transition-colors cursor-pointer"
+        className="p-1.5 rounded-md hover:bg-muted transition-colors cursor-pointer"
         title="テーブル挿入 (3x3)"
       >
         <TableIcon className="h-4 w-4" />
@@ -277,7 +277,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
       <button
         type="button"
         onClick={() => editor.chain().focus().setHorizontalRule().run()}
-        className="p-1.5 rounded-md hover:bg-slate-200/70 transition-colors cursor-pointer"
+        className="p-1.5 rounded-md hover:bg-muted transition-colors cursor-pointer"
         title="区切り線"
       >
         <Minus className="h-4 w-4" />

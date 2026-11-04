@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { createFileRoute } from '@tanstack/react-router'
-import { Trash2, ShieldAlert } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
 
 import { PurgeConfirmDialog } from '@/components/trash/PurgeConfirmDialog'
 import { TrashTable } from '@/components/trash/TrashTable'
@@ -86,16 +86,15 @@ function TrashPage() {
   }
   const currentTabCount = summary ? summary[selectedTab] : 0
   return (
-    <div className="max-w-4xl mx-auto w-full space-y-6">
-      {/* ページタイトル & 注意喚起 */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="max-w-4xl mx-auto w-full space-y-5">
+      {/* ページタイトル */}
+      <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
-            <Trash2 className="h-6 w-6 text-slate-700" />
+          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
             ゴミ箱
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            削除されたデータの一覧です。復元するか、完全に削除できます。
+          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+            削除した項目はここから復元・完全削除できます
           </p>
         </div>
 
@@ -106,24 +105,16 @@ function TrashPage() {
             size="sm"
             onClick={handleOpenEmptyDialog}
             disabled={emptyMutation.isPending}
-            className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300 self-start sm:self-auto cursor-pointer"
+            className="text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive cursor-pointer rounded-lg"
           >
             <Trash2 className="h-4 w-4 mr-1.5" />
-            このタブのゴミ箱を空にする
+            空にする
           </Button>
         )}
       </div>
 
-      {/* 注意バナー */}
-      <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200/80 text-amber-800 text-xs flex items-start gap-2.5">
-        <ShieldAlert className="h-4 w-4 shrink-0 text-amber-600 mt-0.5" />
-        <p className="leading-relaxed">
-          完全削除を実行すると、データはデータベースから物理的に削除され、二度と復元できなくなります。慎重に操作してください。
-        </p>
-      </div>
-
       {/* リソース種別タブ */}
-      <div className="border-b border-slate-200">
+      <div className="border-b border-border">
         <nav className="flex space-x-2 sm:space-x-4 overflow-x-auto pb-px">
           {TABS.map((tab) => {
             const count = summary ? summary[tab.id] : 0
@@ -134,19 +125,19 @@ function TrashPage() {
                 onClick={() => setSelectedTab(tab.id)}
                 className={`py-2.5 px-3 text-sm font-medium border-b-2 whitespace-nowrap transition-colors flex items-center gap-2 cursor-pointer ${
                   isActive
-                    ? 'border-slate-900 text-slate-900'
-                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                    ? 'border-primary text-foreground font-semibold'
+                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
                 }`}
               >
                 {tab.label}
                 {!isLoadingSummary && (
                   <span
-                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
+                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                       count > 0
                         ? isActive
-                          ? 'bg-slate-900 text-white'
-                          : 'bg-slate-100 text-slate-600'
-                        : 'bg-slate-50 text-slate-400'
+                          ? 'bg-secondary text-secondary-foreground'
+                          : 'bg-muted text-muted-foreground'
+                        : 'bg-muted/50 text-muted-foreground/60'
                     }`}
                   >
                     {count}

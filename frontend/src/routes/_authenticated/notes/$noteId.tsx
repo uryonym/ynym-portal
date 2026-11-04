@@ -176,7 +176,7 @@ function NoteDetailPage() {
   if (isLoading || isCategoriesLoading) {
     return (
       <div className="max-w-4xl mx-auto w-full space-y-4 p-4 sm:p-6">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div className="flex items-center justify-between pb-4 border-b border-border">
           <Skeleton className="h-8 w-24" />
           <Skeleton className="h-8 w-32" />
         </div>
@@ -189,10 +189,10 @@ function NoteDetailPage() {
   if (isError || !note) {
     return (
       <div className="max-w-md mx-auto text-center py-16 space-y-4">
-        <h2 className="text-xl font-bold text-slate-800">
+        <h2 className="text-lg font-semibold text-foreground">
           ノートが見つかりませんでした
         </h2>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted-foreground">
           削除されたか、アクセス権限がない可能性があります。
         </p>
         <Button
@@ -208,7 +208,7 @@ function NoteDetailPage() {
   }
 
   return (
-    <div className="min-h-full flex flex-col bg-slate-50/30 pb-16">
+    <div className="min-h-full flex flex-col pb-16">
       {/* Sticky Header */}
       <NoteEditorHeader
         categoryId={categoryId}
@@ -225,14 +225,14 @@ function NoteDetailPage() {
 
       {/* Main Content Area */}
       <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 pt-6 sm:pt-8 space-y-4">
-        {/* Title Input (Notion-like large borderless input) */}
+        {/* Title Input */}
         <div className="px-2">
           <input
             type="text"
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
-            placeholder="無題のノート"
-            className="w-full text-2xl sm:text-3xl font-bold text-slate-900 placeholder:text-slate-300 border-none outline-none bg-transparent focus:ring-0 leading-tight"
+            placeholder="タイトル"
+            className="w-full text-2xl sm:text-3xl font-semibold text-foreground placeholder:text-muted-foreground/50 border-none outline-none bg-transparent focus:ring-0 leading-tight"
           />
         </div>
 
@@ -240,7 +240,7 @@ function NoteDetailPage() {
         <TipTapEditor
           content={body}
           onChange={handleBodyChange}
-          placeholder="何を書きますか？ '/' でコマンドを表示..."
+          placeholder="メモを入力（'/' でブロック挿入）"
           className="min-h-[500px]"
         />
       </div>

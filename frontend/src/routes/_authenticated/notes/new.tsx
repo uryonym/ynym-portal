@@ -98,7 +98,7 @@ function NewNotePage() {
   }
 
   return (
-    <div className="min-h-full flex flex-col bg-slate-50/30 pb-16">
+    <div className="min-h-full flex flex-col pb-16">
       {/* Sticky Header */}
       <NoteEditorHeader
         categoryId={categoryId}
@@ -117,9 +117,9 @@ function NewNotePage() {
             type="text"
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
-            placeholder="無題のノート"
+            placeholder="タイトル"
             autoFocus
-            className="w-full text-2xl sm:text-3xl font-bold text-slate-900 placeholder:text-slate-300 border-none outline-none bg-transparent focus:ring-0 leading-tight"
+            className="w-full text-2xl sm:text-3xl font-semibold text-foreground placeholder:text-muted-foreground/50 border-none outline-none bg-transparent focus:ring-0 leading-tight"
           />
         </div>
 
@@ -127,7 +127,7 @@ function NewNotePage() {
         <TipTapEditor
           content={body}
           onChange={handleBodyChange}
-          placeholder="何を書きますか？ '/' でコマンドを表示..."
+          placeholder="メモを入力（'/' でブロック挿入）"
           className="min-h-[500px]"
         />
       </div>

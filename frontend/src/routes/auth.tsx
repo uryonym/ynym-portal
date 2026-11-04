@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import { AlertCircle, Home } from 'lucide-react'
+import { AlertCircle, Leaf } from 'lucide-react'
 import { z } from 'zod'
 
 import { GoogleAuthButton } from '@/components/auth/GoogleAuthButton'
@@ -36,48 +36,39 @@ function AuthPage() {
   const { error, redirect: redirectParam } = Route.useSearch()
 
   return (
-    <main className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-slate-50 font-sans">
+    <main className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-background font-sans">
       <div className="w-full max-w-sm space-y-6">
-        {/* Simple Login Card */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-8 space-y-6 text-center">
-          {/* App Icon & Title */}
+        <div className="bg-card rounded-2xl border border-border shadow-2xs p-8 space-y-6 text-center">
           <div className="space-y-3">
-            <div className="mx-auto w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center shadow-xs">
-              <Home className="h-6 w-6" />
+            <div className="mx-auto w-11 h-11 rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center">
+              <Leaf className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-slate-900">
-                Ynym Portal
+              <h1 className="text-lg font-semibold tracking-tight text-foreground">
+                ynym portal
               </h1>
-              <p className="text-sm text-slate-500 mt-1">
-                ログインして利用を開始
+              <p className="text-xs text-muted-foreground mt-1">
+                家族のポータルサイト
               </p>
             </div>
           </div>
 
           {error === 'unauthorized' && (
-            <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs text-left flex items-start gap-2.5">
+            <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200/80 text-amber-800 text-xs text-left flex items-start gap-2.5">
               <AlertCircle className="h-4 w-4 shrink-0 text-amber-600 mt-0.5" />
-              <div>
-                <p className="font-semibold text-amber-900">
-                  アクセスが制限されています
-                </p>
-                <p className="mt-0.5 leading-relaxed">
-                  このGoogleアカウントは事前登録されていないか、利用が停止されています。管理者に問い合わせてください。
-                </p>
-              </div>
+              <p className="leading-relaxed">
+                このアカウントではログインできません。登録状況を確認してください。
+              </p>
             </div>
           )}
 
-          {/* Login Button */}
-          <div className="pt-2">
+          <div className="pt-1">
             <GoogleAuthButton redirectTo={redirectParam} />
           </div>
         </div>
 
-        {/* Minimal Footer */}
-        <p className="text-center text-xs text-slate-400">
-          © {currentYear} Ynym
+        <p className="text-center text-xs text-muted-foreground/70">
+          © {currentYear} ynym
         </p>
       </div>
     </main>

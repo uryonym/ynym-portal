@@ -42,7 +42,7 @@ export function ConfirmDeleteDialog({
       <DialogContent className="w-full max-w-md mx-auto">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription className="text-slate-500 pt-2 text-sm leading-relaxed">
+          <DialogDescription className="text-muted-foreground pt-2 text-sm leading-relaxed">
             {description ? (
               description
             ) : (
@@ -50,7 +50,7 @@ export function ConfirmDeleteDialog({
                 {itemName && (
                   <>
                     「
-                    <span className="font-semibold text-slate-800">
+                    <span className="font-semibold text-foreground">
                       {itemName}
                     </span>
                     」を
@@ -58,7 +58,7 @@ export function ConfirmDeleteDialog({
                 )}
                 削除してもよろしいですか？
                 <br />
-                削除したアイテムはゴミ箱からいつでも復元できます。
+                削除した項目はゴミ箱から復元できます。
               </>
             )}
           </DialogDescription>

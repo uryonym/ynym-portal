@@ -47,14 +47,14 @@ export function GoogleAuthButton({
       nativeButton={false}
       variant="outline"
       className={cn(
-        'w-full h-12 bg-white hover:bg-slate-50 text-slate-800 font-semibold border-slate-300/80 hover:border-slate-400 shadow-sm hover:shadow transition-all duration-200 active:scale-[0.99] gap-3 text-base justify-center cursor-pointer',
+        'w-full h-11 bg-card hover:bg-muted/60 text-foreground font-medium border-border shadow-2xs transition-colors gap-2.5 text-sm justify-center cursor-pointer rounded-xl',
         className,
       )}
       size="lg"
       aria-label="Googleアカウントでログイン"
     >
       <GoogleIcon />
-      <span className="text-slate-800 tracking-tight">Googleでログイン</span>
+      <span className="text-foreground tracking-tight">Googleでログイン</span>
     </Button>
   )
 }

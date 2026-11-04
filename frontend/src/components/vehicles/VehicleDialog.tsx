@@ -29,7 +29,7 @@ export function VehicleDialog({
   onDelete,
   isLoading = false,
 }: VehicleDialogProps) {
-  const title = initialData ? '車両を編集' : '新しい車両を登録'
+  const title = initialData ? '車両を編集' : '車両を登録'
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-md mx-auto">

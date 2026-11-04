@@ -27,10 +27,10 @@ export function NoteCategoryDeleteDialog({
       description={
         <>
           カテゴリ「
-          <span className="font-semibold text-slate-800">{category.name}</span>
+          <span className="font-semibold text-foreground">{category.name}</span>
           」を削除してもよろしいですか？
           <br />
-          削除したカテゴリはゴミ箱から復元できます。なお、ノートが紐付いているカテゴリは削除できません。
+          ノートが紐付いているカテゴリは削除できません。
         </>
       }
       onConfirm={() => onConfirm(category.id)}

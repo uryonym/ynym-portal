@@ -99,40 +99,35 @@ function FuelRecordsPage() {
   }
   if (vehiclesLoading) {
     return (
-      <div className="max-w-4xl mx-auto w-full text-center py-12 text-slate-500">
-        車両情報を読み込み中...
+      <div className="max-w-4xl mx-auto w-full text-center py-12 text-muted-foreground text-sm">
+        読み込み中...
       </div>
     )
   }
   if (vehicles.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto w-full text-center py-12 space-y-4">
-        <p className="text-slate-500">
-          燃費記録を利用するには、まず車両を登録してください。
+      <div className="max-w-4xl mx-auto w-full text-center py-14 bg-card rounded-xl border border-border/80 space-y-4">
+        <p className="text-sm text-muted-foreground">
+          先に車両を登録してください
         </p>
-        <Button render={<Link to="/vehicles" />} nativeButton={false}>
-          車両管理へ
+        <Button render={<Link to="/vehicles" />} nativeButton={false} size="sm">
+          クルマへ
         </Button>
       </div>
     )
   }
   return (
     <>
-      <div className="max-w-4xl mx-auto w-full space-y-6">
+      <div className="max-w-4xl mx-auto w-full space-y-5">
         {/* ヘッダー */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
-              燃費管理
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-              給油履歴と燃費を記録します
-            </p>
-          </div>
+        <div className="flex items-center justify-between gap-4">
+          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
+            給油・燃費
+          </h1>
           {activeVehicleId && (
             <Button
               onClick={handleOpenDialog}
-              className="h-10 px-4 gap-2 w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white rounded-xl shadow-xs cursor-pointer"
+              className="h-9 px-3.5 gap-1.5 rounded-lg cursor-pointer text-xs sm:text-sm font-medium"
             >
               <span>給油を記録</span>
             </Button>
@@ -141,14 +136,14 @@ function FuelRecordsPage() {
 
         {/* 車両選択セレクター */}
         <div className="flex items-center gap-3">
-          <span className="text-sm font-medium text-slate-700 whitespace-nowrap">
+          <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
             車両:
           </span>
           <Select
             value={activeVehicleId ?? undefined}
             onValueChange={(val) => setSelectedVehicleId(val ?? null)}
           >
-            <SelectTrigger className="w-[280px]">
+            <SelectTrigger className="w-[260px] bg-card">
               <SelectValue placeholder="車両を選択">
                 {activeVehicleId ? vehicleItems[activeVehicleId] : '車両を選択'}
               </SelectValue>

@@ -36,7 +36,7 @@ export const Route = createFileRoute('/_authenticated')({
 function AuthenticatedLayout() {
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="min-h-screen flex w-full bg-slate-50/60">
+      <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
         <SidebarInset className="flex flex-col flex-1 min-w-0 bg-transparent">
           <Header />

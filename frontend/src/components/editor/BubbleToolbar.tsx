@@ -33,15 +33,15 @@ export function BubbleToolbar({ editor }: BubbleToolbarProps) {
   return (
     <BubbleMenu
       editor={editor}
-      className="flex items-center gap-0.5 p-1 bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-lg shadow-lg text-slate-700 animate-in fade-in-0 zoom-in-95 duration-100"
+      className="flex items-center gap-0.5 p-1 bg-card/95 backdrop-blur-xs border border-border rounded-lg shadow-lg text-foreground/85 animate-in fade-in-0 zoom-in-95 duration-100"
     >
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('heading', { level: 1 })
-            ? 'bg-slate-900 text-white'
-            : 'hover:bg-slate-100'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="見出し 1"
       >
@@ -52,23 +52,23 @@ export function BubbleToolbar({ editor }: BubbleToolbarProps) {
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('heading', { level: 2 })
-            ? 'bg-slate-900 text-white'
-            : 'hover:bg-slate-100'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="見出し 2"
       >
         <Heading2 className="h-3.5 w-3.5" />
       </button>
 
-      <div className="w-[1px] h-3.5 bg-slate-200 mx-0.5" />
+      <div className="w-[1px] h-3.5 bg-border mx-0.5" />
 
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('bold')
-            ? 'bg-slate-900 text-white'
-            : 'hover:bg-slate-100'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="太字"
       >
@@ -79,8 +79,8 @@ export function BubbleToolbar({ editor }: BubbleToolbarProps) {
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('italic')
-            ? 'bg-slate-900 text-white'
-            : 'hover:bg-slate-100'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="斜体"
       >
@@ -91,8 +91,8 @@ export function BubbleToolbar({ editor }: BubbleToolbarProps) {
         onClick={() => editor.chain().focus().toggleStrike().run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('strike')
-            ? 'bg-slate-900 text-white'
-            : 'hover:bg-slate-100'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="取り消し線"
       >
@@ -103,8 +103,8 @@ export function BubbleToolbar({ editor }: BubbleToolbarProps) {
         onClick={() => editor.chain().focus().toggleCode().run()}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('code')
-            ? 'bg-slate-900 text-white'
-            : 'hover:bg-slate-100'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="インラインコード"
       >
@@ -115,8 +115,8 @@ export function BubbleToolbar({ editor }: BubbleToolbarProps) {
         onClick={setLink}
         className={`p-1.5 rounded-md transition-colors cursor-pointer ${
           editor.isActive('link')
-            ? 'bg-slate-900 text-white'
-            : 'hover:bg-slate-100'
+            ? 'bg-secondary text-secondary-foreground'
+            : 'hover:bg-muted'
         }`}
         title="リンク"
       >

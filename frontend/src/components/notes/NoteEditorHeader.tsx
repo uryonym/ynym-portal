@@ -44,19 +44,19 @@ export function NoteEditorHeader({
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 bg-white/80 backdrop-blur-xs px-4 py-3 sticky top-0 z-20">
+    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/80 bg-card/85 backdrop-blur-xs px-4 py-2.5 sticky top-0 z-20 rounded-t-xl">
       {/* Left: Back Link & Category */}
       <div className="flex items-center gap-3">
         <Link
           to="/notes"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors p-1.5 -ml-1.5 rounded-lg hover:bg-slate-100"
-          title="ノート一覧に戻る"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors p-1.5 -ml-1.5 rounded-lg hover:bg-muted"
+          title="ノート一覧へ"
         >
           <ArrowLeft className="h-4 w-4" />
           <span className="hidden sm:inline">一覧へ</span>
         </Link>
 
-        <div className="h-4 w-[1px] bg-slate-200" />
+        <div className="h-4 w-[1px] bg-border" />
 
         <div className="w-36 sm:w-44">
           <Select
@@ -65,7 +65,7 @@ export function NoteEditorHeader({
               onCategoryChange(!val || val === NONE_CATEGORY_VALUE ? '' : val)
             }
           >
-            <SelectTrigger className="h-8 text-xs border-slate-200 bg-slate-50/50 hover:bg-slate-100/50 transition-colors">
+            <SelectTrigger className="h-8 text-xs border-border bg-muted/40 hover:bg-muted/70 transition-colors">
               <SelectValue placeholder="カテゴリ選択" />
             </SelectTrigger>
             <SelectContent>
@@ -85,17 +85,17 @@ export function NoteEditorHeader({
       {/* Right: Save Status & Actions */}
       <div className="flex items-center gap-2 sm:gap-3">
         {/* Status Indicator */}
-        <div className="flex items-center gap-1.5 text-xs text-slate-500">
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
           {saveStatus === 'saving' && (
             <>
-              <Loader2 className="h-3.5 w-3.5 animate-spin text-slate-400" />
+              <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />
               <span>保存中...</span>
             </>
           )}
           {saveStatus === 'saved' && (
             <>
-              <Check className="h-3.5 w-3.5 text-emerald-600" />
-              <span className="text-slate-600">
+              <Check className="h-3.5 w-3.5 text-primary" />
+              <span className="text-muted-foreground">
                 {lastSavedAt
                   ? `保存済み (${formatTime(lastSavedAt)})`
                   : '保存済み'}
@@ -119,12 +119,12 @@ export function NoteEditorHeader({
             onClick={onTogglePin}
             className={`h-8 px-2 cursor-pointer transition-colors ${
               isPinned
-                ? 'text-amber-600 hover:text-amber-700 bg-amber-50 hover:bg-amber-100/80'
-                : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100'
+                ? 'text-primary hover:text-primary bg-secondary hover:bg-secondary/80'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
             }`}
-            title={isPinned ? 'ピン留めを解除' : '最上部にピン留めする'}
+            title={isPinned ? 'ピン留めを解除' : 'ピン留め'}
           >
-            <Pin className={`h-4 w-4 ${isPinned ? 'fill-amber-600' : ''}`} />
+            <Pin className={`h-4 w-4 ${isPinned ? 'fill-primary' : ''}`} />
           </Button>
         )}
 
@@ -150,8 +150,8 @@ export function NoteEditorHeader({
             variant="ghost"
             onClick={onDelete}
             disabled={isDeleting}
-            className="h-8 px-2 text-slate-400 hover:text-red-600 hover:bg-red-50 cursor-pointer transition-colors"
-            title="ノートを削除"
+            className="h-8 px-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 cursor-pointer transition-colors"
+            title="削除"
           >
             <Trash2 className="h-4 w-4" />
           </Button>

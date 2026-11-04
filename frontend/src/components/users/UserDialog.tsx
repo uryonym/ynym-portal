@@ -93,21 +93,20 @@ function UserFormContent({
           name="google_uid"
           render={({ field }) => (
             <FormItem className="space-y-1.5">
-              <FormLabel className="text-xs font-semibold text-slate-700">
-                Google UID (sub) <span className="text-red-500">*</span>
+              <FormLabel className="text-xs font-semibold text-foreground">
+                Google UID (sub) <span className="text-destructive">*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   placeholder="例: 118234857291029384756"
                   disabled={isLoading}
-                  className="h-10 text-sm rounded-xl"
+                  className="h-10 text-sm rounded-lg"
                   {...field}
                 />
               </FormControl>
               <FormMessage />
-              <FormDescription className="text-[11px] text-slate-400">
-                Googleアカウントの固有ID（OpenID
-                Connectのsub値）を入力してください。
+              <FormDescription className="text-[11px] text-muted-foreground">
+                Googleアカウントの固有ID（sub値）を入力してください。
               </FormDescription>
             </FormItem>
           )}
@@ -118,14 +117,14 @@ function UserFormContent({
           name="name"
           render={({ field }) => (
             <FormItem className="space-y-1.5">
-              <FormLabel className="text-xs font-semibold text-slate-700">
-                名前 <span className="text-red-500">*</span>
+              <FormLabel className="text-xs font-semibold text-foreground">
+                名前 <span className="text-destructive">*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   placeholder="例: 山田 太郎"
                   disabled={isLoading}
-                  className="h-10 text-sm rounded-xl"
+                  className="h-10 text-sm rounded-lg"
                   {...field}
                 />
               </FormControl>
@@ -139,15 +138,15 @@ function UserFormContent({
           name="email"
           render={({ field }) => (
             <FormItem className="space-y-1.5">
-              <FormLabel className="text-xs font-semibold text-slate-700">
-                メールアドレス <span className="text-red-500">*</span>
+              <FormLabel className="text-xs font-semibold text-foreground">
+                メールアドレス <span className="text-destructive">*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   type="email"
                   placeholder="例: user@example.com"
                   disabled={isLoading}
-                  className="h-10 text-sm rounded-xl"
+                  className="h-10 text-sm rounded-lg"
                   {...field}
                 />
               </FormControl>
@@ -168,7 +167,7 @@ function UserFormContent({
                   disabled={isLoading}
                 />
               </FormControl>
-              <FormLabel className="text-sm font-medium text-slate-700 cursor-pointer select-none">
+              <FormLabel className="text-sm font-medium text-foreground cursor-pointer select-none">
                 管理者権限を付与する
               </FormLabel>
             </FormItem>
@@ -181,16 +180,12 @@ function UserFormContent({
             variant="outline"
             onClick={onClose}
             disabled={isLoading}
-            className="h-10 rounded-xl"
+            className="h-9 rounded-lg"
           >
             キャンセル
           </Button>
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className="h-10 rounded-xl bg-slate-900 hover:bg-slate-800 text-white"
-          >
-            {isLoading ? '保存中...' : isEdit ? '更新する' : '事前登録する'}
+          <Button type="submit" disabled={isLoading} className="h-9 rounded-lg">
+            {isLoading ? '保存中...' : isEdit ? '保存' : '登録する'}
           </Button>
         </DialogFooter>
       </form>
@@ -211,7 +206,7 @@ export function UserDialog({
       <DialogContent className="w-full max-w-md mx-auto">
         <DialogHeader>
           <DialogTitle>
-            {isEdit ? 'ユーザー情報を編集' : 'ユーザーを事前登録'}
+            {isEdit ? 'ユーザーを編集' : 'ユーザーを登録'}
           </DialogTitle>
         </DialogHeader>
 

@@ -166,7 +166,7 @@ export function FuelRecordForm({
                   disabled={isLoading}
                 >
                   <FormControl>
-                    <SelectTrigger className="h-10 w-full bg-white">
+                    <SelectTrigger className="h-10 w-full bg-card">
                       <SelectValue placeholder="選択してください" />
                     </SelectTrigger>
                   </FormControl>
@@ -263,7 +263,7 @@ export function FuelRecordForm({
                   disabled={isLoading}
                 />
               </FormControl>
-              <FormLabel className="text-sm font-normal text-gray-700 cursor-pointer">
+              <FormLabel className="text-sm font-normal text-foreground cursor-pointer">
                 満タン
               </FormLabel>
             </FormItem>

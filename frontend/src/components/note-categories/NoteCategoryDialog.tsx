@@ -26,7 +26,7 @@ export function NoteCategoryDialog({
   onDelete,
   isLoading = false,
 }: NoteCategoryDialogProps) {
-  const title = initialData ? 'カテゴリを編集' : '新しいカテゴリを作成'
+  const title = initialData ? 'カテゴリを編集' : 'カテゴリを追加'
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-md mx-auto">

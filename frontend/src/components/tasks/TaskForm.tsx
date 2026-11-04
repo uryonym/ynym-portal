@@ -111,8 +111,8 @@ export function TaskForm({
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center justify-between">
-                <FormLabel className="text-xs font-semibold text-slate-700">
-                  タイトル <span className="text-rose-500">*</span>
+                <FormLabel className="text-xs font-semibold text-foreground">
+                  タイトル <span className="text-destructive">*</span>
                 </FormLabel>
               </div>
               <FormControl>
@@ -122,9 +122,9 @@ export function TaskForm({
                     field.ref(e)
                     titleInputRef.current = e
                   }}
-                  placeholder="タスクのタイトルを入力（例: 経費精算を提出する）"
+                  placeholder="やること（例: ゴミ袋を買う、市役所へ行く）"
                   disabled={isLoading}
-                  className="h-10 text-sm rounded-xl border-slate-200 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-900 focus-visible:border-slate-900"
+                  className="h-10 text-sm rounded-lg"
                 />
               </FormControl>
               <FormMessage />
@@ -139,18 +139,18 @@ export function TaskForm({
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center justify-between">
-                <FormLabel className="text-xs font-semibold text-slate-700">
-                  詳細メモ
+                <FormLabel className="text-xs font-semibold text-foreground">
+                  メモ
                 </FormLabel>
-                <span className="text-[11px] text-slate-400">任意</span>
+                <span className="text-[11px] text-muted-foreground">任意</span>
               </div>
               <FormControl>
                 <Textarea
                   {...field}
                   value={field.value}
-                  placeholder="詳細な補足情報やリンクなどがあれば入力してください"
+                  placeholder="メモや補足があれば入力"
                   disabled={isLoading}
-                  className="min-h-24 text-sm leading-relaxed rounded-xl border-slate-200 placeholder:text-slate-400 resize-none p-3 focus-visible:ring-1 focus-visible:ring-slate-900 focus-visible:border-slate-900"
+                  className="min-h-24 text-sm leading-relaxed rounded-lg resize-none p-3"
                 />
               </FormControl>
               <FormMessage />
@@ -165,10 +165,10 @@ export function TaskForm({
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <div className="flex items-center justify-between">
-                <FormLabel className="text-xs font-semibold text-slate-700">
+                <FormLabel className="text-xs font-semibold text-foreground">
                   期日
                 </FormLabel>
-                <span className="text-[11px] text-slate-400">任意</span>
+                <span className="text-[11px] text-muted-foreground">任意</span>
               </div>
 
               {/* クイック選択ショートカット */}
@@ -177,7 +177,7 @@ export function TaskForm({
                   type="button"
                   onClick={() => setQuickDate(0)}
                   disabled={isLoading}
-                  className="px-2.5 py-1 text-xs rounded-lg border border-slate-200/80 bg-slate-50/70 hover:bg-slate-100 text-slate-600 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 text-xs rounded-md border border-border bg-muted/50 hover:bg-secondary hover:text-secondary-foreground text-muted-foreground transition-colors cursor-pointer"
                 >
                   今日
                 </button>
@@ -185,7 +185,7 @@ export function TaskForm({
                   type="button"
                   onClick={() => setQuickDate(1)}
                   disabled={isLoading}
-                  className="px-2.5 py-1 text-xs rounded-lg border border-slate-200/80 bg-slate-50/70 hover:bg-slate-100 text-slate-600 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 text-xs rounded-md border border-border bg-muted/50 hover:bg-secondary hover:text-secondary-foreground text-muted-foreground transition-colors cursor-pointer"
                 >
                   明日
                 </button>
@@ -193,7 +193,7 @@ export function TaskForm({
                   type="button"
                   onClick={() => setQuickDate(7)}
                   disabled={isLoading}
-                  className="px-2.5 py-1 text-xs rounded-lg border border-slate-200/80 bg-slate-50/70 hover:bg-slate-100 text-slate-600 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 text-xs rounded-md border border-border bg-muted/50 hover:bg-secondary hover:text-secondary-foreground text-muted-foreground transition-colors cursor-pointer"
                 >
                   1週間後
                 </button>
@@ -202,7 +202,7 @@ export function TaskForm({
                     type="button"
                     onClick={clearDate}
                     disabled={isLoading}
-                    className="px-2 py-1 text-xs text-rose-500 hover:text-rose-700 hover:bg-rose-50/60 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                    className="px-2 py-1 text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md transition-colors flex items-center gap-1 cursor-pointer"
                   >
                     <X className="h-3 w-3" />
                     クリア
@@ -216,21 +216,21 @@ export function TaskForm({
                     render={
                       <Button
                         variant="outline"
-                        className="w-full justify-start text-left font-normal h-10 rounded-xl border-slate-200 hover:bg-slate-50/80 text-sm cursor-pointer"
+                        className="w-full justify-start text-left font-normal h-10 rounded-lg text-sm cursor-pointer"
                         disabled={isLoading}
                       />
                     }
                   >
-                    <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
+                    <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground" />
                     {field.value ? (
-                      <span className="text-slate-900 font-medium">
+                      <span className="text-foreground font-medium">
                         {formatDisplayDate(
                           parseDateString(field.value, 'yyyy-MM-dd'),
                           'yyyy年M月d日(E)',
                         )}
                       </span>
                     ) : (
-                      <span className="text-slate-400">カレンダーから指定</span>
+                      <span className="text-muted-foreground">日付を選択</span>
                     )}
                   </PopoverTrigger>
                 </FormControl>
@@ -249,12 +249,12 @@ export function TaskForm({
                       disabled={isLoading}
                     />
                     {field.value && (
-                      <div className="border-t border-slate-100 p-2">
+                      <div className="border-t border-border p-2">
                         <Button
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="w-full gap-2 text-xs text-slate-600 hover:text-rose-600 cursor-pointer"
+                          className="w-full gap-2 text-xs text-muted-foreground hover:text-destructive cursor-pointer"
                           onClick={() => field.onChange('')}
                           disabled={isLoading}
                         >
@@ -272,7 +272,7 @@ export function TaskForm({
         />
 
         {/* ボタンフッター */}
-        <div className="flex items-center justify-between pt-4 border-t border-slate-150 gap-2">
+        <div className="flex items-center justify-between pt-4 border-t border-border gap-2">
           <div>
             {isEditing && initialData && onDelete && (
               <Button
@@ -284,10 +284,10 @@ export function TaskForm({
                   onCancel()
                 }}
                 disabled={isLoading}
-                className="text-xs text-slate-400 hover:text-rose-600 hover:bg-rose-50/80 h-9 px-2.5 gap-1.5 rounded-lg transition-colors cursor-pointer"
+                className="text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-9 px-2.5 gap-1.5 rounded-lg transition-colors cursor-pointer"
               >
                 <Trash2 className="h-3.5 w-3.5" />
-                <span>タスクを削除</span>
+                <span>削除</span>
               </Button>
             )}
           </div>
@@ -299,7 +299,7 @@ export function TaskForm({
               size="sm"
               onClick={onCancel}
               disabled={isLoading}
-              className="h-9 px-4 text-xs sm:text-sm rounded-xl border-slate-200 text-slate-600 hover:text-slate-900 cursor-pointer"
+              className="h-9 px-4 text-xs sm:text-sm rounded-lg cursor-pointer"
             >
               キャンセル
             </Button>
@@ -307,13 +307,9 @@ export function TaskForm({
               type="submit"
               size="sm"
               disabled={isLoading}
-              className="h-9 px-4 text-xs sm:text-sm rounded-xl bg-slate-900 hover:bg-slate-800 text-white cursor-pointer shadow-2xs font-medium"
+              className="h-9 px-4 text-xs sm:text-sm rounded-lg cursor-pointer font-medium"
             >
-              {isLoading
-                ? '保存中...'
-                : isEditing
-                  ? '変更を保存'
-                  : 'タスクを作成'}
+              {isLoading ? '保存中...' : isEditing ? '保存' : '追加'}
             </Button>
           </div>
         </div>

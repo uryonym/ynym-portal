@@ -54,34 +54,29 @@ export function UserList({
     }
   }
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
-            ユーザー管理
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            事前登録された Google アカウントの管理や利用停止（退会）を行います
-          </p>
-        </div>
+    <div className="space-y-5">
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
+          ユーザー管理
+        </h1>
         <Button
           onClick={onAddNew}
-          className="h-10 px-4 gap-2 w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white rounded-xl shadow-xs cursor-pointer"
+          className="h-9 px-3.5 gap-1.5 rounded-lg cursor-pointer text-xs sm:text-sm font-medium"
         >
           <Plus className="h-4 w-4" />
-          <span>ユーザーを事前登録</span>
+          <span>ユーザーを登録</span>
         </Button>
       </div>
 
       {/* 検索 & フィルターバー */}
-      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between bg-white p-3.5 rounded-2xl border border-slate-200/80">
+      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between bg-card p-3.5 rounded-xl border border-border/80">
         <div className="relative w-full sm:w-80">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="名前、メール、UID で検索..."
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-9 h-9 text-sm rounded-xl"
+            className="pl-9 h-9 text-sm rounded-lg"
           />
         </div>
 
@@ -95,33 +90,33 @@ export function UserList({
           />
           <Label
             htmlFor="include_deleted"
-            className="text-xs font-medium text-slate-600 cursor-pointer select-none"
+            className="text-xs font-medium text-muted-foreground cursor-pointer select-none"
           >
-            論理削除済み（退会済み）を含める
+            停止中のユーザーも表示
           </Label>
         </div>
       </div>
 
       {/* ユーザー一覧テーブル */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs">
+      <div className="bg-card rounded-xl border border-border/80 overflow-hidden shadow-2xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50/80 border-b border-slate-200/80 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <thead className="bg-muted/50 border-b border-border/80 text-xs font-medium text-muted-foreground">
               <tr>
-                <th className="px-5 py-3.5">ユーザー</th>
-                <th className="px-5 py-3.5">Google UID</th>
-                <th className="px-5 py-3.5">権限</th>
-                <th className="px-5 py-3.5">ステータス</th>
-                <th className="px-5 py-3.5">登録日時</th>
-                <th className="px-5 py-3.5 text-right">操作</th>
+                <th className="px-5 py-3">ユーザー</th>
+                <th className="px-5 py-3">Google UID</th>
+                <th className="px-5 py-3">権限</th>
+                <th className="px-5 py-3">状態</th>
+                <th className="px-5 py-3">登録日</th>
+                <th className="px-5 py-3 text-right">操作</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border/60">
               {users.length === 0 ? (
                 <tr>
                   <td
                     colSpan={6}
-                    className="text-center py-12 text-slate-400 text-sm"
+                    className="text-center py-12 text-muted-foreground text-sm"
                   >
                     {isLoading
                       ? '読み込み中...'
@@ -135,7 +130,7 @@ export function UserList({
                   return (
                     <tr
                       key={user.id}
-                      className={`hover:bg-slate-50/60 transition-colors ${isDeleted ? 'bg-slate-50/40 text-slate-400' : ''}`}
+                      className={`hover:bg-muted/30 transition-colors ${isDeleted ? 'bg-muted/20 text-muted-foreground' : ''}`}
                     >
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-3">
@@ -145,27 +140,27 @@ export function UserList({
                               alt={user.name}
                               width={36}
                               height={36}
-                              className={`h-9 w-9 rounded-full object-cover ring-1 ring-slate-200 shrink-0 ${isDeleted ? 'grayscale opacity-60' : ''}`}
+                              className={`h-9 w-9 rounded-full object-cover ring-1 ring-border shrink-0 ${isDeleted ? 'grayscale opacity-60' : ''}`}
                             />
                           ) : (
-                            <div className="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-semibold text-xs shrink-0">
+                            <div className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground font-semibold text-xs shrink-0">
                               {user.name.slice(0, 1).toUpperCase()}
                             </div>
                           )}
                           <div className="min-w-0">
                             <div className="flex items-center gap-1.5">
                               <p
-                                className={`font-medium truncate ${isDeleted ? 'line-through text-slate-500' : 'text-slate-900'}`}
+                                className={`font-medium truncate ${isDeleted ? 'line-through text-muted-foreground' : 'text-foreground'}`}
                               >
                                 {user.name}
                               </p>
                               {isSelf && (
-                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600">
+                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-secondary text-secondary-foreground">
                                   自分
                                 </span>
                               )}
                             </div>
-                            <p className="text-xs text-slate-500 truncate mt-0.5">
+                            <p className="text-xs text-muted-foreground truncate mt-0.5">
                               {user.email}
                             </p>
                           </div>
@@ -173,39 +168,41 @@ export function UserList({
                       </td>
                       <td className="px-5 py-3.5">
                         {user.google_uid ? (
-                          <code className="text-xs font-mono bg-slate-100 px-2 py-1 rounded-md text-slate-700">
+                          <code className="text-xs font-mono bg-muted px-2 py-1 rounded-md text-foreground/80">
                             {user.google_uid}
                           </code>
                         ) : (
-                          <span className="text-xs text-slate-400">未設定</span>
+                          <span className="text-xs text-muted-foreground">
+                            未設定
+                          </span>
                         )}
                       </td>
                       <td className="px-5 py-3.5">
                         {user.is_admin ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
                             <ShieldCheck className="h-3 w-3" />
                             管理者
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-50 text-slate-600 border border-slate-200">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground">
                             一般
                           </span>
                         )}
                       </td>
                       <td className="px-5 py-3.5">
                         {isDeleted ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-200">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200/80">
                             <UserX className="h-3 w-3" />
-                            利用停止（退会）
+                            停止中
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
                             <UserCheck className="h-3 w-3" />
                             有効
                           </span>
                         )}
                       </td>
-                      <td className="px-5 py-3.5 text-xs text-slate-500">
+                      <td className="px-5 py-3.5 text-xs text-muted-foreground">
                         {new Date(user.created_at).toLocaleDateString('ja-JP', {
                           year: 'numeric',
                           month: '2-digit',
@@ -218,7 +215,7 @@ export function UserList({
                             variant="ghost"
                             size="sm"
                             onClick={() => onEdit(user)}
-                            className="h-8 w-8 p-0 text-slate-600 hover:text-slate-900"
+                            className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
                             title="編集"
                           >
                             <Edit2 className="h-3.5 w-3.5" />
@@ -229,11 +226,11 @@ export function UserList({
                               size="sm"
                               onClick={() => handleRestore(user.id)}
                               disabled={restoringId === user.id}
-                              className="h-8 px-2 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 gap-1"
-                              title="復元"
+                              className="h-8 px-2 text-xs text-primary hover:text-primary hover:bg-secondary gap-1"
+                              title="再開"
                             >
                               <RotateCcw className="h-3.5 w-3.5" />
-                              <span>復元</span>
+                              <span>再開</span>
                             </Button>
                           ) : (
                             <Button
@@ -241,9 +238,9 @@ export function UserList({
                               size="sm"
                               onClick={() => onDelete(user)}
                               disabled={isSelf}
-                              className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50 disabled:opacity-30"
+                              className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 disabled:opacity-30"
                               title={
-                                isSelf ? '自分自身は削除できません' : '論理削除'
+                                isSelf ? '自分自身は停止できません' : '利用停止'
                               }
                             >
                               <Trash2 className="h-3.5 w-3.5" />

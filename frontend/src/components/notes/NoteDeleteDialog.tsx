@@ -27,10 +27,10 @@ export function NoteDeleteDialog({
       description={
         <>
           ノート「
-          <span className="font-semibold text-slate-800">{note.title}</span>
+          <span className="font-semibold text-foreground">{note.title}</span>
           」を削除してもよろしいですか？
           <br />
-          削除したノートはゴミ箱からいつでも復元できます。
+          削除したノートはゴミ箱から復元できます。
         </>
       }
       onConfirm={() => onConfirm(note.id)}

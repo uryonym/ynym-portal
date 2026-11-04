@@ -35,9 +35,7 @@ export function EventDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-lg mx-auto max-h-[90vh] overflow-y-auto">
         <DialogHeader className="text-left">
-          <DialogTitle>
-            {isEditing ? '予定を編集' : '新しい予定を追加'}
-          </DialogTitle>
+          <DialogTitle>{isEditing ? '予定を編集' : '予定を追加'}</DialogTitle>
         </DialogHeader>
 
         <div className="pt-2">

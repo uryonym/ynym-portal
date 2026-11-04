@@ -12,17 +12,17 @@ import {
 import type { CalendarEvent } from '@/lib/types/event'
 
 export const DEFAULT_MEMBER_COLORS = [
-  '#3b82f6', // blue
-  '#ec4899', // pink
-  '#10b981', // emerald
-  '#f59e0b', // amber
-  '#8b5cf6', // purple
-  '#06b6d4', // cyan
-  '#f97316', // orange
-  '#14b8a6', // teal
+  '#5b9a7d', // sage green
+  '#5b8db8', // calm blue
+  '#d47a8e', // dusty rose
+  '#d6934b', // warm ochre
+  '#8c7aa9', // muted lavender
+  '#5a9da3', // soft teal
+  '#c97b63', // terracotta
+  '#7d9c5b', // olive green
 ]
 
-export const SHARED_FAMILY_COLOR = '#6366f1' // indigo
+export const SHARED_FAMILY_COLOR = '#5b9a7d' // sage green
 
 /**
  * メンバーの表示色を決定論的に取得（未設定時はIDからハッシュ割当）

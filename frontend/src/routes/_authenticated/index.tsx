@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { format } from 'date-fns'
+import { ja } from 'date-fns/locale'
 import {
   Calendar,
   CheckSquare,
@@ -6,8 +8,7 @@ import {
   Fuel,
   StickyNote,
   Folder,
-  ArrowRight,
-  Sparkles,
+  ChevronRight,
 } from 'lucide-react'
 
 import { useAuthUserQuery } from '@/hooks/queries/useAuth'
@@ -18,100 +19,79 @@ export const Route = createFileRoute('/_authenticated/')({
 
 function DashboardHomePage() {
   const { data: user } = useAuthUserQuery()
+  const todayText = format(new Date(), 'M月d日 (EEEE)', { locale: ja })
 
   const quickLinks = [
     {
       title: 'カレンダー',
-      description: '家族の予定・スケジュール',
+      description: '予定・スケジュール',
       url: '/calendar',
       icon: Calendar,
-      color:
-        'text-rose-600 bg-rose-50/80 border-rose-100/60 group-hover:bg-rose-600 group-hover:text-white',
     },
     {
       title: 'タスク',
-      description: '日々のやることリスト',
+      description: 'やることリスト',
       url: '/tasks',
       icon: CheckSquare,
-      color:
-        'text-indigo-600 bg-indigo-50/80 border-indigo-100/60 group-hover:bg-indigo-600 group-hover:text-white',
     },
     {
       title: 'ノート',
-      description: '日々のメモや記録',
+      description: 'メモ・暮らしの記録',
       url: '/notes',
       icon: StickyNote,
-      color:
-        'text-amber-600 bg-amber-50/80 border-amber-100/60 group-hover:bg-amber-600 group-hover:text-white',
     },
     {
       title: 'カテゴリ',
-      description: 'ノートの分類整理',
+      description: 'ノートの分類',
       url: '/note-categories',
       icon: Folder,
-      color:
-        'text-purple-600 bg-purple-50/80 border-purple-100/60 group-hover:bg-purple-600 group-hover:text-white',
     },
     {
-      title: '車両管理',
-      description: '愛車の情報・車検確認',
+      title: 'クルマ',
+      description: '登録車両の確認',
       url: '/vehicles',
       icon: Car,
-      color:
-        'text-emerald-600 bg-emerald-50/80 border-emerald-100/60 group-hover:bg-emerald-600 group-hover:text-white',
     },
     {
-      title: '燃費管理',
-      description: '給油と燃費の記録',
+      title: '給油・燃費',
+      description: '給油の記録と燃費',
       url: '/fuel-records',
       icon: Fuel,
-      color:
-        'text-sky-600 bg-sky-50/80 border-sky-100/60 group-hover:bg-sky-600 group-hover:text-white',
     },
   ]
 
   return (
     <div className="max-w-4xl mx-auto w-full space-y-6">
-      {/* Greeting Header */}
-      <div className="flex flex-col gap-1.5 pb-2 border-b border-slate-200/60">
-        <div className="flex items-center gap-2">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-900/5 text-slate-700 text-xs font-medium">
-            <Sparkles className="h-3 w-3 text-amber-500" />
-            <span>ダッシュボード</span>
-          </div>
-        </div>
-        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
-          {user ? `こんにちは、${user.name}さん` : 'こんにちは'}
+      <div className="flex flex-col gap-1 pb-2">
+        <span className="text-xs font-medium text-muted-foreground">
+          {todayText}
+        </span>
+        <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
+          {user ? `${user.name}さん、こんにちは` : 'こんにちは'}
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500">
-          利用するメニューを選択してください
-        </p>
       </div>
 
-      {/* Quick Navigation Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
         {quickLinks.map((item) => (
           <Link
             key={item.title}
             to={item.url}
-            className="group relative block p-5 bg-white rounded-2xl border border-slate-200/70 shadow-2xs hover:shadow-md hover:border-slate-300 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
+            className="group flex items-center justify-between p-4 bg-card rounded-xl border border-border/80 shadow-2xs hover:border-primary/40 hover:bg-accent/25 transition-colors cursor-pointer"
           >
-            <div className="flex items-center justify-between mb-3.5">
-              <div
-                className={`w-10 h-10 rounded-xl border flex items-center justify-center transition-all duration-200 shadow-2xs ${item.color}`}
-              >
-                <item.icon className="h-5 w-5" />
+            <div className="flex items-center gap-3.5 min-w-0">
+              <div className="w-10 h-10 rounded-lg bg-secondary text-secondary-foreground flex items-center justify-center shrink-0 transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                <item.icon className="h-4.5 w-4.5" />
               </div>
-              <div className="w-7 h-7 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-slate-900 group-hover:bg-slate-100 transition-colors">
-                <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+              <div className="min-w-0">
+                <h2 className="text-sm sm:text-base font-semibold text-foreground tracking-tight">
+                  {item.title}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                  {item.description}
+                </p>
               </div>
             </div>
-            <h2 className="text-base font-bold text-slate-900 tracking-tight">
-              {item.title}
-            </h2>
-            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-              {item.description}
-            </p>
+            <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-foreground shrink-0 transition-colors" />
           </Link>
         ))}
       </div>

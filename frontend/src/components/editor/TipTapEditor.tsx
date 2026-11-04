@@ -32,7 +32,7 @@ interface TipTapEditorProps {
 export function TipTapEditor({
   content,
   onChange,
-  placeholder = "何を書きますか？ '/' でコマンドを表示...",
+  placeholder = "メモを入力（'/' でブロック挿入）",
   editable = true,
   autoFocus = false,
   className = '',
@@ -171,7 +171,7 @@ export function TipTapEditor({
 
   return (
     <div
-      className={`relative w-full rounded-xl border border-slate-200/80 bg-white shadow-2xs transition-all ${className}`}
+      className={`relative w-full rounded-xl border border-border/80 bg-card shadow-2xs transition-all ${className}`}
     >
       {editable && showToolbar && <EditorToolbar editor={editor} />}
       {editable && <BubbleToolbar editor={editor} />}

@@ -270,7 +270,7 @@ export function EventForm({
           </div>
         </div>
 
-        {/* プライベート設定（重要要件） */}
+        {/* プライベート設定 */}
         <FormField
           control={form.control}
           name="is_private"
@@ -287,13 +287,13 @@ export function EventForm({
                 <div className="space-y-1 leading-none">
                   <label
                     htmlFor="is_private"
-                    className="flex items-center gap-1.5 text-sm font-semibold cursor-pointer"
+                    className="flex items-center gap-1.5 text-sm font-medium cursor-pointer"
                   >
                     <Lock className="h-3.5 w-3.5 text-amber-500" />
-                    <span>プライベート予定（自分のみ表示）</span>
+                    <span>自分のみ表示（非公開）</span>
                   </label>
                   <p className="text-xs text-muted-foreground">
-                    チェックを入れると、この予定はあなただけに表示され、他の家族には完全非表示になります。
+                    他のメンバーには表示されません
                   </p>
                 </div>
               </div>

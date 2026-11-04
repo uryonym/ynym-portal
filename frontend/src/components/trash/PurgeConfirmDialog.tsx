@@ -33,25 +33,25 @@ export function PurgeConfirmDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-md mx-auto">
         <DialogHeader>
-          <DialogTitle className="text-red-600">{title}</DialogTitle>
-          <DialogDescription className="text-slate-500 pt-2 space-y-2">
+          <DialogTitle className="text-destructive">{title}</DialogTitle>
+          <DialogDescription className="text-muted-foreground pt-2 space-y-2">
             {description ? (
               <span>{description}</span>
             ) : isBatch ? (
               <span>
-                このリソースのゴミ箱内のすべてのアイテムを完全に削除します。
+                表示中のタブの項目をすべて完全に削除します。
                 <br />
-                <strong className="text-red-600">
-                  この操作は取り消せません。
+                <strong className="text-destructive">
+                  完全削除したデータは元に戻せません。
                 </strong>
               </span>
             ) : (
               <span>
-                「<strong className="text-slate-800">{itemName}</strong>
+                「<strong className="text-foreground">{itemName}</strong>
                 」を完全に削除します。
                 <br />
-                <strong className="text-red-600">
-                  この操作は取り消せません。
+                <strong className="text-destructive">
+                  完全削除したデータは元に戻せません。
                 </strong>
               </span>
             )}

@@ -55,7 +55,7 @@ function UsersPage() {
   if (isAuthLoading) {
     return (
       <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full flex items-center justify-center min-h-[50vh]">
-        <div className="text-slate-400 text-sm">認証情報を確認中...</div>
+        <div className="text-muted-foreground text-sm">読み込み中...</div>
       </div>
     )
   }
@@ -64,21 +64,21 @@ function UsersPage() {
   if (!currentUser?.is_admin) {
     return (
       <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-md mx-auto w-full flex flex-col items-center justify-center min-h-[50vh] text-center space-y-4">
-        <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shadow-xs">
-          <ShieldAlert className="h-6 w-6" />
+        <div className="w-11 h-11 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+          <ShieldAlert className="h-5 w-5" />
         </div>
         <div>
-          <h2 className="text-lg font-bold text-slate-900">
+          <h2 className="text-base font-semibold text-foreground">
             管理者権限が必要です
           </h2>
-          <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-            このページは管理者権限を持つユーザーのみがアクセスできます。
+          <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+            このページは管理者のみアクセスできます。
           </p>
         </div>
         <Button
           variant="outline"
           onClick={() => navigate({ to: '/' })}
-          className="h-10 rounded-xl"
+          className="h-9 rounded-lg"
         >
           ホームに戻る
         </Button>

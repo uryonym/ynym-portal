@@ -60,17 +60,16 @@ export function AgendaView({
 
   if (daysWithItems.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border p-12 text-center bg-card">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-muted-foreground mb-4">
-          <CalendarIcon className="h-6 w-6" />
+      <div className="flex flex-col items-center justify-center rounded-xl border border-border/80 p-12 text-center bg-card">
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-secondary text-secondary-foreground mb-3">
+          <CalendarIcon className="h-5 w-5" />
         </div>
-        <h3 className="text-base font-medium">この月の予定はありません</h3>
-        <p className="mt-1 text-sm text-muted-foreground">
-          家族の予定やイベントを登録してみましょう。
-        </p>
+        <h3 className="text-sm font-medium text-foreground">
+          この月の予定はありません
+        </h3>
         <Button
           onClick={() => onSelectDay(new Date())}
-          className="mt-4 gap-1.5"
+          className="mt-4 gap-1.5 rounded-lg"
           size="sm"
         >
           <Plus className="h-4 w-4" />

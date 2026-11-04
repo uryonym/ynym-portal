@@ -38,24 +38,22 @@ export function UserDeleteDialog({
       <DialogContent className="w-full max-w-md mx-auto">
         <DialogHeader>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 shrink-0">
+            <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center text-destructive shrink-0">
               <AlertTriangle className="h-5 w-5" />
             </div>
             <div>
-              <DialogTitle>ユーザーの論理削除（退会）</DialogTitle>
-              <DialogDescription className="text-xs text-slate-500 mt-0.5">
-                対象: {user.name} ({user.email})
+              <DialogTitle>ユーザーの利用停止</DialogTitle>
+              <DialogDescription className="text-xs text-muted-foreground mt-0.5">
+                {user.name} ({user.email})
               </DialogDescription>
             </div>
           </div>
         </DialogHeader>
 
-        <div className="py-3 text-sm text-slate-600 leading-relaxed space-y-2">
-          <p>このユーザーを論理削除しますか？</p>
-          <div className="p-3 bg-red-50 rounded-xl border border-red-200 text-xs text-red-800">
-            論理削除されたユーザーは、次回以降 Google
-            アカウントでのログインが拒否されます（退会扱いとなります）。
-          </div>
+        <div className="py-2 text-sm text-muted-foreground leading-relaxed space-y-2">
+          <p>
+            このユーザーの利用を停止しますか？停止すると、次回以降ログインできなくなります（いつでも再開できます）。
+          </p>
         </div>
 
         <DialogFooter className="pt-2 flex gap-2 sm:justify-end">
@@ -64,7 +62,7 @@ export function UserDeleteDialog({
             variant="outline"
             onClick={() => onOpenChange(false)}
             disabled={isLoading}
-            className="h-10 rounded-xl"
+            className="h-9 rounded-lg"
           >
             キャンセル
           </Button>
@@ -73,9 +71,9 @@ export function UserDeleteDialog({
             variant="destructive"
             onClick={handleConfirm}
             disabled={isLoading}
-            className="h-10 rounded-xl bg-red-600 hover:bg-red-700 text-white"
+            className="h-9 rounded-lg"
           >
-            {isLoading ? '削除中...' : '論理削除する'}
+            {isLoading ? '処理中...' : '利用を停止する'}
           </Button>
         </DialogFooter>
       </DialogContent>
