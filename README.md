@@ -31,8 +31,8 @@
 ## 前提条件
 
 - **ランタイムバージョン管理**: [asdf](https://asdf-vm.com/)
-  - Node.js `24.19.0`
-  - Python `3.12.14`
+  - Node.js `24.22.3`
+  - Python `3.14.10`
 - **Python パッケージマネージャー**: [uv](https://github.com/astral-sh/uv)
 - **コンテナ環境** (コンテナ利用時): Docker & Docker Compose
 

@@ -15,7 +15,7 @@ ynym portal 向けの FastAPI バックエンドシステム。
 
 ## 前提条件
 
-- Python 3.12+
+- Python 3.14+
 - [uv](https://github.com/astral-sh/uv) パッケージマネージャー
 - PostgreSQL 12+ (または Docker)
 

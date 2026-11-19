@@ -38,7 +38,7 @@ class EventCreate(EventBase):
     """予定作成スキーマ."""
 
     @model_validator(mode="after")
-    def validate_event(self) -> "EventCreate":
+    def validate_event(self) -> EventCreate:
         self.title = self.title.strip()
         if not self.title:
             raise ValueError("タイトルを入力してください")
@@ -66,7 +66,7 @@ class EventUpdate(BaseModel):
     )
 
     @model_validator(mode="after")
-    def validate_update(self) -> "EventUpdate":
+    def validate_update(self) -> EventUpdate:
         if self.title is not None:
             self.title = self.title.strip()
             if not self.title:

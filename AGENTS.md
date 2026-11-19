@@ -10,7 +10,7 @@
 
 本リポジトリは、FastAPI バックエンドと Vite + TanStack SPA フロントエンドを統合したモノレポ構成です。
 
-- **`backend/`**: FastAPI (Python 3.12, uv)
+- **`backend/`**: FastAPI (Python 3.14, uv)
   - BFF 認証: Google OAuth + HttpOnly Cookie / セッション一元管理
   - パッケージ管理: `uv`
   - ORM: SQLAlchemy 2.0 (`psycopg`)

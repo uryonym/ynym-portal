@@ -5,7 +5,7 @@ This guide covers deploying the ynym Portal Backend to production.
 ## Prerequisites
 
 - PostgreSQL 12+ running
-- Python 3.12+ environment
+- Python 3.14+ environment
 - Server with Docker support (recommended)
 
 ## Environment Configuration

@@ -77,7 +77,7 @@ graph TB
 | **データフェッチ/キャッシュ** | TanStack Query | `@tanstack/react-query` v5 |
 | **スタイリング** | Tailwind CSS | v4 (`@tailwindcss/vite`) |
 | **UI コンポーネント** | shadcn/ui (Base UI) | コンポーネントライブラリ（直接改変禁止） |
-| **バックエンド基盤** | FastAPI | Python 3.12 (uv 管理) |
+| **バックエンド基盤** | FastAPI | Python 3.14 (uv 管理) |
 | **ORM / DB** | SQLAlchemy 2.0 | `psycopg` (PostgreSQL 16) |
 | **型定義** | TypeScript | `src/lib/types/` 配下で手動定義・管理 |
 
@@ -248,8 +248,8 @@ backend/app/
 
 本プロジェクトは **asdf** を使用してランタイムバージョンを統一しています（`mise` は使用しません）。
 
-- **Node.js**: `24.19.0` (または `.tool-versions` 指定のバージョン)
-- **Python**: `3.12.x` (uv によるパッケージ管理)
+- **Node.js**: `24.22.3` (または `.tool-versions` 指定のバージョン)
+- **Python**: `3.14.x` (uv によるパッケージ管理)
 - **Docker / PostgreSQL**: ローカル検証用 DB
 
 ```bash
@@ -343,7 +343,7 @@ Makefile によりコマンドが統一されています。CI でも同一の�
 #### バックエンド Dockerfile (キャッシュ最適化 & 本番最小構成)
 
 ```dockerfile
-FROM python:3.12-slim-bookworm
+FROM python:3.14-slim-bookworm
 
 # uv パッケージマネージャーをインストール
 COPY --from=ghcr.io/astral-sh/uv:0.13.7 /uv /uvx /bin/
