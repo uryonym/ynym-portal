@@ -1,16 +1,16 @@
-# Production Deployment
+# 本番デプロイガイド
 
-This guide covers deploying the ynym Portal Backend to production.
+ynym Portal バックエンドを本番環境へデプロイするためのガイドです。
 
-## Prerequisites
+## 前提条件
 
-- PostgreSQL 12+ running
-- Python 3.12+ environment
-- Server with Docker support (recommended)
+- PostgreSQL 12+ が稼働していること
+- Python 3.14+ 環境
+- Docker 対応サーバー（推奨）
 
-## Environment Configuration
+## 環境設定
 
-### 1. Set Production Environment Variables
+### 1. 本番用環境変数の設定
 
 `.env.sample` を `.env` にコピーして本番の値を設定します:
 
@@ -49,15 +49,15 @@ ENVIRONMENT=production
 LOG_LEVEL=INFO
 ```
 
-**Important**: Generate a strong secret key for JWT:
+**重要**: JWT 用の強力なシークレットキーを生成してください:
 
 ```bash
 python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
 
-## Deployment Methods
+## デプロイ方法
 
-### Option 1: Docker (Recommended)
+### 方法 1: Docker（推奨）
 
 プロジェクトルートの `Dockerfile` を使用してビルド・起動します:
 
@@ -72,32 +72,32 @@ docker run -p 80:80 --env-file .env ynym-portal-backend
 docker compose up -d
 ```
 
-### Option 2: Direct Server Deployment
+### 方法 2: サーバーへの直接デプロイ
 
 ```bash
-# Install dependencies
+# 依存パッケージのインストール
 uv sync --no-dev
 
-# Run with production ASGI server (gunicorn + uvicorn)
+# 本番用 ASGI サーバーで起動 (gunicorn + uvicorn)
 pip install gunicorn
 gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker
 ```
 
-## Database Setup
+## データベースセットアップ
 
 ```bash
-# Create database
+# データベースの作成
 createdb ynym_db
 
-# Set up database user
+# データベースユーザーの設定
 createuser ynym_user
 ALTER USER ynym_user WITH PASSWORD 'strong-password';
 GRANT ALL PRIVILEGES ON DATABASE ynym_db TO ynym_user;
 ```
 
-## Reverse Proxy Configuration
+## リバースプロキシ設定
 
-### Nginx Example
+### Nginx 設定例
 
 ```nginx
 upstream ynym_backend {
@@ -118,70 +118,70 @@ server {
 }
 ```
 
-## SSL/TLS Configuration
+## SSL/TLS 設定
 
-Use Let's Encrypt with Certbot:
+Certbot を使用して Let's Encrypt 証明書を取得します:
 
 ```bash
 sudo certbot certonly --standalone -d api.example.com
 ```
 
-Update Nginx configuration to use SSL certificates.
+取得した SSL 証明書を使用するように Nginx 設定を更新してください。
 
-## Monitoring
+## 監視
 
-### Health Check
+### ヘルスチェック
 
 ```bash
 curl http://localhost:8000/health
 ```
 
-### Logging
+### ロギング
 
-Configure centralized logging for production (e.g., ELK Stack, Datadog, New Relic).
+本番環境向けに集中ログ管理（ELK Stack、Datadog、New Relic 等）を設定してください。
 
-## Scaling
+## スケーリング
 
-- Use multiple worker processes: `-w 4` with gunicorn
-- Deploy behind load balancer for horizontal scaling
-- Use connection pooling for database
-- Consider caching layer (Redis)
+- gunicorn で複数ワーカープロセスを使用: `-w 4`
+- 水平スケーリングのためにロードバランサー配下にデプロイ
+- データベースのコネクションプーリングを使用
+- キャッシュレイヤー（Redis）の導入を検討
 
-## Security Considerations
+## セキュリティ上の考慮事項
 
-1. **HTTPS Only**: Always use HTTPS in production
-2. **CORS**: Configure CORS appropriately
-3. **Rate Limiting**: Implement rate limiting for API endpoints
-4. **Input Validation**: Validate all user inputs (already handled by Pydantic)
-5. **Dependencies**: Keep dependencies updated
-6. **Secrets**: Never commit `.env` file, use environment variables
-7. **Database**: Use strong passwords, limit database user permissions
+1. **HTTPS 必須**: 本番環境では常に HTTPS を使用する
+2. **CORS**: CORS を適切に設定する
+3. **レート制限**: API エンドポイントにレート制限を実装する
+4. **入力バリデーション**: すべてのユーザー入力を検証する（Pydantic により処理済み）
+5. **依存関係**: 依存パッケージを最新に保つ
+6. **シークレット管理**: `.env` ファイルをコミットせず、環境変数を使用する
+7. **データベース**: 強力なパスワードを使用し、データベースユーザーの権限を最小限に制限する
 
-## Maintenance
+## メンテナンス
 
-### Updates
+### アップデート
 
 ```bash
 git pull
 uv sync
-# Restart application
+# アプリケーションを再起動
 ```
 
-### Backups
+### バックアップ
 
-Set up regular PostgreSQL backups:
+定期的な PostgreSQL バックアップを設定します:
 
 ```bash
-# Daily backup
+# 日次バックアップ
 pg_dump ynym_db > backup_$(date +%Y%m%d).sql
 ```
 
-### Monitoring and Alerting
+### 監視とアラート
 
-Set up monitoring for:
+以下の項目について監視を設定してください:
 
-- Application uptime
-- Database performance
-- Error rates
-- Response times
-- Resource utilization
+- アプリケーションの稼働状況
+- データベースのパフォーマンス
+- エラー率
+- レスポンスタイム
+- リソース使用率

@@ -1,9 +1,9 @@
-# Documentation
+# ドキュメント
 
-This directory contains project documentation.
+このディレクトリには、プロジェクトのドキュメントが格納されています。
 
-## Subdirectories
+## サブディレクトリ
 
-- **api/**: API documentation including endpoints and specifications
-- **development/**: Development guide, setup instructions, and architecture
-- **deployment/**: Deployment guide for production environments
+- **api/**: エンドポイントや仕様を含む API ドキュメント
+- **development/**: 開発ガイド、セットアップ手順、アーキテクチャ解説
+- **deployment/**: 本番環境向けのデプロイガイド

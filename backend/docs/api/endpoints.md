@@ -1,14 +1,14 @@
-# API Endpoints
+# API エンドポイント
 
-This page documents all available API endpoints.
+このページでは、利用可能なすべての API エンドポイントを記載しています。
 
-## Health Check
+## ヘルスチェック
 
 ### GET /api/health
 
-Health check endpoint to verify the API is running.
+API が稼働しているか確認するためのヘルスチェックエンドポイントです。
 
-**Response:**
+**レスポンス:**
 
 ```json
 {
@@ -19,7 +19,7 @@ Health check endpoint to verify the API is running.
 
 ---
 
-## Tasks
+## タスク (Tasks)
 
 ### GET /api/tasks
 
@@ -33,14 +33,14 @@ Health check endpoint to verify the API is running.
 2. **期日なしのタスク**: 期日ありのタスク後に表示
 3. **同一グループ内での作成日時昇順**: `created_at ASC`
 
-**Query Parameters:**
+**クエリパラメータ:**
 
-| Parameter | Type    | Default | Description                     |
-| --------- | ------- | ------- | ------------------------------- |
+| パラメータ | 型      | デフォルト | 説明                            |
+| ---------- | ------- | ---------- | ------------------------------- |
 | skip      | integer | 0       | スキップするレコード数          |
 | limit     | integer | 100     | 取得するレコード数（最大 1000） |
 
-**Response (200 OK):**
+**成功レスポンス (200 OK):**
 
 ```json
 {
@@ -74,7 +74,7 @@ Health check endpoint to verify the API is running.
 }
 ```
 
-**Response (500 Internal Server Error):**
+**エラーレスポンス (500 Internal Server Error):**
 
 ```json
 {
@@ -92,16 +92,16 @@ Health check endpoint to verify the API is running.
 
 ユーザーが新しいタスクを作成します。タスク作成後、created_at と updated_at は自動的に現在の JST 時刻に設定されます。
 
-**Request Body:**
+**リクエストボディ:**
 
-| Field        | Type    | Required | Description                      |
-| ------------ | ------- | -------- | -------------------------------- |
-| title        | string  | Yes      | タスクのタイトル (1-255 文字)    |
-| description  | string  | No       | タスクの説明 (0-2000 文字)       |
-| due_date     | string  | No       | 期日 (ISO 8601 形式: YYYY-MM-DD) |
-| is_completed | boolean | No       | 完了状態 (デフォルト: false)     |
+| フィールド   | 型      | 必須 | 説明                             |
+| ------------ | ------- | ---- | -------------------------------- |
+| title        | string  | はい | タスクのタイトル (1-255 文字)    |
+| description  | string  | いいえ | タスクの説明 (0-2000 文字)     |
+| due_date     | string  | いいえ | 期日 (ISO 8601 形式: YYYY-MM-DD) |
+| is_completed | boolean | いいえ | 完了状態 (デフォルト: false)   |
 
-**Example Request:**
+**リクエスト例:**
 
 ```json
 {
@@ -112,7 +112,7 @@ Health check endpoint to verify the API is running.
 }
 ```
 
-**Response (201 Created):**
+**成功レスポンス (201 Created):**
 
 ```json
 {
@@ -132,7 +132,7 @@ Health check endpoint to verify the API is running.
 }
 ```
 
-**Response (400 Bad Request):**
+**エラーレスポンス (400 Bad Request):**
 
 バリデーションエラーが発生した場合。
 
@@ -150,7 +150,7 @@ Health check endpoint to verify the API is running.
 - `title` が 255 文字を超える場合: `"title: String should have at most 255 characters"`
 - `description` が 2000 文字を超える場合: `"description: String should have at most 2000 characters"`
 
-**Response (500 Internal Server Error):**
+**エラーレスポンス (500 Internal Server Error):**
 
 サーバーエラーが発生した場合。
 
@@ -162,9 +162,9 @@ Health check endpoint to verify the API is running.
 
 ---
 
-## Users
+## ユーザー (Users)
 
-## Notes
+## ノート (Notes)
 
 ### GET /api/notes
 
@@ -174,14 +174,14 @@ Health check endpoint to verify the API is running.
 
 ユーザーにひも付くノートを取得します。既定の並び順はカテゴリ名の昇順、次にタイトルの昇順で、カテゴリ未設定のノートは末尾に並びます。
 
-**Query Parameters:**
+**クエリパラメータ:**
 
-| Parameter | Type    | Default | Description            |
-| --------- | ------- | ------- | ---------------------- |
+| パラメータ | 型      | デフォルト | 説明                   |
+| ---------- | ------- | ---------- | ---------------------- |
 | skip      | integer | 0       | スキップするレコード数 |
 | limit     | integer | 100     | 取得するレコード数     |
 
-**Response (200 OK):**
+**成功レスポンス (200 OK):**
 
 ```json
 {
@@ -206,15 +206,15 @@ Health check endpoint to verify the API is running.
 
 新規ノートを作成します。
 
-**Request Body:**
+**リクエストボディ:**
 
-| Field       | Type   | Required | Description           |
-| ----------- | ------ | -------- | --------------------- |
-| title       | string | Yes      | タイトル (1-255 文字) |
-| body        | string | Yes      | 本文                  |
-| category_id | string | No       | カテゴリ ID (UUID)    |
+| フィールド  | 型     | 必須   | 説明                  |
+| ----------- | ------ | ------ | --------------------- |
+| title       | string | はい   | タイトル (1-255 文字) |
+| body        | string | はい   | 本文                  |
+| category_id | string | いいえ | カテゴリ ID (UUID)    |
 
-**Response (201 Created):**
+**成功レスポンス (201 Created):**
 
 ```json
 {
@@ -237,7 +237,7 @@ Health check endpoint to verify the API is running.
 
 ノートを取得します。
 
-**Response (200 OK):**
+**成功レスポンス (200 OK):**
 
 ```json
 {
@@ -260,15 +260,15 @@ Health check endpoint to verify the API is running.
 
 ノートを更新します。
 
-**Request Body:**
+**リクエストボディ:**
 
-| Field       | Type   | Required | Description        |
-| ----------- | ------ | -------- | ------------------ |
-| title       | string | No       | タイトル           |
-| body        | string | No       | 本文               |
-| category_id | string | No       | カテゴリ ID (UUID) |
+| フィールド  | 型     | 必須   | 説明               |
+| ----------- | ------ | ------ | ------------------ |
+| title       | string | いいえ | タイトル           |
+| body        | string | いいえ | 本文               |
+| category_id | string | いいえ | カテゴリ ID (UUID) |
 
-**Response (200 OK):**
+**成功レスポンス (200 OK):**
 
 ```json
 {
@@ -291,7 +291,7 @@ Health check endpoint to verify the API is running.
 
 ノートを削除します。
 
-**Response (200 OK):**
+**成功レスポンス (200 OK):**
 
 ```json
 {
@@ -305,14 +305,14 @@ Health check endpoint to verify the API is running.
 
 カテゴリ一覧を取得します。
 
-**Query Parameters:**
+**クエリパラメータ:**
 
-| Parameter | Type    | Default | Description            |
-| --------- | ------- | ------- | ---------------------- |
+| パラメータ | 型      | デフォルト | 説明                   |
+| ---------- | ------- | ---------- | ---------------------- |
 | skip      | integer | 0       | スキップするレコード数 |
 | limit     | integer | 100     | 取得するレコード数     |
 
-**Response (200 OK):**
+**成功レスポンス (200 OK):**
 
 ```json
 {
@@ -335,13 +335,13 @@ Health check endpoint to verify the API is running.
 
 新規カテゴリを作成します。
 
-**Request Body:**
+**リクエストボディ:**
 
-| Field | Type   | Required | Description             |
-| ----- | ------ | -------- | ----------------------- |
-| name  | string | Yes      | カテゴリ名 (1-255 文字) |
+| フィールド | 型     | 必須 | 説明                    |
+| ---------- | ------ | ---- | ----------------------- |
+| name       | string | はい | カテゴリ名 (1-255 文字) |
 
-**Response (201 Created):**
+**成功レスポンス (201 Created):**
 
 ```json
 {
@@ -362,7 +362,7 @@ Health check endpoint to verify the API is running.
 
 カテゴリを取得します。
 
-**Response (200 OK):**
+**成功レスポンス (200 OK):**
 
 ```json
 {
@@ -383,13 +383,13 @@ Health check endpoint to verify the API is running.
 
 カテゴリを更新します。
 
-**Request Body:**
+**リクエストボディ:**
 
-| Field | Type   | Required | Description |
-| ----- | ------ | -------- | ----------- |
-| name  | string | No       | カテゴリ名  |
+| フィールド | 型     | 必須   | 説明       |
+| ---------- | ------ | ------ | ---------- |
+| name       | string | いいえ | カテゴリ名 |
 
-**Response (200 OK):**
+**成功レスポンス (200 OK):**
 
 ```json
 {
@@ -410,7 +410,7 @@ Health check endpoint to verify the API is running.
 
 カテゴリを削除します。
 
-**Response (200 OK):**
+**成功レスポンス (200 OK):**
 
 ```json
 {
@@ -418,21 +418,21 @@ Health check endpoint to verify the API is running.
 }
 ```
 
-(Documentation to be added as endpoints are implemented)
+（エンドポイントの実装に合わせてドキュメントを追記予定）
 
 ---
 
-## Items
+## アイテム (Items)
 
-(Documentation to be added as endpoints are implemented)
+（エンドポイントの実装に合わせてドキュメントを追記予定）
 
 ---
 
-## Authentication
+## 認証 (Authentication)
 
-## (Documentation to be added as authentication endpoints are implemented)
+（認証エンドポイントの実装に合わせてドキュメントを追記予定）
 
-## Vehicles
+## 車両 (Vehicles)
 
 ### GET /api/vehicles
 
@@ -662,7 +662,7 @@ Health check endpoint to verify the API is running.
 
 ---
 
-## Fuel Records
+## 給油記録 (Fuel Records)
 
 ### GET /api/fuel-records
 
@@ -869,16 +869,16 @@ Health check endpoint to verify the API is running.
 
 ---
 
-## Error Codes
+## エラーコード
 
-| Code | Description           |
-| ---- | --------------------- |
-| 200  | OK                    |
-| 201  | Created               |
-| 204  | No Content            |
-| 400  | Bad Request           |
-| 401  | Unauthorized          |
-| 403  | Forbidden             |
-| 404  | Not Found             |
-| 422  | Validation Error      |
-| 500  | Internal Server Error |
+| コード | 説明                                       |
+| ------ | ------------------------------------------ |
+| 200    | OK（成功）                                 |
+| 201    | Created（作成成功）                        |
+| 204    | No Content（成功・レスポンスボディなし）   |
+| 400    | Bad Request（不正なリクエスト）            |
+| 401    | Unauthorized（認証エラー）                 |
+| 403    | Forbidden（アクセス権限なし）              |
+| 404    | Not Found（リソースが見つからない）        |
+| 422    | Validation Error（バリデーションエラー）   |
+| 500    | Internal Server Error（サーバー内部エラー）|

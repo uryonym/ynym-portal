@@ -42,7 +42,7 @@ session_local = sessionmaker(engine)
 
 
 # セッション生成（リクエスト単位のトランザクション管理）
-def get_db() -> Generator[Session, None, None]:
+def get_db() -> Generator[Session]:
     """FastAPI 依存関係用 DB セッション.
 
     正常終了時に自動 commit、例外発生時に自動 rollback を行います。
@@ -59,7 +59,7 @@ def get_db() -> Generator[Session, None, None]:
 
 
 @contextmanager
-def transactional_session() -> Generator[Session, None, None]:
+def transactional_session() -> Generator[Session]:
     """コンテキストマネージャ用 DB セッション.
 
     スクリプトやバックグラウンドタスクなど、FastAPI リクエスト外で

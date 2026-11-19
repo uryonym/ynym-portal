@@ -1,49 +1,49 @@
-# Testing Guide
+# テストガイド
 
-## Test Structure
+## テスト構成
 
-Tests are organized into two categories:
+テストは以下の 2 つのカテゴリに分かれています:
 
-- **Unit Tests** (`tests/unit/`): Test domain services, repositories, and business logic
-- **Integration Tests** (`tests/integration/`): Test API endpoints and database operations using `TestClient`
+- **ユニットテスト** (`tests/unit/`): ドメインサービス、リポジトリ、ビジネスロジックをテストします
+- **統合テスト** (`tests/integration/`): `TestClient` を用いて API エンドポイントとデータベース操作をテストします
 
-Test markers (`unit` / `integration`) are automatically applied based on test file locations.
+テストマーカー（`unit` / `integration`）は、テストファイルの配置場所に基づいて自動的に付与されます。
 
-## Running Tests
+## テストの実行
 
-### Run all tests
+### すべてのテストを実行
 
 ```bash
 uv run pytest
 ```
 
-### Run only unit tests
+### ユニットテストのみ実行
 
 ```bash
 uv run pytest -m unit
 ```
 
-### Run only integration tests
+### 統合テストのみ実行
 
 ```bash
 uv run pytest -m integration
 ```
 
-### Run specific test file
+### 特定のテストファイルを実行
 
 ```bash
 uv run pytest tests/unit/test_user_service.py
 ```
 
-### Run with coverage
+### カバレッジ付きで実行
 
 ```bash
 uv run pytest --cov=app --cov-report=html
 ```
 
-## Writing Tests
+## テストの書き方
 
-### Unit Test Example
+### ユニットテストの例
 
 ```python
 import pytest
@@ -66,7 +66,7 @@ def test_create_user(db_session):
     assert user.email == "test@example.com"
 ```
 
-### Integration Test Example
+### 統合テストの例
 
 ```python
 def test_get_users(client):
