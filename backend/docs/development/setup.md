@@ -1,87 +1,87 @@
-# Development Setup
+# 開発環境セットアップ
 
-## Prerequisites
+## 前提条件
 
 - Python 3.14+
-- uv package manager
+- uv パッケージマネージャー
 - PostgreSQL 12+
 
-## Installation
+## インストール
 
-### 1. Install dependencies
+### 1. 依存パッケージのインストール
 
 ```bash
 uv sync
 ```
 
-### 2. Set up environment variables
+### 2. 環境変数の設定
 
-Copy `.env.sample` to `.env` and update the values:
+`.env.sample` を `.env` にコピーし、環境に合わせて値を更新します:
 
 ```bash
 cp .env.sample .env
 ```
 
-### 3. Initialize database
+### 3. データベースの初期化
 
 ```bash
-# Create database
+# データベースの作成
 createdb ynym_db
 
-# Run migrations (if using Alembic in the future)
+# マイグレーションの実行（今後 Alembic を導入する場合）
 ```
 
-## Running the application
+## アプリケーションの起動
 
-### Development server
+### 開発サーバー
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-The API will be available at `http://localhost:8000`
+API は `http://localhost:8000` で利用可能になります。
 
-Swagger UI: `http://localhost:8000/docs`
-ReDoc: `http://localhost:8000/redoc`
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
 
-## Running tests
+## テストの実行
 
 ```bash
 pytest
 ```
 
-With coverage:
+カバレッジ付きで実行する場合:
 
 ```bash
 pytest --cov=app
 ```
 
-## Code quality
+## コード品質
 
-### Linting
+### リント
 
 ```bash
 ruff check app
 ```
 
-### Formatting
+### フォーマット
 
 ```bash
 ruff format app
 ```
 
-### Type checking
+### 型チェック
 
 ```bash
 mypy app
 ```
 
-## Documentation
+## ドキュメント
 
-Generate and serve documentation:
+ドキュメントを生成してローカルサーバーでプレビューします:
 
 ```bash
 mkdocs serve
 ```
 
-Documentation will be available at `http://localhost:8000`
+ドキュメントは `http://localhost:8000` で閲覧できます。

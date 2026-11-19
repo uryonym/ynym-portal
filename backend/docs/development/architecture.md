@@ -1,93 +1,93 @@
-# Architecture
+# アーキテクチャ
 
-## Overview
+## 概要
 
-The backend application follows a layered clean architecture:
+バックエンドアプリケーションは、レイヤードクリーンアーキテクチャを採用しています:
 
 ```
 ┌─────────────────────────────────────┐
-│        FastAPI Application          │
+│        FastAPI アプリケーション      │
 │            (app/main.py)            │
 └──────────────┬──────────────────────┘
                │
 ┌──────────────▼──────────────────────┐
-│       Router Layer (Endpoints)      │
+│    Router レイヤー (エンドポイント)  │
 │          (app/routers/...)          │
 └──────────────┬──────────────────────┘
                │
 ┌──────────────▼──────────────────────┐
-│            Service Layer            │
+│          Service レイヤー           │
 │          (app/services/...)         │
 └──────────────┬──────────────────────┘
                │
 ┌──────────────▼──────────────────────┐
-│          Repository Layer           │
+│        Repository レイヤー          │
 │        (app/repositories/...)       │
 └──────────────┬──────────────────────┘
                │
 ┌──────────────▼──────────────────────┐
-│       Data Layer (SQLAlchemy)       │
+│      Data レイヤー (SQLAlchemy)     │
 │          (app/models/...)           │
 └──────────────┬──────────────────────┘
                │
 ┌──────────────▼──────────────────────┐
-│        Database (PostgreSQL)        │
+│       データベース (PostgreSQL)     │
 └─────────────────────────────────────┘
 ```
 
-## Key Components
+## 主要コンポーネント
 
-### Router Layer (`app/routers/`)
+### Router レイヤー (`app/routers/`)
 
-- Handles HTTP requests and responses
-- Request validation and response serialization via Pydantic v2 schemas (`app/schemas/`)
-- Mounted under the `/api` prefix
+- HTTP リクエストとレスポンスを処理します
+- Pydantic v2 スキーマ（`app/schemas/`）によるリクエストバリデーションとレスポンスシリアライズを行います
+- `/api` プレフィックス配下にマウントされています
 
-### Service Layer (`app/services/`)
+### Service レイヤー (`app/services/`)
 
-- Contains business logic
-- Orchestrates multi-entity operations and validates domain rules
-- Raises standard application exceptions (`app/utils/exceptions.py`)
+- ビジネスロジックを保持します
+- 複数エンティティにまたがる操作の調停やドメインルールの検証を行います
+- 標準アプリケーション例外（`app/utils/exceptions.py`）を送出します
 
-### Repository Layer (`app/repositories/`)
+### Repository レイヤー (`app/repositories/`)
 
-- Encapsulates database queries and data persistence
-- Inherits from `BaseRepository` or `UserOwnedSoftDeleteRepository`
-- Decouples SQLAlchemy query building from business logic
+- データベースクエリとデータ永続化をカプセル化します
+- `BaseRepository` または `UserOwnedSoftDeleteRepository` を継承します
+- SQLAlchemy のクエリ構築をビジネスロジックから分離します
 
-### Data Layer (`app/models/`)
+### Data レイヤー (`app/models/`)
 
-- Defines SQLAlchemy 2.0 ORM models inheriting from `Base` (`app/models/base.py`)
-- Represents PostgreSQL schema with soft-delete (`deleted_at`) and JST timezone helpers
+- `Base`（`app/models/base.py`）を継承した SQLAlchemy 2.0 ORM モデルを定義します
+- 論理削除（`deleted_at`）や JST タイムゾーンヘルパーを備えた PostgreSQL スキーマを表現します
 
-### Schemas (`app/schemas/`)
+### スキーマ (`app/schemas/`)
 
-- Pydantic v2 models for request validation and response formatting
-- Base schemas in `app/schemas/base.py` (`EntityResponseBase`, `SoftDeleteEntityResponseBase`)
+- リクエストバリデーションおよびレスポンス整形用の Pydantic v2 モデルです
+- `app/schemas/base.py` にベーススキーマ（`EntityResponseBase`、`SoftDeleteEntityResponseBase`）を定義しています
 
-### Security (`app/security/`)
+### セキュリティ (`app/security/`)
 
-- BFF pattern with Google OAuth2 flow
-- JWT token management and HttpOnly cookie session handling (`app/security/deps.py`)
+- Google OAuth2 フローを用いた BFF パターンを実装しています
+- JWT トークン管理および HttpOnly Cookie によるセッション制御を行います（`app/security/deps.py`）
 
-### Core & Database (`app/core/`)
+### コア・データベース (`app/core/`)
 
-- `app/core/config.py`: Environment-based settings via Pydantic Settings
-- `app/core/db.py`: PostgreSQL connection and session management via SQLAlchemy 2.0 and `psycopg`
+- `app/core/config.py`: Pydantic Settings を用いた環境変数ベースの設定管理
+- `app/core/db.py`: SQLAlchemy 2.0 と `psycopg` を用いた PostgreSQL 接続・セッション管理
 
-### Utils (`app/utils/`)
+### ユーティリティ (`app/utils/`)
 
-- Custom application exceptions (`app/utils/exceptions.py`)
-- Centralized exception handlers for FastAPI
-- Logging configuration
+- カスタムアプリケーション例外（`app/utils/exceptions.py`）
+- FastAPI 用の共通例外ハンドラー
+- ロギング設定
 
-## Data Flow
+## データフロー
 
-1. **Request** → FastAPI receives HTTP request at `/api/...`
-2. **Authentication / Dependency** → Current user verified from HttpOnly cookie session (`CurrentUser`)
-3. **Validation** → Pydantic schema validates input
-4. **Router** → Endpoint delegates to corresponding Service
-5. **Service** → Business logic and domain validations
-6. **Repository** → Executes SQLAlchemy 2.0 queries on PostgreSQL
-7. **Response** → Serialized with Pydantic response models
-8. **Output** → FastAPI returns JSON response
+1. **リクエスト** → FastAPI が `/api/...` で HTTP リクエストを受信
+2. **認証 / 依存関係** → HttpOnly Cookie セッションから現在のユーザーを検証（`CurrentUser`）
+3. **バリデーション** → Pydantic スキーマが入力値を検証
+4. **Router** → エンドポイントが対応する Service に処理を委譲
+5. **Service** → ビジネスロジックおよびドメイン検証を実行
+6. **Repository** → PostgreSQL に対して SQLAlchemy 2.0 クエリを実行
+7. **レスポンス** → Pydantic レスポンスモデルでシリアライズ
+8. **出力** → FastAPI が JSON レスポンスを返却

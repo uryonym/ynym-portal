@@ -1,25 +1,25 @@
-# API Overview
+# API 概要
 
-This is the API for the ynym Portal Backend system.
+ynym Portal バックエンドシステムの API 仕様概要です。
 
-## Base URL
+## ベース URL
 
-- Development: `http://localhost:8000/api`
-- Production: (To be configured)
+- 開発環境: `http://localhost:8000/api`
+- 本番環境: （設定予定）
 
-## Authentication
+## 認証
 
-The API uses JWT (JSON Web Tokens) for authentication.
+本 API では認証に JWT（JSON Web Tokens）を使用しています。
 
-All protected endpoints require an `Authorization` header:
+保護されたすべてのエンドポイントでは、`Authorization` ヘッダーが必要です:
 
 ```
 Authorization: Bearer <token>
 ```
 
-## Response Format
+## レスポンス形式
 
-### Success Response (2xx)
+### 成功レスポンス (2xx)
 
 ```json
 {
@@ -28,7 +28,7 @@ Authorization: Bearer <token>
 }
 ```
 
-### Error Response (4xx, 5xx)
+### エラーレスポンス (4xx, 5xx)
 
 ```json
 {
@@ -38,6 +38,6 @@ Authorization: Bearer <token>
 }
 ```
 
-## Endpoints
+## エンドポイント一覧
 
-See [endpoints.md](endpoints.md) for detailed endpoint documentation.
+詳細なエンドポイント仕様は [endpoints.md](endpoints.md) を参照してください。
